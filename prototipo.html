@@ -1,0 +1,646 @@
+<title>OIRS Salud Padre Las Casas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: portal público tipo WordPress + consola administrativa con barra lateral; ambos comparten tokens. */
+:root{
+  --bg:#F4F7F6; --surface:#FFFFFF; --sunken:#EAF1EF; --fg:#13211F; --muted:#566966; --line:#D3DFDC;
+  --primary:#0B5D57; --primary-ink:#FFFFFF; --primary-soft:#DDEDEA; --focus:#AD6A00;
+  --ok:#1D7438; --ok-soft:#DFF1E4; --warn:#9A5B00; --warn-soft:#FBEBD0; --crit:#B42318; --crit-soft:#FBE1DE;
+  --info:#2456A6; --info-soft:#E1EAF8; --proto:#3B2F63; --proto-ink:#F2EEFF;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
+  --r:10px; --r-sm:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1716; --surface:#152220; --sunken:#1B2C29; --fg:#E4EEEC; --muted:#9DB2AE; --line:#2A3D3A;
+  --primary:#5CC2B6; --primary-ink:#06201D; --primary-soft:#1D3C38; --focus:#F2B544;
+  --ok:#6FCF8C; --ok-soft:#173826; --warn:#F0B35A; --warn-soft:#3A2A10; --crit:#FF8A7E; --crit-soft:#401C19;
+  --info:#8DB3F2; --info-soft:#1A2A45; --proto:#2A2347; --proto-ink:#E4DCFF; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1716; --surface:#152220; --sunken:#1B2C29; --fg:#E4EEEC; --muted:#9DB2AE; --line:#2A3D3A;
+  --primary:#5CC2B6; --primary-ink:#06201D; --primary-soft:#1D3C38; --focus:#F2B544;
+  --ok:#6FCF8C; --ok-soft:#173826; --warn:#F0B35A; --warn-soft:#3A2A10; --crit:#FF8A7E; --crit-soft:#401C19;
+  --info:#8DB3F2; --info-soft:#1A2A45; --proto:#2A2347; --proto-ink:#E4DCFF; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font:16px/1.55 var(--f-body);margin:0}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800}
+h2{font-size:1.35rem;font-weight:800}
+h3{font-size:1.05rem;font-weight:600}
+p{margin:0}
+a{color:var(--primary)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+button,input,select,textarea{font:inherit;color:inherit}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Banda de prototipo */
+.proto{background:var(--proto);color:var(--proto-ink);font-size:.86rem}
+.proto .wrap{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;padding-block:8px}
+.seg{display:inline-flex;border:1px solid color-mix(in srgb,var(--proto-ink) 40%,transparent);border-radius:999px;overflow:hidden}
+.seg button{background:transparent;border:0;color:var(--proto-ink);padding:6px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--proto-ink);color:var(--proto)}
+
+/* Botones y formularios */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:700;text-decoration:none;color:var(--fg)}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:var(--primary-ink)}
+.btn.danger{color:var(--crit);border-color:var(--crit)}
+.btn.small{min-height:36px;padding:0 12px;font-size:.92rem}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.field{display:grid;gap:6px}
+.field label{font-weight:700}
+.field .hint{font-size:.88rem;color:var(--muted)}
+.err{font-size:.9rem;color:var(--crit);font-weight:700}
+.field{align-content:start}
+.err-sum{border:2px solid var(--crit);background:var(--crit-soft);border-radius:var(--r-sm);padding:14px 16px;display:grid;gap:6px}
+.err-sum ul{margin:0;padding-left:20px}
+.err-sum a{color:var(--crit);font-weight:700}
+input[type=text],input[type=email],input[type=tel],input[type=date],input[type=password],input[type=number],select,textarea{
+  width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface)}
+textarea{min-height:120px;resize:vertical}
+[aria-invalid="true"]{border-color:var(--crit)!important;box-shadow:0 0 0 1px var(--crit)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.check{display:flex;gap:10px;align-items:flex-start}
+.check input{width:22px;height:22px;margin-top:2px;flex:none}
+
+/* Chips de estado y semáforo */
+.chip{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:999px;font-size:.84rem;font-weight:700;white-space:nowrap}
+.chip::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.s-VERDE{background:var(--ok-soft);color:var(--ok)}
+.s-AMARILLO{background:var(--warn-soft);color:var(--warn)}
+.s-ROJO{background:var(--crit-soft);color:var(--crit)}
+.e-INGRESADO{background:var(--info-soft);color:var(--info)}
+.e-EN_PROCESO{background:var(--warn-soft);color:var(--warn)}
+.e-RESPONDIDO{background:var(--ok-soft);color:var(--ok)}
+.e-CERRADO{background:var(--sunken);color:var(--muted)}
+
+/* ===== Portal ciudadano ===== */
+.site-head{background:var(--surface);border-bottom:1px solid var(--line)}
+.site-head .wrap{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;padding-block:14px}
+.brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--fg)}
+.brand-mark{width:42px;height:42px;border-radius:50%;background:var(--primary);display:grid;place-items:center;color:var(--primary-ink);font-family:var(--f-display);font-weight:800}
+.brand small{display:block;color:var(--muted);font-size:.82rem}
+.site-nav{display:flex;flex-wrap:wrap;gap:4px}
+.site-nav button{background:none;border:0;padding:10px 12px;border-radius:var(--r-sm);cursor:pointer;font-weight:700;color:var(--fg)}
+.site-nav button[aria-current="page"]{background:var(--primary-soft);color:var(--primary)}
+.hero{background:var(--primary);color:var(--primary-ink)}
+.hero .wrap{padding-block:36px;display:grid;gap:14px}
+.hero p{max-width:60ch;font-size:1.08rem}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:-28px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:grid;gap:8px;text-align:left;cursor:pointer;color:var(--fg)}
+.tile:hover{border-color:var(--primary)}
+.tile .ico{width:40px;height:40px;border-radius:var(--r-sm);background:var(--primary-soft);color:var(--primary);display:grid;place-items:center}
+.section{padding-block:32px;display:grid;gap:18px}
+.news{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.news article{border-top:3px solid var(--primary);background:var(--surface);padding:16px;display:grid;gap:6px}
+.news time{font-size:.85rem;color:var(--muted)}
+.tipo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.tipo{border:2px solid var(--line);border-radius:var(--r);padding:16px;background:var(--surface);cursor:pointer;text-align:left;display:grid;gap:4px;color:var(--fg)}
+.tipo[aria-pressed="true"]{border-color:var(--primary);background:var(--primary-soft)}
+.tipo b{font-family:var(--f-display);font-size:1.05rem}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;display:grid;gap:18px}
+.steps{display:flex;gap:8px;flex-wrap:wrap;font-size:.9rem;color:var(--muted)}
+.steps span[aria-current="step"]{color:var(--primary);font-weight:700}
+.escala{display:flex;gap:6px;flex-wrap:wrap}
+.escala button{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:700}
+.escala button[aria-pressed="true"]{background:var(--primary);color:var(--primary-ink);border-color:var(--primary)}
+.escala-leyenda{display:flex;justify-content:space-between;font-size:.82rem;color:var(--muted);max-width:350px}
+.folio{font-family:var(--f-mono);font-size:1.6rem;letter-spacing:.04em;color:var(--primary)}
+.estab-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.estab-list article{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:6px}
+.site-foot{border-top:1px solid var(--line);background:var(--surface);margin-top:24px}
+.site-foot .wrap{padding-block:20px;display:flex;flex-wrap:wrap;gap:12px 32px;font-size:.9rem;color:var(--muted)}
+
+/* ===== Consola administrativa ===== */
+.app{display:grid;grid-template-columns:240px 1fr;min-height:calc(100dvh - 52px)}
+.side{background:var(--surface);border-right:1px solid var(--line);padding:18px 12px;display:flex;flex-direction:column;gap:6px}
+.side .who{padding:10px;border-radius:var(--r-sm);background:var(--sunken);font-size:.88rem;margin-bottom:10px}
+.side .who b{display:block;font-size:.95rem}
+.side button.nav{background:none;border:0;text-align:left;padding:10px 12px;border-radius:var(--r-sm);cursor:pointer;font-weight:700;color:var(--fg);display:flex;gap:10px;align-items:center}
+.side button.nav[aria-current="page"]{background:var(--primary-soft);color:var(--primary)}
+.side .spacer{flex:1}
+.main{padding-block:24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:20px;align-content:start;min-width:0}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
+.toolbar .field{min-width:160px;flex:1}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:2px;text-align:left;color:var(--fg)}
+button.kpi{cursor:pointer}
+button.kpi[aria-pressed="true"]{border-color:var(--primary);box-shadow:inset 0 0 0 1px var(--primary)}
+.m-who{display:none}
+.kpi .v{font-family:var(--f-display);font-size:1.9rem;font-weight:800;font-variant-numeric:tabular-nums}
+.kpi .l{font-size:.86rem;color:var(--muted)}
+.tbl-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;font-size:.94rem}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:var(--sunken)}
+tr.click{cursor:pointer}
+tr.click:hover td{background:var(--sunken)}
+.cards{display:none}
+.detail{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:12px;align-content:start}
+dl.kv{display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;margin:0}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-weight:700}
+.timeline{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.timeline li{border-left:3px solid var(--primary);padding-left:12px}
+.timeline time{font-size:.84rem;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.notice{padding:12px 14px;border-radius:var(--r-sm);background:var(--info-soft);color:var(--info);font-weight:700}
+.notice.warn{background:var(--warn-soft);color:var(--warn)}
+.bars{display:grid;gap:8px}
+.bar{display:grid;grid-template-columns:1fr 44px;gap:2px 10px;align-items:center;font-size:.92rem}
+.bar > span:first-child{grid-column:1 / -1}
+.bar .track{display:block;height:14px;background:var(--sunken);border-radius:999px;overflow:hidden}
+.bar .fill{display:block;height:100%;background:var(--primary);border-radius:999px}
+.bar .n{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.estab-panel{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.login{min-height:calc(100% - 44px);display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
+.login .panel{width:min(440px,100%)}
+.demo-users{display:grid;gap:8px}
+.demo-users button{text-align:left}
+dialog{border:1px solid var(--line);border-radius:var(--r);padding:0;width:min(560px,calc(100% - 32px));background:var(--surface);color:var(--fg)}
+dialog::backdrop{background:rgba(5,15,14,.55)}
+dialog form{padding:22px;display:grid;gap:14px}
+.toast{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:12px 18px;border-radius:var(--r-sm);font-weight:700;max-width:min(420px,calc(100% - 32px));z-index:30}
+.mobile-nav{display:none}
+
+@media (max-width:820px){
+  .app{grid-template-columns:1fr}
+  .side{display:none}
+  .mobile-nav{display:flex;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line);overflow-x:auto;gap:4px;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px))}
+  .mobile-nav button{white-space:nowrap;background:none;border:0;padding:8px 12px;border-radius:999px;font-weight:700;color:var(--fg)}
+  .mobile-nav button[aria-current="page"]{background:var(--primary-soft);color:var(--primary)}
+  .detail{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr;gap:8px}
+  .kpi{padding:10px 12px}
+  .kpi .v{font-size:1.4rem}
+  .tipo-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .tipo{padding:12px}
+  .tipo .muted{font-size:.85rem}
+  .m-who{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));font-size:.88rem;background:var(--surface)}
+  .proto{font-size:.8rem}
+  .tbl-wrap.resp{display:none}
+  .cards{display:grid;gap:10px}
+  .cards article{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:grid;gap:6px;cursor:pointer}
+  .cards .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:space-between}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="proto" role="note">
+  <div class="wrap">
+    <span><b>Prototipo académico</b> · Proyecto Integrado · Datos ficticios: nada de lo que ingrese se envía.</span>
+    <div class="seg" role="group" aria-label="Cambiar de vista">
+      <button type="button" id="ver-portal" aria-pressed="true">Portal ciudadano</button>
+      <button type="button" id="ver-admin" aria-pressed="false">Sistema administrativo</button>
+    </div>
+  </div>
+</div>
+<div id="root"></div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+/* ================= Datos y reglas ================= */
+const FERIADOS = new Set(['2026-01-01','2026-04-03','2026-04-04','2026-05-01','2026-05-21','2026-06-21','2026-06-29','2026-07-16','2026-08-15','2026-09-18','2026-09-19','2026-10-12','2026-10-31','2026-11-01','2026-12-08','2026-12-25','2027-01-01','2027-03-26','2027-03-27','2027-05-01','2027-05-21','2027-06-21','2027-06-28','2027-07-16','2027-08-15','2027-09-17','2027-09-18','2027-09-19','2027-10-11','2027-10-31','2027-11-01','2027-12-08','2027-12-25']);
+const iso = d => d.toISOString().slice(0,10);
+const parse = s => new Date(s+'T12:00:00Z');
+const habil = d => { const w=d.getUTCDay(); return w!==0 && w!==6 && !FERIADOS.has(iso(d)); };
+function sumarHabiles(desde,n){ const d=parse(desde); let c=0; while(c<n){ d.setUTCDate(d.getUTCDate()+1); if(habil(d)) c++; } return iso(d); }
+function restantes(hoy,venc){ if(hoy===venc) return 0; const paso = venc>hoy?1:-1; const d=parse(hoy); let c=0; while(iso(d)!==venc){ d.setUTCDate(d.getUTCDate()+paso); if(habil(d)) c+=paso; } return c; }
+const semaforo = r => r<0?'ROJO':(r<=5?'AMARILLO':'VERDE');
+const HOY = iso(new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 12)));
+function haceHabiles(n){ const d=parse(HOY); let c=0; while(c<n){ d.setUTCDate(d.getUTCDate()-1); if(habil(d)) c++; } return iso(d); }
+
+const ESTABS = [
+  {cod:'CESFAM-PLC', nombre:'CESFAM Padre Las Casas', horario:'Lun a jue 08:00–17:00 · vie 08:00–16:00', tipo:'CESFAM'},
+  {cod:'CESFAM-PUL', nombre:'CESFAM Pulmahue', horario:'Lun a jue 08:00–17:00 · vie 08:00–16:00', tipo:'CESFAM'},
+  {cod:'CESFAM-CON', nombre:'CESFAM Conunhuenu', horario:'Lun a jue 08:00–17:00 · vie 08:00–16:00', tipo:'CESFAM'},
+  {cod:'SAPU-PLC', nombre:'SAPU Padre Las Casas', horario:'Lun a vie 17:00–24:00 · sáb, dom y festivos 08:00–24:00', tipo:'SAPU'},
+  {cod:'PSR-01', nombre:'Posta de Salud Rural (ejemplo)', horario:'Rondas según calendario del sector', tipo:'Posta rural'},
+];
+const nombreEst = c => (ESTABS.find(e=>e.cod===c)||{}).nombre || c;
+const CATEGORIAS = ['Calidad de la atención','Tiempos de espera','Trato recibido','Presentación del personal','Información e indicaciones','Infraestructura y equipamiento','Gestión administrativa','Otro'];
+const UNIDADES = ['Dirección','SOME','Sector Azul','Sector Rojo','Farmacia','Dental','Urgencia'];
+const TIPOS = {
+  RECLAMO:{t:'Reclamo', d:'Algo no funcionó como esperaba', id:true},
+  SUGERENCIA:{t:'Sugerencia', d:'Una idea para mejorar', id:false},
+  CONSULTA:{t:'Consulta', d:'Necesito información', id:true},
+  SOLICITUD:{t:'Solicitud', d:'Pido un trámite o gestión', id:true},
+  FELICITACION:{t:'Felicitación', d:'Quiero reconocer una buena atención', id:false},
+};
+const ESTADO_TXT = {INGRESADO:'Ingresado', EN_PROCESO:'En proceso', RESPONDIDO:'Respondido', CERRADO:'Cerrado'};
+const PREGUNTAS = [
+  {id:'p1', t:'Calidad de la atención recibida'}, {id:'p2', t:'Tiempo de espera'}, {id:'p3', t:'Trato recibido'},
+  {id:'p4', t:'Presentación e identificación del personal'}, {id:'p5', t:'Claridad de las indicaciones'},
+];
+const USUARIOS = [
+  {email:'admin@dsm.cl', nombre:'Ana Morales', rol:'ADMIN', rolTxt:'Administradora del sistema', est:null, activo:true, mfa:true},
+  {email:'oirs.dsm@dsm.cl', nombre:'Daniel Fuentes', rol:'OIRS_DSM', rolTxt:'Encargado OIRS Departamento', est:null, activo:true, mfa:true},
+  {email:'oirs.plc@dsm.cl', nombre:'Olga Huenchumán', rol:'OIRS_EST', rolTxt:'Encargada OIRS', est:'CESFAM-PLC', activo:true, mfa:false},
+  {email:'dir.plc@dsm.cl', nombre:'Diana Rivas', rol:'DIRECCION', rolTxt:'Directora de establecimiento', est:'CESFAM-PLC', activo:true, mfa:false},
+  {email:'oirs.pul@dsm.cl', nombre:'Pedro Catrileo', rol:'OIRS_EST', rolTxt:'Encargado OIRS', est:'CESFAM-PUL', activo:true, mfa:false},
+];
+const PERM = {
+  ver:['ADMIN','OIRS_DSM','OIRS_EST','DIRECCION'], gestionar:['OIRS_EST'], ingresar:['OIRS_EST'], panel:['OIRS_DSM','ADMIN'],
+  reportes:['OIRS_DSM','OIRS_EST','DIRECCION'], exportar:['OIRS_DSM'], usuarios:['ADMIN'],
+};
+const puede = (u,a) => PERM[a].includes(u.rol);
+
+let correlativo = 1158;
+const nuevoFolio = () => `PLC-${HOY.slice(0,4)}-${String(++correlativo).padStart(6,'0')}`;
+function req(folio,tipo,est,diasAtras,estado,desc,cat,unidad,sol){
+  const ingreso = haceHabiles(diasAtras);
+  const r = {folio,tipo,est,ingreso,vence:sumarHabiles(ingreso,15),estado,desc,cat:cat||null,unidad:unidad||null,canal:diasAtras%2?'WEB':'PRESENCIAL',
+    sol: sol||null, historial:[{f:ingreso,a:'Ingreso',e:'INGRESADO',u:'Sistema (canal '+(diasAtras%2?'web':'presencial')+')'}], respuesta:null};
+  if(estado!=='INGRESADO') r.historial.push({f:haceHabiles(Math.max(diasAtras-2,0)),a:`Clasificado como «${cat}» y derivado a ${unidad}`,e:'EN_PROCESO',u:'Encargada OIRS'});
+  if(estado==='RESPONDIDO'||estado==='CERRADO'){ r.respuesta={medio:'Carta certificada',fecha:haceHabiles(Math.max(diasAtras-9,0)),texto:'Se revisó la situación con el equipo y se adoptaron medidas.'}; r.historial.push({f:r.respuesta.fecha,a:'Respuesta registrada (dentro de plazo)',e:'RESPONDIDO',u:'Encargada OIRS'}); }
+  if(estado==='CERRADO') r.historial.push({f:haceHabiles(Math.max(diasAtras-11,0)),a:'Caso cerrado',e:'CERRADO',u:'Encargada OIRS'});
+  return r;
+}
+const S1={nombre:'María Pérez', email:'maria.p@correo.cl', tel:'+56 9 1234 5678', edad:45, sexo:'F', autorizaEmail:true};
+const S2={nombre:'José Ancamil', email:'', tel:'+56 9 8765 4321', edad:67, sexo:'M', autorizaEmail:false};
+let REQS = [
+  req('PLC-2026-001140','RECLAMO','CESFAM-PLC',17,'EN_PROCESO','Esperé más de tres horas en SOME para pedir hora con el médico y nadie informó la demora.','Tiempos de espera','SOME',S1),
+  req('PLC-2026-001144','CONSULTA','CESFAM-PLC',12,'EN_PROCESO','¿Cómo solicito una copia de mi ficha clínica para un trámite?','Gestión administrativa','SOME',S2),
+  req('PLC-2026-001149','RECLAMO','CESFAM-PLC',4,'INGRESADO','La farmacia no tenía mi medicamento para la presión y no me indicaron cuándo llega.',null,null,S2),
+  req('PLC-2026-001151','SUGERENCIA','CESFAM-PLC',3,'INGRESADO','Sería útil una pantalla con el número de atención en la sala de espera del sector azul.'),
+  req('PLC-2026-001152','FELICITACION','CESFAM-PLC',2,'INGRESADO','Agradezco la atención de la matrona del sector rojo, muy cercana y clara.'),
+  req('PLC-2026-001120','RECLAMO','CESFAM-PLC',20,'RESPONDIDO','Trato poco amable en el mesón de admisión.','Trato recibido','Dirección',S1),
+  req('PLC-2026-001101','SOLICITUD','CESFAM-PLC',30,'CERRADO','Solicito cambio de sector por cambio de domicilio.','Gestión administrativa','SOME',S2),
+  req('PLC-2026-001138','RECLAMO','CESFAM-PUL',14,'EN_PROCESO','No había rampa habilitada el día de mi control.','Infraestructura y equipamiento','Dirección',S1),
+  req('PLC-2026-001147','CONSULTA','CESFAM-PUL',6,'INGRESADO','¿Qué días vacunan contra la influenza?',null,null,S2),
+  req('PLC-2026-001131','RECLAMO','CESFAM-CON',18,'EN_PROCESO','La hora dental fue suspendida sin aviso.','Calidad de la atención','Dental',S2),
+  req('PLC-2026-001145','SUGERENCIA','SAPU-PLC',8,'INGRESADO','Mejorar la señalética de acceso nocturno.'),
+  req('PLC-2026-001112','RECLAMO','PSR-01',16,'EN_PROCESO','La ronda médica no llegó en la fecha informada.','Información e indicaciones','Dirección',S1),
+];
+let ENCUESTAS = {n:214, prom:{p1:5.6,p2:4.3,p3:6.1,p4:5.8,p5:5.4}, porEst:{'CESFAM-PLC':5.5,'CESFAM-PUL':5.7,'CESFAM-CON':5.2,'SAPU-PLC':4.9,'PSR-01':6.0}};
+
+/* ================= Utilidades ================= */
+const $ = (s,el=document) => el.querySelector(s);
+const esc = s => String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dec = n => n.toFixed(1).replace('.', ',');
+const fmt = s => { const [y,m,d]=s.split('-'); return `${d}-${m}-${y}`; };
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.hidden=false; clearTimeout(toast.h); toast.h=setTimeout(()=>t.hidden=true,3800); }
+const icon = n => ({
+  doc:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M8 13h8M8 17h5"/></svg>',
+  star:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/></svg>',
+  pin:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.1 7-11a7 7 0 0 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>',
+  news:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>',
+}[n]);
+
+/* ================= Estado de la app ================= */
+const st = { modo:'portal', pag:'inicio', tipo:null, form:{}, errores:{}, enviado:null, encuesta:{est:'', r:{}, comentario:''}, encuestaOk:false,
+  usuario:null, mfaPendiente:null, vista:'bandeja', folio:null, filtros:{estado:'ABIERTOS', tipo:'', q:'', sem:''} };
+
+function render(){
+  $('#ver-portal').setAttribute('aria-pressed', st.modo==='portal');
+  $('#ver-admin').setAttribute('aria-pressed', st.modo==='admin');
+  $('#root').innerHTML = st.modo==='portal' ? portal() : (st.usuario ? consola() : login());
+  bind();
+}
+
+/* ================= Portal ciudadano ================= */
+function portal(){
+  const nav = [['inicio','Inicio'],['establecimientos','Establecimientos'],['oirs','OIRS'],['encuesta','Encuesta de satisfacción']];
+  return `
+  <header class="site-head"><div class="wrap">
+    <a class="brand" href="#" data-pag="inicio"><span class="brand-mark" aria-hidden="true">S</span><span><b>Salud Municipal</b><small>Departamento de Salud · Padre Las Casas</small></span></a>
+    <nav class="site-nav" aria-label="Principal">${nav.map(([k,t])=>`<button type="button" data-pag="${k}" ${st.pag===k?'aria-current="page"':''}>${t}</button>`).join('')}</nav>
+  </div></header>
+  <main>${ {inicio:pInicio, establecimientos:pEstabs, oirs:pOirs, encuesta:pEncuesta}[st.pag]() }</main>
+  <footer class="site-foot"><div class="wrap"><span>Departamento de Salud Municipal · contenido de ejemplo</span><span>Plazo de respuesta a reclamos: 15 días hábiles (Ley N.° 20.584)</span><a href="#" data-pag="oirs">Oficina OIRS</a></div></footer>`;
+}
+function pInicio(){
+  return `
+  <section class="hero"><div class="wrap"><h1>Tu opinión mejora la salud de la comuna</h1>
+    <p>Envía un reclamo, sugerencia, consulta, solicitud o felicitación a cualquier establecimiento de la red, o responde la encuesta de satisfacción en dos minutos.</p></div></section>
+  <div class="wrap">
+    <div class="tiles">
+      <button class="tile" type="button" data-pag="oirs"><span class="ico">${icon('doc')}</span><h3>Reclamos y sugerencias (OIRS)</h3><span class="muted">Ingresa tu caso y recibe un número de folio.</span></button>
+      <button class="tile" type="button" data-pag="encuesta"><span class="ico">${icon('star')}</span><h3>Encuesta de satisfacción</h3><span class="muted">Anónima. No pedimos tu nombre.</span></button>
+      <button class="tile" type="button" data-pag="establecimientos"><span class="ico">${icon('pin')}</span><h3>Establecimientos y horarios</h3><span class="muted">CESFAM, SAPU y postas rurales.</span></button>
+    </div>
+    <section class="section"><h2>Noticias</h2>
+      <div class="news">
+        <article><time>Ejemplo · octubre</time><h3>Campaña de invierno: vacunación en CESFAM</h3><p class="muted">Texto de ejemplo para mostrar el bloque de noticias editable desde WordPress.</p></article>
+        <article><time>Ejemplo · octubre</time><h3>Nuevo horario de SOME</h3><p class="muted">Los contenidos los actualiza la Unidad de Participación y Comunicaciones.</p></article>
+        <article><time>Ejemplo · septiembre</time><h3>Operativo de salud rural</h3><p class="muted">Bloque reutilizable de entradas del sitio institucional.</p></article>
+      </div>
+    </section>
+  </div>`;
+}
+function pEstabs(){
+  return `<div class="wrap section"><h1>Establecimientos de salud</h1><p class="muted">Horarios y datos de ejemplo; el DSM los mantiene actualizados desde WordPress.</p>
+  <div class="estab-list">${ESTABS.map(e=>`<article><span class="chip e-CERRADO">${esc(e.tipo)}</span><h3>${esc(e.nombre)}</h3><p>${esc(e.horario)}</p></article>`).join('')}</div></div>`;
+}
+function pOirs(){
+  if(st.enviado){ const r=st.enviado; return `<div class="wrap section"><div class="panel" role="status">
+    <h1>Recibimos tu ${esc(TIPOS[r.tipo].t.toLowerCase())}</h1>
+    <p>Tu número de folio es</p><p class="folio">${r.folio}</p>
+    <p>${TIPOS[r.tipo].id ? `Te responderemos a más tardar el <b>${fmt(r.vence)}</b> (15 días hábiles) por ${r.sol && r.sol.autorizaEmail ? 'correo electrónico' : 'carta certificada'}.` : 'Gracias. La información se entregará al equipo del establecimiento.'}</p>
+    <div class="actions"><button class="btn primary" type="button" id="otra">Enviar otra solicitud</button><button class="btn" type="button" data-pag="inicio">Volver al inicio</button></div></div></div>`; }
+  const t = st.tipo, f = st.form, e = st.errores, idReq = t && TIPOS[t].id;
+  const err = k => e[k] ? `<span class="err" id="err-${k}">${esc(e[k])}</span>` : '';
+  const inv = k => e[k] ? 'aria-invalid="true" aria-describedby="err-'+k+'"' : '';
+  return `<div class="wrap section">
+    <h1>Oficina de Informaciones, Reclamos y Sugerencias</h1>
+    <div class="panel">
+      <h2>1. ¿Qué deseas enviar?</h2>
+      <div class="tipo-grid" role="group" aria-label="Tipo de solicitud">${Object.entries(TIPOS).map(([k,v])=>`<button class="tipo" type="button" data-tipo="${k}" aria-pressed="${t===k}"><b>${v.t}</b><span class="muted">${v.d}</span></button>`).join('')}</div>
+    </div>
+    ${t ? `<form class="panel" id="f-oirs" novalidate>
+      ${Object.keys(e).length?`<div class="err-sum" role="alert" tabindex="-1" id="err-sum"><b>Revisa ${Object.keys(e).length===1?'1 campo':Object.keys(e).length+' campos'} antes de enviar:</b><ul>${Object.entries(e).map(([k,m])=>`<li><a href="#${k}" data-ir="${k}">${esc(m)}</a></li>`).join('')}</ul></div>`:''}
+      <h2>2. Cuéntanos qué ocurrió</h2>
+      <div class="grid2">
+        <div class="field"><label for="est">Establecimiento *</label><select id="est" ${inv('est')}><option value="">Selecciona…</option>${ESTABS.map(x=>`<option value="${x.cod}" ${f.est===x.cod?'selected':''}>${esc(x.nombre)}</option>`).join('')}</select>${err('est')}</div>
+        <div class="field"><label for="fat">Fecha de la atención</label><input type="date" id="fat" max="${HOY}" value="${esc(f.fat||'')}"></div>
+      </div>
+      <div class="field"><label for="desc">Descripción *</label><textarea id="desc" maxlength="4000" ${inv('desc')}>${esc(f.desc||'')}</textarea><span class="hint">Mínimo 10 caracteres.</span>${err('desc')}</div>
+      ${t==='RECLAMO'||t==='SOLICITUD' ? `<div class="field"><label for="pet">¿Qué solicitas concretamente?</label><textarea id="pet" maxlength="2000" style="min-height:80px">${esc(f.pet||'')}</textarea></div>`:''}
+      <h2>3. Tus datos ${idReq?'':'<span class="muted" style="font-size:1rem;font-weight:400">(opcional)</span>'}</h2>
+      <p class="muted">${idReq ? 'Los usamos solo para responderte dentro del plazo legal. Indica al menos un correo o un teléfono.' : 'Puedes enviarla sin identificarte. Si dejas un contacto, te avisaremos cuando sea revisada.'}</p>
+      <div class="grid2">
+        <div class="field"><label for="nom">Nombre ${idReq?'*':''}</label><input type="text" id="nom" autocomplete="name" value="${esc(f.nom||'')}" ${inv('nom')}>${err('nom')}</div>
+        <div class="field"><label for="mail">Correo electrónico</label><input type="email" id="mail" autocomplete="email" value="${esc(f.mail||'')}" ${inv('mail')}>${err('mail')}</div>
+        <div class="field"><label for="tel">Teléfono</label><input type="tel" id="tel" autocomplete="tel" placeholder="+56 9 …" value="${esc(f.tel||'')}" ${inv('tel')}>${err('tel')}</div>
+        ${idReq?`<div class="field"><label for="edad">Edad <span class="muted">(opcional, estadística)</span></label><input type="number" id="edad" min="0" max="120" inputmode="numeric" value="${esc(f.edad||'')}"></div>
+        <div class="field"><label for="sexo">Sexo <span class="muted">(opcional, estadística)</span></label><select id="sexo"><option value="">Prefiero no indicar</option><option value="F" ${f.sexo==='F'?'selected':''}>Femenino</option><option value="M" ${f.sexo==='M'?'selected':''}>Masculino</option><option value="O" ${f.sexo==='O'?'selected':''}>Otro</option></select></div>`:''}
+      </div>
+      <label class="check"><input type="checkbox" id="autem" ${f.autem?'checked':''}><span>Autorizo recibir la respuesta por correo electrónico.</span></label>
+      <label class="check"><input type="checkbox" id="acepta" ${f.acepta?'checked':''} ${inv('acepta')}><span>Acepto que mis datos se usen solo para gestionar esta solicitud (Ley N.° 19.628). *</span></label>${err('acepta')}
+      <div class="actions"><button class="btn primary" type="submit">Enviar ${esc(TIPOS[t].t.toLowerCase())}</button></div>
+    </form>`:''}
+  </div>`;
+}
+function pEncuesta(){
+  if(st.encuestaOk) return `<div class="wrap section"><div class="panel" role="status"><h1>¡Gracias por responder!</h1><p>Tu opinión es anónima y se usa para mejorar la atención.</p><div class="actions"><button class="btn" type="button" data-pag="inicio">Volver al inicio</button></div></div></div>`;
+  const en = st.encuesta;
+  return `<div class="wrap section"><h1>Encuesta de satisfacción</h1><p class="muted">Es anónima: no pedimos nombre, RUT ni datos de contacto.</p>
+  <form class="panel" id="f-enc" novalidate>
+    <div class="field"><label for="enc-est">¿En qué establecimiento te atendiste? *</label><select id="enc-est"><option value="">Selecciona…</option>${ESTABS.map(x=>`<option value="${x.cod}" ${en.est===x.cod?'selected':''}>${esc(x.nombre)}</option>`).join('')}</select></div>
+    ${PREGUNTAS.map(p=>`<fieldset class="field" style="border:0;padding:0;margin:0"><legend style="font-weight:700;margin-bottom:6px">${p.t} *</legend>
+      <div class="escala">${[1,2,3,4,5,6,7].map(v=>`<button type="button" data-p="${p.id}" data-v="${v}" aria-pressed="${en.r[p.id]===v}" aria-label="${p.t}: nota ${v}">${v}</button>`).join('')}</div>
+      <div class="escala-leyenda"><span>1 = Muy malo</span><span>7 = Excelente</span></div></fieldset>`).join('')}
+    <div class="field"><label for="enc-com">Comentario (opcional)</label><textarea id="enc-com" maxlength="1000" style="min-height:80px">${esc(en.comentario)}</textarea></div>
+    <div class="actions"><button class="btn primary" type="submit">Enviar encuesta</button></div>
+  </form></div>`;
+}
+
+/* ================= Sistema administrativo ================= */
+function login(){
+  if(st.mfaPendiente) return `<div class="login"><form class="panel" id="f-mfa"><h1>Verificación en dos pasos</h1>
+    <p>Tu perfil (${esc(st.mfaPendiente.rolTxt)}) requiere un código de 6 dígitos de tu aplicación autenticadora.</p>
+    <div class="field"><label for="totp">Código de verificación</label><input type="text" id="totp" inputmode="numeric" maxlength="6" autocomplete="one-time-code"><span class="hint">En el prototipo cualquier código de 6 dígitos es válido.</span></div>
+    <div class="actions"><button class="btn primary" type="submit">Verificar</button><button class="btn" type="button" id="mfa-cancel">Cancelar</button></div></form></div>`;
+  return `<div class="login"><div class="panel">
+    <h1>Sistema de Gestión OIRS</h1><p class="muted">Acceso exclusivo para funcionarios con cuenta individual.</p>
+    <form id="f-login" class="field" style="gap:14px" novalidate>
+      <div class="field"><label for="lg-mail">Correo institucional</label><input type="email" id="lg-mail" autocomplete="username"></div>
+      <div class="field"><label for="lg-pass">Contraseña</label><input type="password" id="lg-pass" autocomplete="current-password"></div>
+      <span class="err" id="lg-err" hidden>Credenciales inválidas o cuenta no disponible.</span>
+      <button class="btn primary" type="submit">Ingresar</button>
+    </form>
+    <h3>Perfiles de demostración</h3>
+    <div class="demo-users">${USUARIOS.map((u,i)=>`<button class="btn" type="button" data-demo="${i}">${esc(u.rolTxt)}${u.est?' · '+esc(nombreEst(u.est)):''}</button>`).join('')}</div>
+  </div></div>`;
+}
+function navItems(u){
+  const it=[];
+  if(puede(u,'ver')) it.push(['bandeja', u.rol==='OIRS_EST'||u.rol==='DIRECCION' ? 'Bandeja' : 'Requerimientos']);
+  if(puede(u,'ingresar')) it.push(['ingreso','Ingreso presencial']);
+  if(puede(u,'panel')) it.push(['plazos','Panel de plazos']);
+  if(puede(u,'reportes')) it.push(['reportes','Reportes']);
+  if(puede(u,'usuarios')) it.push(['usuarios','Usuarios']);
+  return it;
+}
+function visibles(u){ return REQS.filter(r => (u.rol==='OIRS_EST'||u.rol==='DIRECCION') ? r.est===u.est : true); }
+function consola(){
+  const u = st.usuario, items = navItems(u);
+  if(!items.some(i=>i[0]===st.vista) && st.vista!=='detalle') st.vista = items[0][0];
+  const vista = {bandeja:vBandeja, detalle:vDetalle, ingreso:vIngreso, plazos:vPlazos, reportes:vReportes, usuarios:vUsuarios}[st.vista];
+  const navBtns = cls => items.map(([k,t])=>`<button type="button" class="${cls}" data-vista="${k}" ${st.vista===k||(st.vista==='detalle'&&k==='bandeja')?'aria-current="page"':''}>${t}</button>`).join('');
+  return `<div class="app">
+    <aside class="side" aria-label="Menú">
+      <div class="who"><b>${esc(u.nombre)}</b>${esc(u.rolTxt)}${u.est?'<br>'+esc(nombreEst(u.est)):''}</div>
+      ${navBtns('nav')}
+      <span class="spacer"></span>
+      <button type="button" class="btn small" id="salir">Cerrar sesión</button>
+    </aside>
+    <div class="m-who"><span><b>${esc(u.nombre)}</b> · ${esc(u.rolTxt)}</span><button type="button" class="btn small" id="salir-m">Salir</button></div>
+    <nav class="mobile-nav" aria-label="Menú">${navBtns('')}</nav>
+    <main class="main">${vista()}</main>
+  </div>`;
+}
+function filtrados(){
+  const f = st.filtros, q = f.q.trim().toLowerCase();
+  const abierto = r => r.estado==='INGRESADO'||r.estado==='EN_PROCESO';
+  return visibles(st.usuario).filter(r => (!f.estado || (f.estado==='ABIERTOS' ? abierto(r) : r.estado===f.estado)) && (!f.tipo||r.tipo===f.tipo)
+      && (!f.sem || (abierto(r) && semaforo(restantes(HOY,r.vence))===f.sem)) && (!q || r.folio.toLowerCase().includes(q) || r.desc.toLowerCase().includes(q)))
+    .sort((a,b)=> (abierto(b)-abierto(a)) || a.vence.localeCompare(b.vence));
+}
+function plazoChip(r){
+  if(r.estado==='RESPONDIDO'||r.estado==='CERRADO') return '<span class="muted">—</span>';
+  const n = restantes(HOY, r.vence), s = semaforo(n);
+  const txt = n<0 ? `Vencido hace ${-n} d` : (n===0 ? 'Vence hoy' : `${n} días hábiles`);
+  return `<span class="chip s-${s}">${txt}</span>`;
+}
+function vBandeja(){
+  const u = st.usuario, lista = filtrados(), f = st.filtros;
+  const abiertos = visibles(u).filter(r=>r.estado==='INGRESADO'||r.estado==='EN_PROCESO');
+  const por = s => abiertos.filter(r=>semaforo(restantes(HOY,r.vence))===s).length;
+  return `<div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:end">
+      <div><h1>${u.est ? 'Bandeja · '+esc(nombreEst(u.est)) : 'Requerimientos de la red'}</h1><p class="muted">Primero los casos abiertos, ordenados por vencimiento. Toca un indicador para filtrar.</p></div>
+      ${puede(u,'ingresar')?'<button class="btn primary" type="button" data-vista="ingreso">+ Ingreso presencial</button>':''}
+    </div>
+    <div class="kpis">
+      <button type="button" class="kpi" data-sem="" aria-pressed="${!f.sem && f.estado==='ABIERTOS'}"><span class="v">${abiertos.length}</span><span class="l">Abiertos</span></button>
+      <button type="button" class="kpi" data-sem="ROJO" aria-pressed="${f.sem==='ROJO'}"><span class="v" style="color:var(--crit)">${por('ROJO')}</span><span class="l">Vencidos</span></button>
+      <button type="button" class="kpi" data-sem="AMARILLO" aria-pressed="${f.sem==='AMARILLO'}"><span class="v" style="color:var(--warn)">${por('AMARILLO')}</span><span class="l">Vencen en ≤ 5 días hábiles</span></button>
+      <button type="button" class="kpi" data-sem="VERDE" aria-pressed="${f.sem==='VERDE'}"><span class="v" style="color:var(--ok)">${por('VERDE')}</span><span class="l">En plazo holgado</span></button>
+    </div>
+    <div class="toolbar" role="search">
+      <div class="field"><label for="fq">Buscar folio o texto</label><input type="text" id="fq" value="${esc(f.q)}" placeholder="PLC-2026-…"></div>
+      <div class="field"><label for="fe">Estado</label><select id="fe"><option value="ABIERTOS" ${f.estado==='ABIERTOS'?'selected':''}>Abiertos (ingresados y en proceso)</option><option value="" ${f.estado===''?'selected':''}>Todos</option>${Object.entries(ESTADO_TXT).map(([k,v])=>`<option value="${k}" ${f.estado===k?'selected':''}>${v}</option>`).join('')}</select></div>
+      <div class="field"><label for="ft">Tipo</label><select id="ft"><option value="">Todos</option>${Object.entries(TIPOS).map(([k,v])=>`<option value="${k}" ${f.tipo===k?'selected':''}>${v.t}</option>`).join('')}</select></div>
+    </div>
+    <div class="tbl-wrap resp"><table><thead><tr><th>Folio</th><th>Tipo</th>${u.est?'':'<th>Establecimiento</th>'}<th>Motivo</th><th>Estado</th><th>Plazo</th></tr></thead>
+      <tbody>${lista.map(r=>`<tr class="click" data-folio="${r.folio}" tabindex="0"><td class="mono">${r.folio}</td><td>${TIPOS[r.tipo].t}</td>${u.est?'':`<td>${esc(nombreEst(r.est))}</td>`}<td>${esc(r.cat||'Sin clasificar')}</td><td><span class="chip e-${r.estado}">${ESTADO_TXT[r.estado]}</span></td><td>${plazoChip(r)}</td></tr>`).join('') || `<tr><td colspan="6">No hay requerimientos con estos filtros.</td></tr>`}</tbody></table></div>
+    <div class="cards">${lista.map(r=>`<article data-folio="${r.folio}" tabindex="0"><div class="row"><span class="mono">${r.folio}</span><span class="chip e-${r.estado}">${ESTADO_TXT[r.estado]}</span></div><b>${TIPOS[r.tipo].t} · ${esc(r.cat||'Sin clasificar')}</b><div class="row"><span class="muted">${esc(nombreEst(r.est))}</span>${plazoChip(r)}</div></article>`).join('') || '<p>No hay requerimientos con estos filtros.</p>'}</div>`;
+}
+function vDetalle(){
+  const u = st.usuario, r = visibles(u).find(x=>x.folio===st.folio);
+  if(!r) return `<p>No encontrado.</p>`;
+  const gest = puede(u,'gestionar');
+  const abierto = r.estado==='INGRESADO'||r.estado==='EN_PROCESO', rest = restantes(HOY,r.vence);
+  return `<div><button class="btn small" type="button" data-vista="bandeja">← Volver</button></div>
+  <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center"><h1 class="mono" style="font-family:var(--f-mono)">${r.folio}</h1><span class="chip e-${r.estado}">${ESTADO_TXT[r.estado]}</span>${plazoChip(r)}</div>
+  <div class="detail">
+    <div style="display:grid;gap:20px;min-width:0">
+      <section class="box"><h2>${TIPOS[r.tipo].t}</h2><p>${esc(r.desc)}</p>
+        <dl class="kv"><dt>Establecimiento</dt><dd>${esc(nombreEst(r.est))}</dd><dt>Ingreso</dt><dd>${fmt(r.ingreso)} · canal ${r.canal==='WEB'?'web':'presencial'}</dd><dt>Vence</dt><dd>${fmt(r.vence)}</dd><dt>Motivo</dt><dd>${esc(r.cat||'Sin clasificar')}</dd><dt>Derivado a</dt><dd>${esc(r.unidad||'—')}</dd></dl></section>
+      ${r.respuesta?`<section class="box"><h2>Respuesta</h2><p>${esc(r.respuesta.texto)}</p><p class="muted">${esc(r.respuesta.medio)} · ${fmt(r.respuesta.fecha)}</p></section>`:''}
+      ${abierto && rest<0 ? `<p class="notice warn" role="alert">Este caso superó el plazo legal de 15 días hábiles hace ${-rest} ${-rest===1?'día':'días'}. Registra la respuesta lo antes posible; quedará marcada como fuera de plazo.</p>`:''}
+      ${gest ? `<section class="box"><h2>Acciones</h2><div class="actions">
+        ${abierto?`<button class="btn ${r.estado==='INGRESADO'?'primary':''}" type="button" id="a-derivar">${r.estado==='INGRESADO'?'Clasificar y derivar':'Volver a derivar'}</button>`:''}
+        ${r.estado==='EN_PROCESO'?'<button class="btn primary" type="button" id="a-responder">Registrar respuesta</button>':''}
+        ${r.estado==='RESPONDIDO'?'<button class="btn" type="button" id="a-cerrar">Cerrar caso</button>':''}
+        ${r.estado==='CERRADO'?'<span class="muted">Caso cerrado. No admite cambios.</span>':''}</div></section>`
+        : `<p class="notice">Tu perfil puede consultar este caso, pero no modificarlo.</p>`}
+    </div>
+    <div style="display:grid;gap:20px;align-content:start;min-width:0">
+      <section class="box"><h2>Solicitante</h2>${r.sol?`<dl class="kv"><dt>Nombre</dt><dd>${esc(r.sol.nombre)}</dd><dt>Contacto</dt><dd>${esc(r.sol.email||r.sol.tel)}</dd><dt>Respuesta por correo</dt><dd>${r.sol.autorizaEmail?'Autorizada':'No autorizada'}</dd></dl>`:'<p class="muted">Sin datos de contacto (no requeridos para este tipo).</p>'}</section>
+      <section class="box"><h2>Historial</h2><ol class="timeline">${r.historial.map(h=>`<li><time>${fmt(h.f)}</time><div><b>${esc(h.a)}</b></div><div class="muted">${esc(h.u)}</div></li>`).join('')}</ol></section>
+    </div>
+  </div>
+  <dialog id="dlg-derivar"><form method="dialog" id="f-derivar"><h2>Clasificar y derivar</h2>
+    <div class="field"><label for="d-cat">Motivo / categoría *</label><select id="d-cat" required><option value="">Selecciona…</option>${CATEGORIAS.map(c=>`<option ${r.cat===c?'selected':''}>${c}</option>`).join('')}</select></div>
+    <div class="field"><label for="d-uni">Unidad responsable *</label><select id="d-uni" required><option value="">Selecciona…</option>${UNIDADES.map(c=>`<option>${c}</option>`).join('')}</select></div>
+    <div class="field"><label for="d-ins">Instrucciones</label><textarea id="d-ins" style="min-height:80px"></textarea></div>
+    <div class="actions"><button class="btn primary" value="ok">Derivar</button><button class="btn" value="cancel" formnovalidate>Cancelar</button></div></form></dialog>
+  <dialog id="dlg-cerrar"><form method="dialog"><h2>¿Cerrar el caso ${r.folio}?</h2><p>Un caso cerrado no admite cambios. Confirma que la respuesta fue enviada al solicitante.</p>
+    <div class="actions"><button class="btn primary" value="ok">Sí, cerrar caso</button><button class="btn" value="cancel">Cancelar</button></div></form></dialog>
+  <dialog id="dlg-resp"><form method="dialog" id="f-resp"><h2>Registrar respuesta</h2>
+    <div class="field"><label for="r-txt">Respuesta entregada *</label><textarea id="r-txt" required minlength="20"></textarea></div>
+    <div class="grid2"><div class="field"><label for="r-medio">Medio *</label><select id="r-medio"><option value="Carta certificada">Carta certificada</option>${r.sol&&r.sol.autorizaEmail?'<option value="Correo electrónico">Correo electrónico</option>':''}</select></div>
+    <div class="field"><label for="r-fecha">Fecha de emisión *</label><input type="date" id="r-fecha" value="${HOY}" max="${HOY}" required></div></div>
+    <div class="actions"><button class="btn primary" value="ok">Guardar respuesta</button><button class="btn" value="cancel" formnovalidate>Cancelar</button></div></form></dialog>`;
+}
+function vIngreso(){
+  return `<div><h1>Ingreso presencial</h1><p class="muted">Digitaliza el formulario en papel recibido en la OIRS de ${esc(nombreEst(st.usuario.est))}.</p></div>
+  <form class="box" id="f-pres" novalidate>
+    <div class="grid2"><div class="field"><label for="pr-tipo">Tipo *</label><select id="pr-tipo">${Object.entries(TIPOS).map(([k,v])=>`<option value="${k}">${v.t}</option>`).join('')}</select></div>
+    <div class="field"><label for="pr-fat">Fecha de la atención</label><input type="date" id="pr-fat" max="${HOY}"></div></div>
+    <div class="field"><label for="pr-desc">Descripción de la situación *</label><textarea id="pr-desc"></textarea></div>
+    <div class="grid2"><div class="field"><label for="pr-nom">Nombre del solicitante</label><input type="text" id="pr-nom"></div><div class="field"><label for="pr-tel">Teléfono o correo</label><input type="text" id="pr-tel"></div></div>
+    <span class="err" id="pr-err" hidden></span>
+    <div class="actions"><button class="btn primary" type="submit">Registrar y generar folio</button></div></form>`;
+}
+function vPlazos(){
+  const abiertos = REQS.filter(r=>r.estado==='INGRESADO'||r.estado==='EN_PROCESO');
+  return `<div><h1>Panel de plazos de la red</h1><p class="muted">Seguimiento del plazo legal de 15 días hábiles por establecimiento.</p></div>
+  <div class="estab-panel">${ESTABS.map(e=>{ const a=abiertos.filter(r=>r.est===e.cod); const c=s=>a.filter(r=>semaforo(restantes(HOY,r.vence))===s).length;
+    return `<section class="box"><h3>${esc(e.nombre)}</h3><div class="actions"><span class="chip s-ROJO">${c('ROJO')} vencidos</span><span class="chip s-AMARILLO">${c('AMARILLO')} por vencer</span><span class="chip s-VERDE">${c('VERDE')} en plazo</span></div></section>`;}).join('')}</div>
+  <h2>Próximos a vencer y vencidos</h2>
+  <div class="tbl-wrap"><table><thead><tr><th>Folio</th><th>Establecimiento</th><th>Tipo</th><th>Vence</th><th>Plazo</th></tr></thead><tbody>
+  ${abiertos.filter(r=>restantes(HOY,r.vence)<=5).sort((a,b)=>a.vence.localeCompare(b.vence)).map(r=>`<tr class="click" data-folio="${r.folio}" tabindex="0"><td class="mono">${r.folio}</td><td>${esc(nombreEst(r.est))}</td><td>${TIPOS[r.tipo].t}</td><td>${fmt(r.vence)}</td><td>${plazoChip(r)}</td></tr>`).join('')}</tbody></table></div>`;
+}
+function barras(pares){ const max = Math.max(1,...pares.map(p=>p[1])); return `<div class="bars">${pares.map(([k,v])=>`<div class="bar"><span>${esc(k)}</span><span class="track"><span class="fill" style="width:${(v/max*100).toFixed(0)}%"></span></span><span class="n">${v}</span></div>`).join('')}</div>`; }
+function vReportes(){
+  const u = st.usuario, base = visibles(u).filter(r => r.ingreso >= haceHabiles(st.periodo||60));
+  const cnt = (arr,fn) => { const m={}; arr.forEach(x=>{const k=fn(x); m[k]=(m[k]||0)+1;}); return Object.entries(m).sort((a,b)=>b[1]-a[1]); };
+  const resp = base.filter(r=>r.respuesta), dentro = resp.filter(r=>r.respuesta.fecha<=r.vence).length;
+  const sat = u.est ? ENCUESTAS.porEst[u.est] : (Object.values(ENCUESTAS.prom).reduce((a,b)=>a+b,0)/5);
+  return `<div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:end"><div><h1>Reportes de gestión</h1><p class="muted">${u.est?esc(nombreEst(u.est)):'Toda la red'}</p></div>
+    <div class="toolbar"><div class="field"><label for="periodo">Período</label><select id="periodo">${[[20,'Último mes'],[60,'Últimos 3 meses'],[250,'Último año']].map(([v,t])=>`<option value="${v}" ${(st.periodo||60)==v?'selected':''}>${t}</option>`).join('')}</select></div>
+    ${puede(u,'exportar')?'<button class="btn" type="button" id="exportar">Exportar CSV</button>':''}</div></div>
+  <div class="kpis">
+    <div class="kpi"><span class="v">${base.length}</span><span class="l">Requerimientos recibidos</span></div>
+    <div class="kpi"><span class="v">${resp.length?Math.round(dentro/resp.length*100):0}%</span><span class="l">Respondidos dentro de plazo (${dentro} de ${resp.length}; ${resp.length-dentro} fuera)</span></div>
+    <div class="kpi"><span class="v">9,4</span><span class="l">Días hábiles promedio de respuesta</span></div>
+    <div class="kpi"><span class="v">${dec(sat)}</span><span class="l">Satisfacción promedio (1 a 7) · ${ENCUESTAS.n} encuestas</span></div>
+  </div>
+  <div class="charts">
+    <section class="box"><h3>Por tipo</h3>${barras(cnt(base,r=>TIPOS[r.tipo].t))}</section>
+    <section class="box"><h3>Por estado</h3>${barras(Object.keys(ESTADO_TXT).map(k=>[ESTADO_TXT[k], base.filter(r=>r.estado===k).length]))}</section>
+    <section class="box"><h3>Principales motivos</h3>${barras(cnt(base.filter(r=>r.cat),r=>r.cat).slice(0,6))}</section>
+    ${u.est?'':`<section class="box"><h3>Por establecimiento</h3>${barras(cnt(base,r=>nombreEst(r.est)))}</section>`}
+    ${u.est?'':`<section class="box"><h3>Satisfacción por establecimiento (1 a 7)</h3><div class="bars">${ESTABS.map(e=>`<div class="bar"><span>${esc(e.nombre)}</span><span class="track"><span class="fill" style="width:${(ENCUESTAS.porEst[e.cod]/7*100).toFixed(0)}%"></span></span><span class="n">${dec(ENCUESTAS.porEst[e.cod])}</span></div>`).join('')}</div></section>`}
+    <section class="box"><h3>Satisfacción por dimensión</h3><div class="bars">${PREGUNTAS.map(p=>`<div class="bar"><span>${p.t}</span><span class="track"><span class="fill" style="width:${(ENCUESTAS.prom[p.id]/7*100).toFixed(0)}%"></span></span><span class="n">${dec(ENCUESTAS.prom[p.id])}</span></div>`).join('')}</div></section>
+  </div>`;
+}
+function vUsuarios(){
+  return `<div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:end"><div><h1>Usuarios y perfiles</h1><p class="muted">Cuentas individuales. Los perfiles de establecimiento requieren establecimiento asignado.</p></div><button class="btn primary" type="button" id="nuevo-u">+ Nuevo usuario</button></div>
+  <div class="tbl-wrap"><table><thead><tr><th>Nombre</th><th>Correo</th><th>Perfil</th><th>Establecimiento</th><th>2FA</th><th>Estado</th><th></th></tr></thead><tbody>
+  ${USUARIOS.map((x,i)=>`<tr><td>${esc(x.nombre)}</td><td>${esc(x.email)}</td><td>${esc(x.rolTxt)}</td><td>${esc(x.est?nombreEst(x.est):'Toda la red')}</td><td>${x.mfa?'Obligatorio':'—'}</td><td><span class="chip ${x.activo?'s-VERDE':'e-CERRADO'}">${x.activo?'Activo':'Desactivado'}</span></td><td>${x.email!==st.usuario.email?`<button class="btn small" type="button" data-toggle-u="${i}">${x.activo?'Desactivar':'Activar'}</button>`:''}</td></tr>`).join('')}</tbody></table></div>
+  <dialog id="dlg-u"><form method="dialog" id="f-u"><h2>Nuevo usuario</h2>
+    <div class="field"><label for="u-nom">Nombre completo *</label><input type="text" id="u-nom" required></div>
+    <div class="field"><label for="u-mail">Correo institucional *</label><input type="email" id="u-mail" required></div>
+    <div class="field"><label for="u-rol">Perfil *</label><select id="u-rol"><option value="OIRS_EST">Encargado OIRS de establecimiento</option><option value="DIRECCION">Dirección de establecimiento</option><option value="OIRS_DSM">Encargado OIRS Departamento</option><option value="ADMIN">Administrador del sistema</option></select></div>
+    <div class="field" id="u-est-f"><label for="u-est">Establecimiento *</label><select id="u-est"><option value="">Selecciona…</option>${ESTABS.map(e=>`<option value="${e.cod}">${esc(e.nombre)}</option>`).join('')}</select></div>
+    <p class="hint muted">Se enviará una contraseña temporal que deberá cambiarse en el primer ingreso.</p>
+    <span class="err" id="u-err" hidden></span>
+    <div class="actions"><button class="btn primary" value="ok">Crear usuario</button><button class="btn" value="cancel" formnovalidate>Cancelar</button></div></form></dialog>`;
+}
+
+/* ================= Eventos ================= */
+function bind(){
+  document.querySelectorAll('[data-pag]').forEach(b=>b.onclick=e=>{e.preventDefault(); st.pag=b.dataset.pag; if(st.pag!=='oirs'){st.enviado=null;} if(st.pag!=='encuesta') st.encuestaOk=false; render(); scrollTo(0,0);});
+  document.querySelectorAll('[data-tipo]').forEach(b=>b.onclick=()=>{ st.tipo=b.dataset.tipo; st.errores={}; render(); $('#est')?.focus(); });
+  const fo = $('#f-oirs');
+  if(fo){
+    const leer = () => { st.form = {est:$('#est').value, fat:$('#fat').value, desc:$('#desc').value, pet:$('#pet')?.value||'', nom:$('#nom').value, mail:$('#mail').value, tel:$('#tel').value, edad:$('#edad')?.value||'', sexo:$('#sexo')?.value||'', autem:$('#autem').checked, acepta:$('#acepta').checked}; };
+    fo.oninput = leer;
+    fo.onsubmit = e => { e.preventDefault(); leer(); const f=st.form, er={}, idReq=TIPOS[st.tipo].id;
+      if(!f.est) er.est='Selecciona el establecimiento.';
+      if(f.desc.trim().length<10) er.desc='Describe la situación con al menos 10 caracteres.';
+      if(idReq && !f.nom.trim()) er.nom='Necesitamos tu nombre para responderte.';
+      if(f.mail && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.mail)) er.mail='Revisa el formato del correo (ej.: nombre@correo.cl).';
+      if(f.tel && !/^\+?[\d\s]{8,15}$/.test(f.tel)) er.tel='Revisa el teléfono (ej.: +56 9 1234 5678).';
+      if(idReq && !f.mail && !f.tel) er.mail='Indica un correo o un teléfono para poder responderte.';
+      if(!f.acepta) er.acepta='Debes aceptar el uso de datos para enviar la solicitud.';
+      st.errores = er;
+      if(Object.keys(er).length){ render(); $('#err-sum')?.focus(); return; }
+      const sol = f.nom ? {nombre:f.nom, email:f.mail, tel:f.tel, autorizaEmail:f.autem} : null;
+      const r = {folio:nuevoFolio(), tipo:st.tipo, est:f.est, ingreso:HOY, vence:sumarHabiles(HOY,15), estado:'INGRESADO', desc:f.desc, cat:null, unidad:null, canal:'WEB', sol, historial:[{f:HOY,a:'Ingreso',e:'INGRESADO',u:'Sistema (canal web)'}], respuesta:null};
+      REQS.unshift(r); st.enviado=r; st.form={}; st.tipo=null; render(); scrollTo(0,0); };
+  }
+  document.querySelectorAll('[data-ir]').forEach(a=>a.onclick=ev=>{ ev.preventDefault(); $('#'+a.dataset.ir)?.focus(); });
+  $('#otra') && ($('#otra').onclick=()=>{st.enviado=null; render();});
+  const fe = $('#f-enc');
+  if(fe){
+    fe.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{ st.encuesta.r[b.dataset.p]=+b.dataset.v; st.encuesta.est=$('#enc-est').value; st.encuesta.comentario=$('#enc-com').value; render(); });
+    fe.onsubmit = e => { e.preventDefault(); st.encuesta.est=$('#enc-est').value; st.encuesta.comentario=$('#enc-com').value;
+      if(!st.encuesta.est || PREGUNTAS.some(p=>!st.encuesta.r[p.id])){ toast('Completa el establecimiento y las 5 preguntas.'); return; }
+      ENCUESTAS.n++; st.encuesta={est:'',r:{},comentario:''}; st.encuestaOk=true; render(); scrollTo(0,0); };
+  }
+  // Login
+  document.querySelectorAll('[data-demo]').forEach(b=>b.onclick=()=>entrar(USUARIOS[+b.dataset.demo]));
+  $('#f-login') && ($('#f-login').onsubmit=e=>{ e.preventDefault(); const u=USUARIOS.find(x=>x.email===$('#lg-mail').value.trim().toLowerCase()); if(u && $('#lg-pass').value.length>=8 && u.activo) entrar(u); else $('#lg-err').hidden=false; });
+  $('#f-mfa') && ($('#f-mfa').onsubmit=e=>{ e.preventDefault(); if(/^\d{6}$/.test($('#totp').value)){ st.usuario=st.mfaPendiente; st.mfaPendiente=null; st.vista='bandeja'; render(); } else toast('El código debe tener 6 dígitos.'); });
+  $('#mfa-cancel') && ($('#mfa-cancel').onclick=()=>{st.mfaPendiente=null; render();});
+  $('#salir') && ($('#salir').onclick=salir); $('#salir-m') && ($('#salir-m').onclick=salir);
+  document.querySelectorAll('[data-vista]').forEach(b=>b.onclick=()=>{ st.vista=b.dataset.vista; render(); });
+  document.querySelectorAll('[data-folio]').forEach(el=>{ const go=()=>{ st.folio=el.dataset.folio; st.vista='detalle'; render(); scrollTo(0,0); }; el.onclick=go; el.onkeydown=e=>{ if(e.key==='Enter') go(); }; });
+  ['fq','fe','ft'].forEach(id=>{ const el=$('#'+id); if(el) el.oninput=()=>{ st.filtros={...st.filtros, q:$('#fq').value, estado:$('#fe').value, tipo:$('#ft').value}; const pos=el.selectionStart; render(); const n=$('#'+id); n.focus(); if(id==='fq'&&pos!=null) n.setSelectionRange(pos,pos); }; });
+  document.querySelectorAll('[data-sem]').forEach(b=>b.onclick=()=>{ st.filtros={...st.filtros, estado:'ABIERTOS', sem:b.dataset.sem}; render(); });
+  // Acciones del detalle
+  const r = REQS.find(x=>x.folio===st.folio);
+  $('#a-derivar') && ($('#a-derivar').onclick=()=>$('#dlg-derivar').showModal());
+  $('#a-responder') && ($('#a-responder').onclick=()=>$('#dlg-resp').showModal());
+  $('#a-cerrar') && ($('#a-cerrar').onclick=()=>$('#dlg-cerrar').showModal());
+  $('#dlg-cerrar') && ($('#dlg-cerrar').onclose=()=>{ if($('#dlg-cerrar').returnValue!=='ok') return; r.estado='CERRADO'; r.historial.push({f:HOY,a:'Caso cerrado',e:'CERRADO',u:st.usuario.nombre}); toast(`Caso ${r.folio} cerrado.`); render(); });
+  $('#dlg-derivar') && ($('#dlg-derivar').onclose=()=>{ if($('#dlg-derivar').returnValue!=='ok') return; const c=$('#d-cat').value, un=$('#d-uni').value; if(!c||!un){ toast('Selecciona motivo y unidad.'); return; }
+    r.cat=c; r.unidad=un; r.estado='EN_PROCESO'; r.historial.push({f:HOY,a:`Clasificado como «${c}» y derivado a ${un}`,e:'EN_PROCESO',u:st.usuario.nombre}); toast(`Derivado a ${un}.`); render(); });
+  $('#dlg-resp') && ($('#dlg-resp').onclose=()=>{ if($('#dlg-resp').returnValue!=='ok') return; const t=$('#r-txt').value.trim(), fch=$('#r-fecha').value; if(t.length<20){ toast('La respuesta debe tener al menos 20 caracteres.'); return; }
+    const dentro = fch<=r.vence; r.respuesta={medio:$('#r-medio').value, fecha:fch, texto:t}; r.estado='RESPONDIDO'; r.historial.push({f:fch,a:`Respuesta registrada (${dentro?'dentro':'fuera'} de plazo)`,e:'RESPONDIDO',u:st.usuario.nombre}); toast('Respuesta registrada.'); render(); });
+  // Ingreso presencial
+  $('#f-pres') && ($('#f-pres').onsubmit=e=>{ e.preventDefault(); const d=$('#pr-desc').value.trim(); if(d.length<10){ const er=$('#pr-err'); er.textContent='La descripción debe tener al menos 10 caracteres.'; er.hidden=false; return; }
+    const nom=$('#pr-nom').value.trim(), con=$('#pr-tel').value.trim();
+    const r={folio:nuevoFolio(), tipo:$('#pr-tipo').value, est:st.usuario.est, ingreso:HOY, vence:sumarHabiles(HOY,15), estado:'INGRESADO', desc:d, cat:null, unidad:null, canal:'PRESENCIAL', sol: nom?{nombre:nom,email:con.includes('@')?con:'',tel:con.includes('@')?'':con,autorizaEmail:false}:null, historial:[{f:HOY,a:'Ingreso presencial',e:'INGRESADO',u:st.usuario.nombre}], respuesta:null};
+    REQS.unshift(r); toast(`Registrado con folio ${r.folio}.`); st.folio=r.folio; st.vista='detalle'; render(); });
+  // Reportes / usuarios
+  $('#exportar') && ($('#exportar').onclick=()=>toast(`CSV generado con ${visibles(st.usuario).length} filas, sin datos personales. (En el prototipo no se descarga.)`));
+  $('#periodo') && ($('#periodo').onchange=()=>{ st.periodo=+$('#periodo').value; render(); });
+  $('#nuevo-u') && ($('#nuevo-u').onclick=()=>$('#dlg-u').showModal());
+  $('#u-rol') && ($('#u-rol').onchange=()=>{ $('#u-est-f').hidden = !['OIRS_EST','DIRECCION'].includes($('#u-rol').value); });
+  $('#dlg-u') && ($('#dlg-u').onclose=()=>{ if($('#dlg-u').returnValue!=='ok') return; const rol=$('#u-rol').value, est=$('#u-est').value, nom=$('#u-nom').value.trim(), mail=$('#u-mail').value.trim().toLowerCase();
+    if(!nom||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)){ toast('Completa nombre y un correo válido.'); return; }
+    if(['OIRS_EST','DIRECCION'].includes(rol)&&!est){ toast('Este perfil requiere un establecimiento.'); return; }
+    if(USUARIOS.some(u=>u.email===mail)){ toast('Ya existe un usuario con ese correo.'); return; }
+    const txt={OIRS_EST:'Encargado OIRS',DIRECCION:'Dirección de establecimiento',OIRS_DSM:'Encargado OIRS Departamento',ADMIN:'Administrador del sistema'}[rol];
+    USUARIOS.push({email:mail,nombre:nom,rol,rolTxt:txt,est:['OIRS_EST','DIRECCION'].includes(rol)?est:null,activo:true,mfa:['ADMIN','OIRS_DSM'].includes(rol)}); toast(`Usuario ${mail} creado.`); render(); });
+  document.querySelectorAll('[data-toggle-u]').forEach(b=>b.onclick=()=>{ const x=USUARIOS[+b.dataset.toggleU]; x.activo=!x.activo; toast(`${x.nombre}: ${x.activo?'activado':'desactivado'}.`); render(); });
+}
+function entrar(u){ if(!u.activo){ toast('La cuenta está desactivada.'); return; } if(u.mfa){ st.mfaPendiente=u; render(); $('#totp')?.focus(); return; } st.usuario=u; st.vista='bandeja'; render(); }
+function salir(){ st.usuario=null; st.folio=null; st.filtros={estado:'ABIERTOS',tipo:'',q:'',sem:''}; render(); toast('Sesión cerrada.'); }
+$('#ver-portal').onclick=()=>{ st.modo='portal'; render(); };
+$('#ver-admin').onclick=()=>{ st.modo='admin'; render(); };
+render();
+</script>

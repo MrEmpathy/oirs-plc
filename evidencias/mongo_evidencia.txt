@@ -1,0 +1,120 @@
+16 objects imported automatically (use -v 2 for details).
+
+> show collections
+['bitacora_auditoria', 'encuesta_definiciones', 'respuestas_encuesta']
+
+> db.respuestas_encuesta.getIndexes()
+['_id_', 'ix_resp_enc_estab_fecha']
+
+> db.encuesta_definiciones.findOne({encuesta_id: 1}, {_id:0, preguntas: {$slice: 2}})
+{
+  "encuesta_id": 1,
+  "codigo": "satisfaccion-usuaria",
+  "escala": "1 a 7",
+  "preguntas": [
+    {
+      "id": "p1",
+      "texto": "¿Cómo evalúa la calidad de la atención recibida?",
+      "tipo": "escala",
+      "min": 1,
+      "max": 7,
+      "obligatoria": true
+    },
+    {
+      "id": "p2",
+      "texto": "¿Cómo evalúa el tiempo de espera?",
+      "tipo": "escala",
+      "min": 1,
+      "max": 7,
+      "obligatoria": true
+    }
+  ],
+  "version": 1
+}
+
+> db.respuestas_encuesta.findOne({canal: 'WEB'})
+{
+  "_id": {
+    "$oid": "6ad50a48c1b0abfb2cfbd59d"
+  },
+  "encuesta_id": 1,
+  "encuesta_codigo": "satisfaccion-usuaria",
+  "version": 1,
+  "establecimiento_id": 2,
+  "fecha": "2026-10-18",
+  "canal": "WEB",
+  "respuestas": {
+    "p1": 3,
+    "p2": 5,
+    "p3": 2,
+    "p4": 2,
+    "p5": 1
+  },
+  "comentario": ""
+}
+
+> db.bitacora_auditoria.find({folio: 'PLC-2026-001158'})
+[
+  {
+    "ts": {
+      "$date": "2026-10-18T18:05:46.041Z"
+    },
+    "accion": "REQUERIMIENTO_CREADO",
+    "resultado": "OK",
+    "usuario_id": null,
+    "rol": null,
+    "folio": "PLC-2026-001158",
+    "red_origen": "127.0.0.0/24",
+    "detalle": {
+      "canal": "WEB",
+      "tipo": "CONSULTA",
+      "establecimiento_id": 4
+    }
+  }
+]
+
+> db.bitacora_auditoria.findOne({accion: 'LOGIN_OK'})
+{
+  "ts": {
+    "$date": "2026-10-18T17:57:23.102Z"
+  },
+  "accion": "LOGIN_OK",
+  "resultado": "OK",
+  "usuario_id": 4,
+  "rol": "OIRS_EST",
+  "folio": null,
+  "red_origen": "127.0.0.0/24",
+  "detalle": {}
+}
+
+> db.respuestas_encuesta.countDocuments({}) 5804
+
+> resumen de satisfacción CESFAM Padre Las Casas (agregación $match + $group)
+[
+  {
+    "_id": "p1",
+    "promedio": 4.49,
+    "n": 1605
+  },
+  {
+    "_id": "p2",
+    "promedio": 4.56,
+    "n": 1605
+  },
+  {
+    "_id": "p3",
+    "promedio": 4.47,
+    "n": 1605
+  },
+  {
+    "_id": "p4",
+    "promedio": 4.41,
+    "n": 1605
+  },
+  {
+    "_id": "p5",
+    "promedio": 4.56,
+    "n": 1605
+  }
+]
+

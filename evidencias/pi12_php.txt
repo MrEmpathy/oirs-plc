@@ -1,0 +1,3 @@
+Firma válida   -> HTTP 201 {"folio": "PLC-2026-001158", "fecha_vencimiento": "2026-11-06", "estado": "INGRESADO"}
+Firma inválida -> HTTP 401 {"error": "Firma inv\u00e1lida"}
+PI-12 APROBADO

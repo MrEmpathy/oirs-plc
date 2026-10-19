@@ -1,0 +1,37 @@
+# Despliegue de referencia del Sistema de Gestión OIRS (servidor Linux del DSM/Municipalidad o VPS en la nube)
+services:
+  nginx:
+    image: nginx:1.27-alpine
+    ports: ["443:443", "80:80"]
+    volumes: ["./nginx.conf:/etc/nginx/conf.d/default.conf:ro", "./certs:/etc/nginx/certs:ro", "static:/srv/static:ro"]
+    depends_on: [app]
+  app:
+    build: ..
+    command: gunicorn config.wsgi:application -k gthread -w 3 --threads 4 --timeout 60 -b 0.0.0.0:8000
+    env_file: ../.env
+    volumes: ["static:/app/staticfiles"]
+    depends_on: [postgres, mongo, redis]
+    networks: [default, datos]
+  postgres:
+    image: postgres:16-alpine
+    environment: {POSTGRES_DB: oirs_plc, POSTGRES_USER: oirs_owner, POSTGRES_PASSWORD_FILE: /run/secrets/pg_owner}
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    secrets: [pg_owner]
+    networks: [datos]
+  mongo:
+    image: mongo:7
+    command: ["--auth", "--bind_ip_all"]
+    volumes: ["mongodata:/data/db"]
+    networks: [datos]
+  redis:
+    image: redis:7-alpine
+    networks: [datos]
+  respaldo:
+    image: alpine:3.20
+    command: ["/bin/sh", "/scripts/respaldo.sh"]   # pg_dump + mongodump diarios, cifrados, copia fuera del servidor
+    volumes: ["./scripts:/scripts:ro", "pgdata:/pg:ro", "mongodata:/mongo:ro"]
+    networks: [datos]
+networks:
+  datos: {internal: true}   # las bases no son accesibles desde fuera del host
+volumes: {pgdata: {}, mongodata: {}, static: {}}
+secrets: {pg_owner: {file: ./secrets/pg_owner.txt}}

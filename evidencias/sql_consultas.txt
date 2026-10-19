@@ -1,0 +1,62 @@
+Border style is 2.
+-- (1) Tablas del esquema y cantidad de filas
++--------------------------+-------+
+|          tabla           | filas |
++--------------------------+-------+
+| categoria                |     8 |
+| correlativo_folio        |     1 |
+| derivacion               |     0 |
+| encuesta                 |     1 |
+| establecimiento          |     6 |
+| feriado                  |    49 |
+| historial_estado         | 21159 |
+| requerimiento            | 21158 |
+| respuesta                |     0 |
+| solicitante              |  1164 |
+| unidad                   |    35 |
+| usuario                  |     5 |
+| usuario_groups           |     0 |
+| usuario_user_permissions |     0 |
++--------------------------+-------+
+(14 rows)
+
+-- (2) Claves foráneas e integridad referencial de requerimiento
++-----------------------------------------------------------------+------+-----------------------------------------------------------------------------------------------+
+|                           restriccion                           | tipo |                                          definicion                                           |
++-----------------------------------------------------------------+------+-----------------------------------------------------------------------------------------------+
+| ck_req_vencimiento_posterior                                    | c    | CHECK ((fecha_vencimiento >= ((fecha_ingreso AT TIME ZONE 'America/Santiago'::text))::date))  |
+| requerimiento_categoria_id_c38cdfd5_fk_categoria_id             | f    | FOREIGN KEY (categoria_id) REFERENCES categoria(id) DEFERRABLE INITIALLY DEFERRED             |
+| requerimiento_creado_por_id_f5e7bce3_fk_usuario_id              | f    | FOREIGN KEY (creado_por_id) REFERENCES usuario(id) DEFERRABLE INITIALLY DEFERRED              |
+| requerimiento_establecimiento_id_970d28e4_fk_establecimiento_id | f    | FOREIGN KEY (establecimiento_id) REFERENCES establecimiento(id) DEFERRABLE INITIALLY DEFERRED |
+| requerimiento_solicitante_id_e1a624bb_fk_solicitante_id         | f    | FOREIGN KEY (solicitante_id) REFERENCES solicitante(id) DEFERRABLE INITIALLY DEFERRED         |
+| requerimiento_unidad_derivada_id_32f57808_fk_unidad_id          | f    | FOREIGN KEY (unidad_derivada_id) REFERENCES unidad(id) DEFERRABLE INITIALLY DEFERRED          |
+| requerimiento_pkey                                              | p    | PRIMARY KEY (id)                                                                              |
+| requerimiento_folio_key                                         | u    | UNIQUE (folio)                                                                                |
++-----------------------------------------------------------------+------+-----------------------------------------------------------------------------------------------+
+(8 rows)
+
+-- (3) Trazabilidad de un requerimiento ingresado desde WordPress (PI-12)
++-----------------+----------+-----------+-------------------+------------+------------+---------+--------------+
+|      folio      |   tipo   |  estado   |  establecimiento  |  ingreso   |   vence    | accion  | estado_nuevo |
++-----------------+----------+-----------+-------------------+------------+------------+---------+--------------+
+| PLC-2026-001158 | CONSULTA | INGRESADO | CESFAM Conunhuenu | 2026-10-18 | 2026-11-06 | INGRESO | INGRESADO    |
++-----------------+----------+-----------+-------------------+------------+------------+---------+--------------+
+(1 row)
+
+-- (4) Indicador: requerimientos por establecimiento y estado (últimos 12 meses)
++-----------------------------------------+------------+------------+-------------+----------+-------+
+|             establecimiento             | ingresados | en_proceso | respondidos | cerrados | total |
++-----------------------------------------+------------+------------+-------------+----------+-------+
+| CESFAM Padre Las Casas                  |        439 |         96 |         158 |     1195 |  1888 |
+| CESFAM Conunhuenu                       |        448 |         98 |         143 |     1190 |  1879 |
+| CESFAM Pulmahue                         |        408 |         89 |         132 |     1137 |  1766 |
+| Posta de Salud Rural 1 (dato de prueba) |         40 |        112 |         152 |     1215 |  1519 |
+| SAPU Padre Las Casas                    |         47 |        102 |         155 |     1136 |  1440 |
++-----------------------------------------+------------+------------+-------------+----------+-------+
+(5 rows)
+
+-- (5) Intento de violar integridad: establecimiento inexistente
+ERROR:  insert or update on table "requerimiento" violates foreign key constraint "requerimiento_establecimiento_id_970d28e4_fk_establecimiento_id"
+DETAIL:  Key (establecimiento_id)=(9999) is not present in table "establecimiento".
+-- (6) Intento de alterar el historial con el usuario de la aplicación
+ERROR:  permission denied for table historial_estado

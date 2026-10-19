@@ -1,0 +1,7 @@
+argon2-cffi==25.1.0
+Django==5.2.18
+holidays==0.106
+psycopg==3.3.6
+psycopg-binary==3.3.6
+pymongo==4.19.0
+PyOTP==2.10.0

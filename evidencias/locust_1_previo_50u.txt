@@ -1,0 +1,583 @@
+[2026-10-18 14:57:13,502] vm/INFO/locust.main: Starting Locust 2.46.7
+[2026-10-18 14:57:13,510] vm/INFO/locust.main: Run time limit set to 120 seconds
+[2026-10-18 14:57:13,519] vm/INFO/locust.runners: Ramping to 50 users at a rate of 10.00 per second
+[2026-10-18 14:57:17,562] vm/INFO/locust.runners: All users spawned: {"Funcionario": 30, "SitioWordPress": 20} (50 total users)
+[2026-10-18 14:58:20,894] vm/ERROR/locust.user.users: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+  File "/usr/lib/python3.13/http/client.py", line 1478, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+                             " response")
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/util/retry.py", line 510, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/urllib3/util/util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+  File "/usr/lib/python3.13/http/client.py", line 1478, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+                             " response")
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/dist-packages/locust/user/users.py", line 166, in run
+    self.on_start()
+    ~~~~~~~~~~~~~^^
+  File "/home/claude/oirs_plc/tests/performance/locustfile.py", line 51, in on_start
+    r.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 350, in raise_for_status
+    raise self.error
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 413, in __exit__
+    self.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 350, in raise_for_status
+    raise self.error
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 238, in _send_request_safe_mode
+    return super().request(method, url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 711, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+  File "/usr/lib/python3.13/http/client.py", line 1478, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+                             " response")
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/util/retry.py", line 510, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/urllib3/util/util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+  File "/usr/lib/python3.13/http/client.py", line 1478, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+                             " response")
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/gevent/greenlet.py", line 912, in gevent._gevent_cgreenlet.Greenlet.run
+  File "/usr/local/lib/python3.13/dist-packages/locust/user/users.py", line 204, in run_user
+    user.run()
+    ~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/locust/user/users.py", line 166, in run
+    self.on_start()
+    ~~~~~~~~~~~~~^^
+  File "/home/claude/oirs_plc/tests/performance/locustfile.py", line 51, in on_start
+    r.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 350, in raise_for_status
+    raise self.error
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 413, in __exit__
+    self.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 350, in raise_for_status
+    raise self.error
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 238, in _send_request_safe_mode
+    return super().request(method, url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 711, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-10-18T17:58:20Z <Greenlet at 0x7f3ae13d6ca0: run_user(<locustfile.Funcionario object at 0x7f3ae137d230>)> failed with ConnectionError
+
+[2026-10-18 14:58:20,946] vm/ERROR/locust.user.users: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+  File "/usr/lib/python3.13/http/client.py", line 1478, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+                             " response")
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/util/retry.py", line 510, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/urllib3/util/util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+  File "/usr/lib/python3.13/http/client.py", line 1478, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+                             " response")
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/dist-packages/locust/user/users.py", line 166, in run
+    self.on_start()
+    ~~~~~~~~~~~~~^^
+  File "/home/claude/oirs_plc/tests/performance/locustfile.py", line 51, in on_start
+    r.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 350, in raise_for_status
+    raise self.error
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 413, in __exit__
+    self.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 350, in raise_for_status
+    raise self.error
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 238, in _send_request_safe_mode
+    return super().request(method, url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 711, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+  File "/usr/lib/python3.13/http/client.py", line 1478, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+                             " response")
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/util/retry.py", line 510, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/urllib3/util/util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+  File "/usr/lib/python3.13/http/client.py", line 1478, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+                             " response")
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/gevent/greenlet.py", line 912, in gevent._gevent_cgreenlet.Greenlet.run
+  File "/usr/local/lib/python3.13/dist-packages/locust/user/users.py", line 204, in run_user
+    user.run()
+    ~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/locust/user/users.py", line 166, in run
+    self.on_start()
+    ~~~~~~~~~~~~~^^
+  File "/home/claude/oirs_plc/tests/performance/locustfile.py", line 51, in on_start
+    r.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 350, in raise_for_status
+    raise self.error
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 413, in __exit__
+    self.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 350, in raise_for_status
+    raise self.error
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 238, in _send_request_safe_mode
+    return super().request(method, url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 711, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-10-18T17:58:20Z <Greenlet at 0x7f3ae13d7060: run_user(<locustfile.Funcionario object at 0x7f3ae13d6f30>)> failed with ConnectionError
+
+[2026-10-18 14:58:20,951] vm/ERROR/locust.user.users: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+  File "/usr/lib/python3.13/http/client.py", line 1478, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+                             " response")
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/util/retry.py", line 510, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/urllib3/util/util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+  File "/usr/lib/python3.13/http/client.py", line 1478, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+                             " response")
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/dist-packages/locust/user/users.py", line 166, in run
+    self.on_start()
+    ~~~~~~~~~~~~~^^
+  File "/home/claude/oirs_plc/tests/performance/locustfile.py", line 51, in on_start
+    r.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 350, in raise_for_status
+    raise self.error
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 413, in __exit__
+    self.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 350, in raise_for_status
+    raise self.error
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 238, in _send_request_safe_mode
+    return super().request(method, url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 711, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+  File "/usr/lib/python3.13/http/client.py", line 1478, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+                             " response")
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+        method=request.method,
+    ...<9 lines>...
+        chunked=chunked,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/util/retry.py", line 510, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/urllib3/util/util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **response_kw,
+    )
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+  File "/root/.local/lib/python3.13/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+  File "/usr/lib/python3.13/http/client.py", line 1478, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/http/client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+                             " response")
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "src/gevent/greenlet.py", line 912, in gevent._gevent_cgreenlet.Greenlet.run
+  File "/usr/local/lib/python3.13/dist-packages/locust/user/users.py", line 204, in run_user
+    user.run()
+    ~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/locust/user/users.py", line 166, in run
+    self.on_start()
+    ~~~~~~~~~~~~~^^
+  File "/home/claude/oirs_plc/tests/performance/locustfile.py", line 51, in on_start
+    r.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 350, in raise_for_status
+    raise self.error
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 413, in __exit__
+    self.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 350, in raise_for_status
+    raise self.error
+  File "/usr/local/lib/python3.13/dist-packages/locust/clients.py", line 238, in _send_request_safe_mode
+    return super().request(method, url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+  File "/root/.local/lib/python3.13/site-packages/requests/adapters.py", line 711, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-10-18T17:58:20Z <Greenlet at 0x7f3ae13d6e80: run_user(<locustfile.Funcionario object at 0x7f3ae13d6d50>)> failed with ConnectionError
+
+[2026-10-18 14:59:13,505] vm/INFO/locust.main: --run-time limit reached, shutting down
+[2026-10-18 14:59:13,846] vm/INFO/locust.main: Shutting down (exit code 1)
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET bandeja                                                                      107     0(0.00%) |   7416      41   69134   1300 |    0.91        0.00
+GET      GET búsqueda                                                                      40     0(0.00%) |  12420      37   69134   2300 |    0.34        0.00
+GET      GET csrf                                                                          30     0(0.00%) |   7235     532   16713   2300 |    0.26        0.00
+GET      GET indicadores                                                                   17     0(0.00%) |  17747    6249   67095   9400 |    0.14        0.00
+POST     POST encuesta (WP)                                                                80     0(0.00%) |   6921       8   68021   1200 |    0.68        0.00
+POST     POST login                                                                        30    3(10.00%) |  32858    8213   70205  17000 |    0.26        0.03
+POST     POST requerimiento (WP)                                                          144     0(0.00%) |   9230      17   69231   1200 |    1.23        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                       448     3(0.67%) |  10441       8   70205   1700 |    3.81        0.03
+
+Response time percentiles (approximated)
+Type     Name                                                                                  50%    66%    75%    80%    90%    95%    98%    99%  99.9% 99.99%   100% # reqs
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+GET      GET bandeja                                                                          1300   2300   2900   3100  23000  55000  66000  66000  69000  69000  69000    107
+GET      GET búsqueda                                                                         2300   3000   6700  12000  58000  67000  69000  69000  69000  69000  69000     40
+GET      GET csrf                                                                             2300  14000  14000  17000  17000  17000  17000  17000  17000  17000  17000     30
+GET      GET indicadores                                                                      9400  21000  23000  23000  51000  67000  67000  67000  67000  67000  67000     17
+POST     POST encuesta (WP)                                                                   1200   2300   2800   7300  17000  64000  68000  68000  68000  68000  68000     80
+POST     POST login                                                                          17000  50000  60000  68000  69000  70000  70000  70000  70000  70000  70000     30
+POST     POST requerimiento (WP)                                                              1200   2200   2900   7500  59000  68000  68000  69000  69000  69000  69000    144
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+         Aggregated                                                                           1700   3000  11000  15000  52000  67000  69000  69000  70000  70000  70000    448
+
+Error report
+# occurrences      Error                                                                                               
+------------------|---------------------------------------------------------------------------------------------------------------------------------------------
+3                  POST POST login: RemoteDisconnected('Remote end closed connection without response')                
+------------------|---------------------------------------------------------------------------------------------------------------------------------------------
+

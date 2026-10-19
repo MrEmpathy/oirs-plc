@@ -1,0 +1,49 @@
+Timing is on.
+                                                           QUERY PLAN                                                           
+--------------------------------------------------------------------------------------------------------------------------------
+ Limit (actual time=2.244..2.255 rows=100 loops=1)
+   Buffers: shared hit=287
+   ->  Sort (actual time=2.242..2.247 rows=100 loops=1)
+         Sort Key: r.fecha_vencimiento, r.id
+         Sort Method: top-N heapsort  Memory: 47kB
+         Buffers: shared hit=287
+         ->  Nested Loop (actual time=1.157..1.738 rows=403 loops=1)
+               Buffers: shared hit=281
+               ->  Seq Scan on establecimiento e (actual time=0.136..0.138 rows=1 loops=1)
+                     Filter: (id = 2)
+                     Rows Removed by Filter: 5
+                     Buffers: shared hit=1
+               ->  Bitmap Heap Scan on requerimiento r (actual time=0.982..1.474 rows=403 loops=1)
+                     Recheck Cond: ((establecimiento_id = 2) AND ((estado)::text = ANY ('{INGRESADO,EN_PROCESO}'::text[])))
+                     Heap Blocks: exact=273
+                     Buffers: shared hit=280
+                     ->  Bitmap Index Scan on ix_req_estab_estado (actual time=0.765..0.765 rows=403 loops=1)
+                           Index Cond: ((establecimiento_id = 2) AND ((estado)::text = ANY ('{INGRESADO,EN_PROCESO}'::text[])))
+                           Buffers: shared hit=7
+ Planning:
+   Buffers: shared hit=409
+ Planning Time: 11.976 ms
+ Execution Time: 3.230 ms
+(23 rows)
+
+Time: 33.545 ms
+                                                QUERY PLAN                                                
+----------------------------------------------------------------------------------------------------------
+ HashAggregate (actual time=7.821..7.876 rows=20 loops=1)
+   Group Key: e.nombre, r.estado
+   Batches: 1  Memory Usage: 24kB
+   ->  Hash Join (actual time=4.174..6.893 rows=7334 loops=1)
+         Hash Cond: (r.establecimiento_id = e.id)
+         ->  Bitmap Heap Scan on requerimiento r (actual time=3.969..5.010 rows=7334 loops=1)
+               Recheck Cond: (fecha_ingreso >= (now() - '365 days'::interval))
+               Heap Blocks: exact=455
+               ->  Bitmap Index Scan on ix_req_fecha_ingreso (actual time=3.913..3.914 rows=7334 loops=1)
+                     Index Cond: (fecha_ingreso >= (now() - '365 days'::interval))
+         ->  Hash (actual time=0.089..0.093 rows=6 loops=1)
+               Buckets: 1024  Batches: 1  Memory Usage: 9kB
+               ->  Seq Scan on establecimiento e (actual time=0.003..0.004 rows=6 loops=1)
+ Planning Time: 2.488 ms
+ Execution Time: 8.226 ms
+(15 rows)
+
+Time: 15.561 ms
