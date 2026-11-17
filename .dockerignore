@@ -1,0 +1,23 @@
+# DEF-09: sin este archivo, «COPY . .» incluía en la imagen el .env con secretos, .git, respaldos y certificados.
+# Solo entra a la imagen lo necesario para ejecutar la aplicación.
+.git
+.github
+.env
+.env.*
+!.env.example
+.venv
+venv
+**/__pycache__
+*.pyc
+.coverage
+htmlcov
+staticfiles
+respaldos
+despliegue/certs
+despliegue/secrets
+evidencias
+docs
+tests
+wordpress-plugin
+wordpress-theme
+prototipo*.html

@@ -6,6 +6,10 @@ set -eu
 cd "$(dirname "$0")/.."
 
 aleatorio() { openssl rand -hex "${1:-24}"; }
+# Puertos publicados (pueden cambiarse antes de ejecutar: OIRS_HTTPS_PUERTO_PUBLICO=9443 ./scripts/preparar_entorno.sh)
+P_HTTPS=${OIRS_HTTPS_PUERTO_PUBLICO:-8443}
+P_HTTP=${OIRS_HTTP_PUERTO_PUBLICO:-8081}
+P_WP=${WP_PUERTO_PUBLICO:-8080}
 
 if [ -f .env ]; then
   echo "· .env ya existe: se conserva."
@@ -18,8 +22,11 @@ DJANGO_SECRET_KEY=$(aleatorio 32)
 DJANGO_DEBUG=0
 DJANGO_SECURE=1
 DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,nginx
-DJANGO_CSRF_TRUSTED_ORIGINS=https://localhost:8443,https://127.0.0.1:8443
+DJANGO_CSRF_TRUSTED_ORIGINS=https://localhost:${P_HTTPS},https://127.0.0.1:${P_HTTPS}
 DJANGO_CONFIAR_PROXY=1
+OIRS_HTTPS_PUERTO_PUBLICO=${P_HTTPS}
+OIRS_HTTP_PUERTO_PUBLICO=${P_HTTP}
+WP_PUERTO_PUBLICO=${P_WP}
 
 PG_SUPERUSER_PASSWORD=$(aleatorio)
 PG_OWNER_PASSWORD=$(aleatorio)
