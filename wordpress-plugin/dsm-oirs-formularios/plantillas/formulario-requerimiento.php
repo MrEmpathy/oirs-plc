@@ -72,6 +72,7 @@ $con_contacto = in_array( $tipo_actual, DSM_OIRS_TIPOS_CON_CONTACTO, true );
 
 		<fieldset class="oirs-grupo">
 			<legend>Su atención</legend>
+			<div class="oirs-grupo__cuerpo">
 			<div class="oirs-campo">
 				<label for="oirs-establecimiento">Establecimiento donde se atendió <span class="oirs-req" aria-hidden="true">*</span></label>
 				<select id="oirs-establecimiento" name="establecimiento" required<?php echo $inv( 'establecimiento' ); // phpcs:ignore ?>>
@@ -101,10 +102,12 @@ $con_contacto = in_array( $tipo_actual, DSM_OIRS_TIPOS_CON_CONTACTO, true );
 				<textarea id="oirs-peticion_concreta" name="peticion_concreta" rows="3" maxlength="2000"<?php echo $inv( 'peticion_concreta' ); // phpcs:ignore ?>><?php echo esc_textarea( (string) ( $valores['peticion_concreta'] ?? '' ) ); ?></textarea>
 				<?php echo $err( 'peticion_concreta' ); // phpcs:ignore ?>
 			</div>
+			</div>
 		</fieldset>
 
 		<fieldset class="oirs-grupo" data-oirs-contacto>
 			<legend>Sus datos de contacto</legend>
+			<div class="oirs-grupo__cuerpo">
 			<p class="oirs-campo__ayuda" data-oirs-contacto-ayuda>
 				<span data-si-contacto <?php echo $con_contacto ? '' : 'hidden'; ?>>Son necesarios para responderle. Indique al menos un correo o un teléfono.</span>
 				<span data-no-contacto <?php echo $con_contacto ? 'hidden' : ''; ?>>Opcionales: puede enviar su <?php echo esc_html( $tipo_actual ? mb_strtolower( DSM_OIRS_TIPOS[ $tipo_actual ] ) : 'solicitud' ); ?> sin identificarse.</span>
@@ -153,6 +156,7 @@ $con_contacto = in_array( $tipo_actual, DSM_OIRS_TIPOS_CON_CONTACTO, true );
 				<input type="checkbox" name="autoriza_respuesta_email" value="1" <?php checked( ! empty( $valores['autoriza_respuesta_email'] ) ); ?>>
 				Autorizo que me respondan por correo electrónico (si no, la respuesta se envía por carta certificada).
 			</label>
+			</div>
 		</fieldset>
 
 		<div class="oirs-campo">

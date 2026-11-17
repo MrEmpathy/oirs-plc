@@ -21,7 +21,8 @@
 .oirs-form { display: grid; gap: 1.25rem; }
 .oirs fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
 .oirs legend { font-weight: 700; color: var(--oirs-titulo); padding: 0; margin-bottom: .5rem; font-size: 1.05rem; }
-.oirs-grupo { background: var(--oirs-fondo-suave); border-radius: .75rem; padding: 1.25rem !important; display: grid; gap: 1rem; }
+/* El fondo va en un contenedor interno: así la leyenda queda como título sobre el recuadro y no encima del borde. */
+.oirs-grupo__cuerpo { background: var(--oirs-fondo-suave); border-radius: .75rem; padding: 1.25rem; display: grid; gap: 1rem; }
 .oirs-campo { display: grid; gap: .35rem; }
 .oirs-campo--corto { max-width: 16rem; }
 .oirs-fila { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }

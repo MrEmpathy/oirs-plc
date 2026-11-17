@@ -52,12 +52,27 @@ def registrar_respuesta(*, codigo, establecimiento_codigo, respuestas: dict, com
         "respuestas": limpias, "comentario": (comentario or "")[:1000],
     }
     db().respuestas_encuesta.insert_one(documento)
+    _invalidar_resumen(encuesta.id)
     return documento
+
+
+def _clave_generacion(encuesta_id):
+    return f"resumen-enc-gen:{encuesta_id}"
+
+
+def _invalidar_resumen(encuesta_id):
+    """DEF-06: cada respuesta nueva cambia la «generación» de la clave de caché, de modo que el reporte
+    la refleja de inmediato sin renunciar a la caché de 5 minutos entre respuestas (INC-04)."""
+    try:
+        cache.incr(_clave_generacion(encuesta_id))
+    except ValueError:                      # la clave aún no existe (o expiró)
+        cache.set(_clave_generacion(encuesta_id), 1, None)
 
 
 def resumen(encuesta_id, establecimiento_id=None, desde=None, hasta=None):
     """Promedio por pregunta (agregación en la base documental), con caché de 5 minutos."""
-    clave = f"resumen-enc:{encuesta_id}:{establecimiento_id}:{desde}:{hasta}"
+    generacion = cache.get_or_set(_clave_generacion(encuesta_id), 0, None)
+    clave = f"resumen-enc:{encuesta_id}:{generacion}:{establecimiento_id}:{desde}:{hasta}"
     return cache.get_or_set(clave, lambda: _resumen(encuesta_id, establecimiento_id, desde, hasta),
                             settings.CACHE_TTL_REPORTES)
 

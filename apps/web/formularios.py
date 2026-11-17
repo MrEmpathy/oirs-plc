@@ -66,6 +66,7 @@ class DerivarForm(forms.Form):
         super().__init__(*args, **kwargs)
         # Solo unidades del mismo establecimiento del caso (regla de integridad PI-04).
         self.fields["unidad"].queryset = Unidad.objects.filter(establecimiento=establecimiento, activa=True).order_by("nombre")
+        self.fields["unidad"].label_from_instance = lambda u: u.nombre   # el establecimiento ya es el del caso
 
 
 class RespuestaForm(forms.Form):

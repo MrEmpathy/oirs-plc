@@ -40,6 +40,8 @@ h2 { font-size: 1.15rem; }
 [data-bs-theme=dark] .btn-primary { --bs-btn-color: #0b1220; --bs-btn-hover-color: #0b1220; --bs-btn-active-color: #0b1220; }
 .btn-outline-primary { --bs-btn-color: var(--oirs-primario); --bs-btn-border-color: var(--oirs-primario);
   --bs-btn-hover-bg: var(--oirs-primario); --bs-btn-hover-border-color: var(--oirs-primario); }
+.btn-outline-secondary { --bs-btn-color: var(--oirs-secundario); --bs-btn-border-color: var(--oirs-secundario);
+  --bs-btn-hover-bg: var(--oirs-secundario); --bs-btn-hover-border-color: var(--oirs-secundario); --bs-btn-hover-color: var(--oirs-superficie); }
 .btn { min-height: 2.75rem; font-weight: 700; }            /* área táctil mínima de 44 px */
 .btn-sm { min-height: 2.25rem; }
 .form-control, .form-select { min-height: 2.75rem; border-color: #64748b; background-color: var(--oirs-superficie); color: var(--oirs-titulo); }

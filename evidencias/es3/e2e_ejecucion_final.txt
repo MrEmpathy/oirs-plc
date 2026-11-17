@@ -1,0 +1,17 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.2.0, pluggy-1.7.0 -- /home/nbeltran/projects/oirs-plc/.venv/bin/python3
+rootdir: /home/nbeltran/projects/oirs-plc/tests/e2e
+configfile: pytest.ini
+collecting ... collected 8 items
+
+tests/e2e/test_recorridos.py::test_e2e01_reclamo_web_hasta_el_cierre PASSED [ 12%]
+tests/e2e/test_recorridos.py::test_e2e02_validacion_del_formulario_ciudadano PASSED [ 25%]
+tests/e2e/test_recorridos.py::test_e2e03_encuesta_por_qr_y_reporte_de_satisfaccion PASSED [ 37%]
+tests/e2e/test_recorridos.py::test_e2e04_panel_de_plazos_y_exportacion_dsm PASSED [ 50%]
+tests/e2e/test_recorridos.py::test_e2e05_permisos_se_validan_en_el_servidor PASSED [ 62%]
+tests/e2e/test_recorridos.py::test_e2e06_diseno_adaptable_sin_desplazamiento_horizontal PASSED [ 75%]
+tests/e2e/test_recorridos.py::test_e2e08_plugin_limita_envios_por_ip PASSED [ 87%]
+tests/e2e/test_recorridos.py::test_e2e07_nginx_limita_intentos_de_inicio_de_sesion PASSED [100%]
+
+- generated xml file: /home/nbeltran/projects/oirs-plc/evidencias/es3/junit_e2e.xml -
+============================== 8 passed in 25.54s ==============================
