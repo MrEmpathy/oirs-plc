@@ -1,0 +1,17 @@
+{% extends "web/auth/base_auth.html" %}
+{% block titulo %}Nueva contraseña{% endblock %}
+{% block contenido %}
+{% if validlink %}
+<h1 class="h4">Defina su nueva contraseña</h1>
+{% include "web/inc/resumen_errores.html" %}
+<form method="post" novalidate>
+  {% csrf_token %}
+  {% for campo in form %}{% include "web/inc/campo.html" %}{% endfor %}
+  <button class="btn btn-primary w-100" type="submit">Guardar contraseña</button>
+</form>
+{% else %}
+<h1 class="h4">Enlace no válido</h1>
+<p>El enlace ya se usó o venció. Solicite uno nuevo.</p>
+<a class="btn btn-primary" href="{% url 'web:recuperar' %}">Solicitar otro enlace</a>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "web/app.html" %}
+{% block titulo %}Usuarios{% endblock %}
+{% block contenido %}
+<div class="encabezado d-flex flex-wrap justify-content-between align-items-end gap-2">
+  <div><h1>Usuarios</h1><p class="text-secondary mb-0">Cuentas individuales de funcionarios. Las cuentas se desactivan, no se eliminan.</p></div>
+  <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#m-nuevo">Nuevo usuario</button>
+</div>
+<form class="filtros" method="get" role="search">
+  <div class="campo campo--ancho"><label class="form-label" for="q">Buscar</label><input class="form-control" id="q" name="q" value="{{ q }}" maxlength="60"></div>
+  <div class="campo"><label class="form-label" for="rol">Perfil</label><select class="form-select" id="rol" name="rol"><option value="">Todos</option>
+    {% for v, t in roles %}<option value="{{ v }}"{% if v == rol %} selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
+  <div class="filtros__acciones"><button class="btn btn-primary" type="submit">Filtrar</button></div>
+</form>
+<div class="tabla-casos" role="region" aria-label="Usuarios" tabindex="0"><table class="table align-middle">
+  <thead><tr><th scope="col">Nombre</th><th scope="col">Correo</th><th scope="col">Perfil</th><th scope="col">Establecimiento</th><th scope="col">Estado</th><th scope="col">2FA</th></tr></thead>
+  <tbody>{% for u in pagina %}<tr>
+    <td data-titulo="Nombre"><a href="{% url 'web:usuario_editar' u.pk %}">{{ u.nombre }} {{ u.apellidos }}</a></td>
+    <td data-titulo="Correo">{{ u.email }}</td><td data-titulo="Perfil">{{ u.get_rol_display }}</td>
+    <td data-titulo="Establecimiento">{{ u.establecimiento.nombre|default:"Toda la red" }}</td>
+    <td data-titulo="Estado">{% if not u.is_active %}<span class="chip chip--estado chip--cerrado">Desactivada</span>{% elif u.esta_bloqueado %}<span class="chip chip--rojo">Bloqueada</span>{% else %}<span class="chip chip--verde">Activa</span>{% endif %}</td>
+    <td data-titulo="2FA">{% if u.mfa_secreto %}Activa{% elif u.requiere_mfa %}<strong>Pendiente</strong>{% else %}—{% endif %}</td>
+  </tr>{% endfor %}</tbody></table></div>
+{% include "web/inc/paginacion.html" %}
+
+<div class="modal fade" id="m-nuevo" tabindex="-1" aria-labelledby="m-nuevo-t" aria-hidden="true">
+  <div class="modal-dialog"><form class="modal-content" method="post" action="{% url 'web:usuario_crear' %}" novalidate>{% csrf_token %}
+    <div class="modal-header"><h2 class="modal-title h5" id="m-nuevo-t">Nuevo usuario</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>
+    <div class="modal-body"><p class="form-text">Se generará una contraseña temporal que deberá cambiar en su primer ingreso.</p>
+      {% for campo in form %}{% include "web/inc/campo.html" %}{% endfor %}</div>
+    <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary" type="submit">Crear usuario</button></div>
+  </form></div>
+</div>
+{% endblock %}

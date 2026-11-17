@@ -1,0 +1,14 @@
+{% extends "web/auth/base_auth.html" %}
+{% block titulo %}Cambiar contraseña{% endblock %}
+{% block contenido %}
+<h1 class="h4 mb-2">Cambiar contraseña</h1>
+{% if obligatorio %}<div class="alert alert-info" role="status">Está usando una contraseña temporal. Debe definir una propia para continuar.</div>{% endif %}
+{% include "web/inc/resumen_errores.html" %}
+<form method="post" novalidate>
+  {% csrf_token %}
+  {% for campo in form %}{% include "web/inc/campo.html" %}{% endfor %}
+  <button class="btn btn-primary w-100" type="submit">Guardar contraseña</button>
+</form>
+{% if not obligatorio %}<p class="mt-3 mb-0"><a href="{% url 'web:inicio' %}">Cancelar</a></p>{% else %}
+<form method="post" action="{% url 'web:salir' %}" class="mt-3">{% csrf_token %}<button class="btn btn-link p-0" type="submit">Salir</button></form>{% endif %}
+{% endblock %}

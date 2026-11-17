@@ -1,0 +1,7 @@
+{% extends "web/auth/base_auth.html" %}
+{% block titulo %}Contraseña actualizada{% endblock %}
+{% block contenido %}
+<h1 class="h4">Contraseña actualizada</h1>
+<p role="status">Ya puede ingresar con su nueva contraseña. Las sesiones abiertas en otros equipos se cerraron.</p>
+<a class="btn btn-primary" href="{% url 'web:ingresar' %}">Ingresar</a>
+{% endblock %}

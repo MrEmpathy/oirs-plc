@@ -153,7 +153,11 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {"console": {"class": "logging.StreamHandler"}},
-    "loggers": {"oirs": {"handlers": ["console"], "level": env("LOG_LEVEL", "INFO")}},
+    "loggers": {
+        "oirs": {"handlers": ["console"], "level": env("LOG_LEVEL", "INFO")},
+        # DEF-04: sin este registro los errores 500 del front no dejaban traza en el log del servidor.
+        "django.request": {"handlers": ["console"], "level": "ERROR", "propagate": False},
+    },
 }
 
 # --- Caché (producción: Redis; desarrollo: memoria local) --------------------

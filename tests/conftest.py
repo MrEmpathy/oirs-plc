@@ -51,7 +51,8 @@ def usuarios(catalogo):
     from apps.cuentas.models import Usuario
 
     def crear(email, rol, est=None, mfa=False):
-        u = Usuario.objects.create_user(email, CLAVE, nombre="N", apellidos="A", rol=rol, establecimiento=est)
+        u = Usuario.objects.create_user(email, CLAVE, nombre="N", apellidos="A", rol=rol, establecimiento=est,
+                                        debe_cambiar_clave=False)
         if mfa:
             u.mfa_secreto = pyotp.random_base32()
             u.save()
@@ -101,3 +102,11 @@ RECLAMO_VALIDO = {
 @pytest.fixture
 def anon():
     return Client()
+
+
+def crear_caso(client_anonimo, **cambios):
+    """Ingresa un reclamo por la API pública firmada y devuelve el Requerimiento creado."""
+    from apps.requerimientos.models import Requerimiento
+    r = post_firmado(client_anonimo, "/api/v1/publico/requerimientos", {**RECLAMO_VALIDO, **cambios})
+    assert r.status_code == 201, r.content
+    return Requerimiento.objects.get(folio=r.json()["folio"])

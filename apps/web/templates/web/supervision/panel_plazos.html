@@ -1,0 +1,41 @@
+{% extends "web/app.html" %}{% load oirs %}
+{% block titulo %}Panel de plazos{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Panel de plazos de la red</h1>
+  <p class="text-secondary mb-0">Casos abiertos al {{ hoy|date:"d-m-Y" }} · plazo legal de 15 días hábiles (Ley N.° 20.584)</p>
+</div>
+<div class="indicadores">
+  <div class="indicador"><span class="indicador__valor">{{ totales.abiertos }}</span><span class="indicador__texto">Abiertos en la red</span></div>
+  <div class="indicador indicador--verde"><span class="indicador__valor">{{ totales.VERDE }}</span><span class="indicador__texto">En plazo</span></div>
+  <div class="indicador indicador--amarillo"><span class="indicador__valor">{{ totales.AMARILLO }}</span><span class="indicador__texto">Por vencer (≤ 5 días)</span></div>
+  <div class="indicador indicador--rojo"><span class="indicador__valor">{{ totales.ROJO }}</span><span class="indicador__texto">Vencidos</span></div>
+</div>
+
+<section class="tarjeta" aria-labelledby="t-est">
+  <h2 id="t-est">Por establecimiento</h2>
+  <div class="table-responsive"><table class="table align-middle">
+    <caption class="visually-hidden">Casos abiertos por establecimiento y estado del plazo</caption>
+    <thead><tr><th scope="col">Establecimiento</th><th scope="col" class="text-end">Abiertos</th><th scope="col" class="text-end">En plazo</th><th scope="col" class="text-end">Por vencer</th><th scope="col" class="text-end">Vencidos</th><th scope="col">Proporción vencida</th></tr></thead>
+    <tbody>{% for f in resumen %}
+      <tr><th scope="row"><a href="{% url 'web:bandeja' %}?estado=abiertos&amp;establecimiento={{ f.establecimiento.id }}">{{ f.establecimiento.nombre }}</a></th>
+        <td class="text-end">{{ f.abiertos }}</td><td class="text-end">{{ f.VERDE }}</td><td class="text-end">{{ f.AMARILLO }}</td>
+        <td class="text-end{% if f.ROJO %} fw-bold texto-rojo{% endif %}">{{ f.ROJO }}</td>
+        <td>{% if f.abiertos %}<meter class="medidor" min="0" max="{{ f.abiertos }}" low="0.0001" high="{{ f.abiertos }}" optimum="0" value="{{ f.ROJO }}" aria-label="{{ f.ROJO }} de {{ f.abiertos }} vencidos"></meter>{% else %}<span class="text-secondary">Sin casos abiertos</span>{% endif %}</td></tr>
+    {% endfor %}</tbody>
+  </table></div>
+</section>
+
+<section class="tarjeta" aria-labelledby="t-crit">
+  <h2 id="t-crit">Casos críticos <span class="text-secondary fs-6">(vencidos o con 2 días hábiles o menos)</span></h2>
+  {% if criticos %}
+  <div class="table-responsive"><table class="table align-middle">
+    <thead><tr><th scope="col">Folio</th><th scope="col">Establecimiento</th><th scope="col">Tipo</th><th scope="col">Vence</th><th scope="col">Plazo</th></tr></thead>
+    <tbody>{% for c in criticos %}
+      <tr><td><a class="folio" href="{% url 'web:detalle' c.req.folio %}">{{ c.req.folio }}</a></td><td>{{ c.req.establecimiento.nombre }}</td>
+        <td>{{ c.req.get_tipo_display }}</td><td>{{ c.req.fecha_vencimiento|date:"d-m-Y" }}</td><td>{% semaforo c.semaforo c.restantes %}</td></tr>
+    {% endfor %}</tbody>
+  </table></div>
+  {% else %}<p class="mb-0" role="status">No hay casos críticos.</p>{% endif %}
+</section>
+{% endblock %}

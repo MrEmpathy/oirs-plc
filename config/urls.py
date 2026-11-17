@@ -26,3 +26,8 @@ urlpatterns = [
     # Front administrativo (plantillas Django)
     path("", include("apps.web.urls")),
 ]
+
+# Páginas de error propias, sin trazas ni detalles internos (SC-04).
+handler403 = "apps.web.vistas.errores.prohibido"
+handler404 = "apps.web.vistas.errores.no_encontrado"
+handler500 = "apps.web.vistas.errores.error_interno"

@@ -1,0 +1,11 @@
+{% extends "web/app.html" %}
+{% block titulo %}Contraseña temporal{% endblock %}
+{% block contenido %}
+<div class="tarjeta comprobante" role="status">
+  <h1 class="h4">{% if nuevo %}Usuario creado{% else %}Contraseña temporal emitida{% endif %}</h1>
+  <p>Entregue esta contraseña a <strong>{{ usuario.nombre }} {{ usuario.apellidos }}</strong> ({{ usuario.email }}) por un canal seguro. Se muestra <strong>una sola vez</strong> y deberá cambiarla en su primer ingreso.</p>
+  <p class="folio folio--grande">{{ clave }}</p>
+  {% if usuario.requiere_mfa %}<p>Su perfil exige verificación en dos pasos: al ingresar se le pedirá registrarla.</p>{% endif %}
+  <a class="btn btn-primary" href="{% url 'web:usuario_editar' usuario.pk %}">Continuar</a>
+</div>
+{% endblock %}

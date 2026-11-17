@@ -1,0 +1,12 @@
+{% load oirs %}{% if campo.is_hidden %}{{ campo }}{% else %}
+<div class="campo{% if clase %} {{ clase }}{% endif %}{% if campo.field.widget.input_type == 'checkbox' %} form-check{% endif %}">
+  {% if campo.field.widget.input_type == 'checkbox' %}
+    {{ campo|control }}
+    <label class="form-check-label" for="{{ campo.id_for_label }}">{{ campo.label }}{% if campo.field.required %} <span class="req" aria-hidden="true">*</span>{% endif %}</label>
+  {% else %}
+    <label class="form-label" for="{{ campo.id_for_label }}">{{ campo.label }}{% if campo.field.required %} <span class="req" aria-hidden="true">*</span>{% endif %}</label>
+    {% if campo.help_text %}<p class="form-text" id="{{ campo.auto_id }}_ayuda">{{ campo.help_text }}</p>{% endif %}
+    {{ campo|control }}
+  {% endif %}
+  {% if campo.errors %}<p class="invalid-feedback d-block" id="{{ campo.auto_id }}_error">{{ campo.errors|join:" " }}</p>{% endif %}
+</div>{% endif %}

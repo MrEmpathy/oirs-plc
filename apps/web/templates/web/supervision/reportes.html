@@ -1,0 +1,45 @@
+{% extends "web/app.html" %}{% load static oirs %}
+{% block titulo %}Reportes e indicadores{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Reportes e indicadores</h1>
+  <p class="text-secondary mb-0">{% if ve_red %}Toda la red o un establecimiento{% else %}{{ user.establecimiento.nombre }}{% endif %} · datos de PostgreSQL (casos) y de la base documental (encuestas)</p>
+</div>
+<form class="filtros" method="get" novalidate>
+  <div class="campo">{{ form.desde.label_tag }}{{ form.desde|control }}</div>
+  <div class="campo">{{ form.hasta.label_tag }}{{ form.hasta|control }}</div>
+  {% if ve_red %}<div class="campo">{{ form.establecimiento.label_tag }}{{ form.establecimiento|control }}</div>{% endif %}
+  <div class="filtros__acciones"><button class="btn btn-primary" type="submit">Ver período</button>
+  {% if puede_exportar and datos %}<a class="btn btn-outline-primary" href="/api/v1/reportes/requerimientos.csv?desde={{ form.cleaned_data.desde|date:'Y-m-d' }}&amp;hasta={{ form.cleaned_data.hasta|date:'Y-m-d' }}">Exportar CSV</a>{% endif %}</div>
+</form>
+{% if form.non_field_errors %}<div class="alert alert-danger" role="alert">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+{% if puede_exportar %}<p class="form-text">La exportación no incluye datos personales y queda registrada en la bitácora.</p>{% endif %}
+
+{% if datos %}
+<div class="indicadores">
+  <div class="indicador"><span class="indicador__valor">{{ datos.total }}</span><span class="indicador__texto">Casos ingresados</span></div>
+  <div class="indicador indicador--verde"><span class="indicador__valor">{% if datos.pct_dentro_plazo is not None %}{{ datos.pct_dentro_plazo }} %{% else %}—{% endif %}</span><span class="indicador__texto">Respondidos dentro de plazo</span></div>
+  <div class="indicador indicador--rojo"><span class="indicador__valor">{{ datos.fuera_plazo }}</span><span class="indicador__texto">Respondidos fuera de plazo</span></div>
+  <div class="indicador"><span class="indicador__valor">{{ datos.tiempo_promedio_dias|default:"—" }}</span><span class="indicador__texto">Días promedio de respuesta</span></div>
+</div>
+{{ graficos|json_script:"datos-graficos" }}
+<div class="graficos">
+  <figure class="tarjeta"><figcaption><h2 class="h6">Casos por tipo</h2></figcaption><div class="grafico"><canvas id="g-tipo" aria-label="Gráfico de casos por tipo; los datos están en la tabla siguiente" role="img"></canvas></div>
+    <details><summary>Ver datos</summary><table class="table table-sm"><tbody>{% for x in datos.por_tipo %}<tr><th scope="row">{{ x.etiqueta }}</th><td class="text-end">{{ x.n }}</td></tr>{% endfor %}</tbody></table></details></figure>
+  <figure class="tarjeta"><figcaption><h2 class="h6">Casos por estado</h2></figcaption><div class="grafico"><canvas id="g-estado" aria-label="Gráfico de casos por estado; los datos están en la tabla siguiente" role="img"></canvas></div>
+    <details><summary>Ver datos</summary><table class="table table-sm"><tbody>{% for x in datos.por_estado %}<tr><th scope="row">{{ x.etiqueta }}</th><td class="text-end">{{ x.n }}</td></tr>{% endfor %}</tbody></table></details></figure>
+  <figure class="tarjeta"><figcaption><h2 class="h6">Principales motivos</h2></figcaption><div class="grafico"><canvas id="g-categoria" aria-label="Gráfico de motivos; los datos están en la tabla siguiente" role="img"></canvas></div>
+    <details><summary>Ver datos</summary><table class="table table-sm"><tbody>{% for x in datos.por_categoria %}<tr><th scope="row">{{ x.categoria__nombre|default:"Sin clasificar" }}</th><td class="text-end">{{ x.n }}</td></tr>{% endfor %}</tbody></table></details></figure>
+  <figure class="tarjeta"><figcaption><h2 class="h6">Satisfacción usuaria (promedio 1 a 7)</h2></figcaption>
+    {% if datos.satisfaccion_tabla %}<div class="grafico"><canvas id="g-satisfaccion" aria-label="Gráfico de satisfacción por pregunta; los datos están en la tabla siguiente" role="img"></canvas></div>
+    <table class="table table-sm mt-2"><thead><tr><th scope="col">Pregunta</th><th scope="col" class="text-end">Promedio</th><th scope="col" class="text-end">Respuestas</th></tr></thead>
+      <tbody>{% for s in datos.satisfaccion_tabla %}<tr><td><strong>P{{ forloop.counter }}</strong> {{ s.pregunta }}</td><td class="text-end">{{ s.promedio }}</td><td class="text-end">{{ s.n }}</td></tr>{% endfor %}</tbody></table>
+    {% else %}<p class="mb-0">Sin respuestas de encuesta en el período.</p>{% endif %}</figure>
+</div>
+{% if ve_red and datos.por_establecimiento %}
+<section class="tarjeta"><h2 class="h6">Casos por establecimiento</h2>
+  <table class="table table-sm"><tbody>{% for x in datos.por_establecimiento %}<tr><th scope="row">{{ x.establecimiento__nombre }}</th><td class="text-end">{{ x.n }}</td></tr>{% endfor %}</tbody></table></section>
+{% endif %}
+{% endif %}
+{% endblock %}
+{% block scripts %}{% if datos %}<script src="{% static 'vendor/chartjs/chart.umd.min.js' %}"></script><script src="{% static 'web/js/reportes.js' %}"></script>{% endif %}{% endblock %}

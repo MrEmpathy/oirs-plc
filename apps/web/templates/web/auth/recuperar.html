@@ -1,0 +1,12 @@
+{% extends "web/auth/base_auth.html" %}
+{% block titulo %}Recuperar contraseña{% endblock %}
+{% block contenido %}
+<h1 class="h4 mb-2">Recuperar contraseña</h1>
+<p>Escriba su correo institucional. Si corresponde a una cuenta activa, recibirá un enlace válido por 30 minutos.</p>
+<form method="post" novalidate>
+  {% csrf_token %}
+  {% for campo in form %}{% include "web/inc/campo.html" %}{% endfor %}
+  <button class="btn btn-primary w-100" type="submit">Enviar enlace</button>
+</form>
+<p class="mt-3 mb-0"><a href="{% url 'web:ingresar' %}">Volver a ingresar</a></p>
+{% endblock %}

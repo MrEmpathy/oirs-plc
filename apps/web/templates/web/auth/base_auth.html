@@ -1,0 +1,15 @@
+{% extends "web/base.html" %}{% load static %}
+{% block clase_body %}pagina-auth{% endblock %}
+{% block cuerpo %}
+<main class="auth" id="principal" tabindex="-1">
+  <div class="auth__tarjeta">
+    <div class="marca marca--oscura mb-4">
+      <img src="{% static 'web/img/icono.svg' %}" alt="" width="40" height="40">
+      <span><strong>Sistema de Gestión OIRS</strong><span>Departamento de Salud Municipal · Padre Las Casas</span></span>
+    </div>
+    {% include "web/inc/mensajes.html" %}
+    {% block contenido %}{% endblock %}
+  </div>
+  <p class="auth__pie">Acceso exclusivo para funcionarios. La actividad queda registrada.</p>
+</main>
+{% endblock %}

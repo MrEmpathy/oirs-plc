@@ -12,9 +12,16 @@ OPCIONES = [
 ]
 
 
+SECCIONES = {"bandeja": "bandeja", "detalle": "bandeja", "ingreso_presencial": "presencial",
+             "panel_plazos": "plazos", "reportes": "reportes", "usuarios": "usuarios",
+             "usuario_editar": "usuarios", "catalogos": "catalogos"}
+
+
 def menu(request):
     usuario = getattr(request, "user", None)
     if not usuario or not usuario.is_authenticated:
         return {"menu": []}
+    nombre = getattr(getattr(request, "resolver_match", None), "url_name", None)
     return {"menu": [{"url": url, "texto": texto, "clave": clave}
-                     for url, texto, permiso, clave in OPCIONES if tiene_permiso(usuario, permiso)]}
+                     for url, texto, permiso, clave in OPCIONES if tiene_permiso(usuario, permiso)],
+            "seccion": SECCIONES.get(nombre)}
