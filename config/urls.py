@@ -9,6 +9,7 @@ urlpatterns = [
     # Canal público (WordPress -> API, firmado HMAC)
     path("api/v1/publico/catalogos", publico.catalogos),
     path("api/v1/publico/requerimientos", publico.crear_requerimiento),
+    path("api/v1/publico/encuestas/<slug:codigo>", publico.definicion_encuesta),
     path("api/v1/publico/encuestas/<slug:codigo>/respuestas", publico.responder_encuesta),
     # Sistema administrativo (sesión)
     path("api/v1/sesion/csrf", cuentas.token_csrf),

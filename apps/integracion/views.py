@@ -53,6 +53,21 @@ def responder_encuesta(request, codigo):
 
 @require_GET
 @_firmado
+@manejar_errores
+def definicion_encuesta(request, codigo):
+    """Preguntas de la versión activa: el plugin las dibuja sin tenerlas escritas en su código, por lo que
+    una nueva versión de la encuesta no requiere modificar WordPress (sección 6.4)."""
+    from apps.encuestas.models import Encuesta
+    encuesta = Encuesta.objects.filter(codigo=codigo, activa=True).first()
+    if not encuesta:
+        return JsonSeguro({"error": "Encuesta no disponible"}, status=404)
+    d = encuestas.definicion(encuesta)
+    return JsonSeguro({"codigo": encuesta.codigo, "version": encuesta.version, "nombre": encuesta.nombre,
+                       "preguntas": d["preguntas"]})
+
+
+@require_GET
+@_firmado
 def catalogos(request):
     return JsonSeguro({
         "establecimientos": list(Establecimiento.objects.filter(activo=True).values("codigo", "nombre")),

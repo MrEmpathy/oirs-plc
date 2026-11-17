@@ -10,8 +10,9 @@ aleatorio() { openssl rand -hex "${1:-24}"; }
 if [ -f .env ]; then
   echo "· .env ya existe: se conserva."
 else
-  umask 077
-  cat > .env <<EOF
+  # umask solo para el .env (DEF-03: antes quedaba activo y los certificados públicos resultaban ilegibles).
+  ( umask 077; : > .env )
+  cat >> .env <<EOF
 # Generado por scripts/preparar_entorno.sh el $(date +%F). NO versionar (está en .gitignore).
 DJANGO_SECRET_KEY=$(aleatorio 32)
 DJANGO_DEBUG=0
@@ -60,6 +61,7 @@ else
           -days 825 -extfile "$CERTS/ext.cnf" -out "$CERTS/servidor.crt" 2>/dev/null
   rm -f "$CERTS/servidor.csr" "$CERTS/ext.cnf"
   chmod 600 "$CERTS/ca.key" "$CERTS/servidor.key"
+  chmod 644 "$CERTS/ca.crt" "$CERTS/servidor.crt"   # públicos: los lee Apache (www-data) en WordPress
   echo "· Certificados de desarrollo creados en $CERTS (CA: $CERTS/ca.crt)."
 fi
 

@@ -1,0 +1,91 @@
+/* DSM OIRS – estilos del plugin. Hereda la paleta del tema del sitio (Astra: --ast-global-color-*) y, si no
+   existe, usa los mismos valores del sitio institucional salud.padrelascasas.cl. Contrastes WCAG AA. */
+.oirs {
+	--oirs-primario: var(--ast-global-color-0, #046bd2);        /* 5,2:1 sobre blanco */
+	--oirs-primario-hover: var(--ast-global-color-1, #045cb4);
+	--oirs-titulo: var(--ast-global-color-2, #1e293b);
+	--oirs-texto: var(--ast-global-color-3, #334155);           /* 10,4:1 */
+	--oirs-fondo: var(--ast-global-color-4, #ffffff);
+	--oirs-fondo-suave: var(--ast-global-color-5, #f0f5fa);
+	--oirs-borde: var(--ast-global-color-7, #d1d5db);
+	--oirs-borde-campo: #64748b;                                /* 4,8:1: borde de controles visible (WCAG 1.4.11) */
+	--oirs-error: #b42318;                                      /* 6,6:1 */
+	--oirs-ok: #146c43;                                         /* 6,4:1 */
+	--oirs-foco: #f59e0b;
+	color: var(--oirs-texto);
+	font-size: 1rem;
+	line-height: 1.55;
+	max-width: 46rem;
+}
+.oirs *, .oirs *::before, .oirs *::after { box-sizing: border-box; }
+.oirs-form { display: grid; gap: 1.25rem; }
+.oirs fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.oirs legend { font-weight: 700; color: var(--oirs-titulo); padding: 0; margin-bottom: .5rem; font-size: 1.05rem; }
+.oirs-grupo { background: var(--oirs-fondo-suave); border-radius: .75rem; padding: 1.25rem !important; display: grid; gap: 1rem; }
+.oirs-campo { display: grid; gap: .35rem; }
+.oirs-campo--corto { max-width: 16rem; }
+.oirs-fila { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+.oirs label { font-weight: 600; color: var(--oirs-titulo); }
+.oirs-campo__ayuda, .oirs-nota { font-size: .925rem; margin: 0; color: var(--oirs-texto); }
+.oirs-req { color: var(--oirs-error); }
+.oirs input[type=text], .oirs input[type=email], .oirs input[type=tel], .oirs input[type=number],
+.oirs input[type=date], .oirs select, .oirs textarea {
+	width: 100%; min-height: 2.75rem; padding: .55rem .75rem; font: inherit; color: var(--oirs-titulo);
+	background: var(--oirs-fondo); border: 1px solid var(--oirs-borde-campo); border-radius: .5rem;
+}
+.oirs textarea { resize: vertical; }
+.oirs [aria-invalid=true] { border-color: var(--oirs-error) !important; border-width: 2px !important; }
+.oirs-campo__error { color: var(--oirs-error); font-weight: 600; margin: 0; font-size: .925rem; }
+.oirs-campo__error::before { content: "⚠ "; }
+.oirs :focus-visible { outline: 3px solid var(--oirs-foco); outline-offset: 2px; }
+
+.oirs-tipos { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+.oirs-tipos legend { grid-column: 1 / -1; }
+.oirs-tipo { position: relative; display: grid; gap: .2rem; padding: .9rem 1rem .9rem 2.75rem; border: 1px solid var(--oirs-borde);
+	border-radius: .75rem; background: var(--oirs-fondo); cursor: pointer; font-weight: 400 !important; }
+.oirs-tipo input { position: absolute; left: 1rem; top: 1.1rem; width: 1.15rem; height: 1.15rem; accent-color: var(--oirs-primario); }
+.oirs-tipo__nombre { font-weight: 700; color: var(--oirs-titulo); }
+.oirs-tipo__ayuda { font-size: .875rem; }
+.oirs-tipo:has(input:checked) { border: 2px solid var(--oirs-primario); background: var(--oirs-fondo-suave); }
+
+.oirs-check { display: flex; gap: .6rem; align-items: flex-start; font-weight: 400 !important; }
+.oirs-check input { width: 1.15rem; height: 1.15rem; margin-top: .2rem; flex: none; accent-color: var(--oirs-primario); }
+
+.oirs-escala { border-top: 1px solid var(--oirs-borde) !important; padding-top: 1rem !important; }
+.oirs-escala__opciones { display: grid; grid-template-columns: repeat(7, minmax(2.75rem, 1fr)); gap: .4rem; }
+.oirs-escala__opcion { position: relative; }
+.oirs-escala__opcion input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.oirs-escala__opcion span { display: grid; place-items: center; min-height: 2.75rem; border: 1px solid var(--oirs-borde-campo);
+	border-radius: .5rem; background: var(--oirs-fondo); font-weight: 700; }
+.oirs-escala__opcion input:checked + span { background: var(--oirs-primario); border-color: var(--oirs-primario); color: #fff; }
+.oirs-escala__opcion input:focus-visible + span { outline: 3px solid var(--oirs-foco); outline-offset: 2px; }
+.oirs-escala__extremos { display: flex; justify-content: space-between; font-size: .85rem; margin: .3rem 0 0; }
+
+.oirs-boton { justify-self: start; min-height: 2.75rem; padding: .65rem 1.4rem; border: 0; border-radius: .5rem; font: inherit;
+	font-weight: 700; color: #fff; background: var(--oirs-primario); cursor: pointer; }
+.oirs-boton:hover { background: var(--oirs-primario-hover); }
+.oirs-boton--secundario { background: var(--oirs-fondo); color: var(--oirs-primario); border: 2px solid var(--oirs-primario); }
+.oirs-boton--secundario:hover { background: var(--oirs-fondo-suave); }
+.oirs-enlace { color: var(--oirs-primario); font-weight: 600; }
+
+.oirs-aviso { border-radius: .75rem; padding: 1rem 1.25rem; margin-bottom: 1.25rem; border-left: 6px solid; }
+.oirs-aviso p { margin: 0 0 .4rem; }
+.oirs-aviso ul { margin: .25rem 0 0 1.1rem; padding: 0; }
+.oirs-aviso a { color: inherit; }
+.oirs-aviso--error { background: #fef3f2; border-color: var(--oirs-error); color: #7a271a; }
+.oirs-confirmacion { background: var(--oirs-fondo-suave); border-radius: .75rem; padding: 1.5rem; border-left: 6px solid var(--oirs-ok); }
+.oirs-confirmacion__titulo { margin-top: 0; color: var(--oirs-titulo); }
+.oirs-folio { font-family: ui-monospace, "IBM Plex Mono", Consolas, monospace; font-size: 1.75rem; font-weight: 700;
+	color: var(--oirs-titulo); letter-spacing: .04em; margin: .25rem 0 .75rem; }
+.oirs-acciones { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+.oirs-hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; overflow: hidden; }
+
+@media (max-width: 600px) {
+	.oirs-escala__opciones { gap: .25rem; grid-template-columns: repeat(7, 1fr); }
+	.oirs-escala__opcion span { min-height: 2.75rem; font-size: .95rem; }
+	.oirs-boton { width: 100%; justify-self: stretch; }
+}
+@media print {
+	.oirs-acciones, header, footer, nav { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) { .oirs * { transition: none !important; } }
