@@ -6,7 +6,7 @@ set -eu
 cd "$(dirname "$0")/.."
 . ./.env
 
-WP_URL="http://localhost:${WP_PUERTO_PUBLICO:-8080}"
+WP_URL="http://${OIRS_NOMBRE_PUBLICO:-localhost}:${WP_PUERTO_PUBLICO:-8080}"
 wp() { docker compose --profile herramientas run --rm -T wpcli wp "$@"; }
 
 echo "· Esperando a WordPress…"

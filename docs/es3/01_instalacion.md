@@ -67,6 +67,17 @@ Qué hace cada paso:
 Tiempo medido en una copia limpia con las imágenes ya descargadas: 32 s para `docker compose up -d --build`,
 más la instalación de WordPress (menos de un minuto). La primera vez se descargan unos 2,5 GB de imágenes.
 
+**Acceso desde otros equipos de la red.** Por defecto el sistema solo acepta `localhost`. Para usar el nombre
+de red del servidor y/o su IP (por ejemplo, desde un notebook en la misma red):
+
+```bash
+./scripts/configurar_acceso_red.sh ls.local 192.168.1.191
+```
+
+El script agrega esos nombres a `DJANGO_ALLOWED_HOSTS` y `DJANGO_CSRF_TRUSTED_ORIGINS`, renueva el certificado
+del servidor con la misma CA local, cambia la dirección de WordPress y reinicia `app`, `nginx` y `wordpress`.
+Luego: `http://ls.local:8080` (ciudadanos) y `https://ls.local:8443` (funcionarios).
+
 **Certificado:** el navegador mostrará una advertencia porque la CA es local. Puede aceptarse o importarse
 `despliegue/certs/ca.crt` como autoridad de confianza en el navegador.
 
@@ -121,6 +132,7 @@ servidor; sin `RESPALDO_CLAVE` no pueden descifrarse, por lo que esa clave debe 
 | «No fue posible procesar su solicitud» tras muchos envíos | Límite anti-spam: 10 envíos por hora por IP | Esperar una hora o, en pruebas, `docker compose --profile herramientas run --rm wpcli wp transient delete --all` |
 | HTTP 429 al iniciar sesión | Límite de Nginx: 5 intentos por minuto por IP | Esperar un minuto |
 | El correo de recuperación no llega | En desarrollo los correos se escriben en el log | `docker compose logs app` y buscar «Recuperación de contraseña» |
+| «Bad Request (400)» al entrar con un nombre o IP distinto de `localhost` | El nombre no está en `DJANGO_ALLOWED_HOSTS` | `./scripts/configurar_acceso_red.sh <nombre> [ip]` |
 | Puertos 8080/8081/8443 ocupados | Otro servicio en el equipo | Cambiar los puertos al ejecutar `preparar_entorno.sh` (ver paso 1) |
 
 ## 6. Ubicación del código, datos y configuración

@@ -144,7 +144,7 @@ services:
         define( 'OIRS_API_URL', 'https://nginx/' );
         define( 'OIRS_HMAC_SECRET', getenv( 'OIRS_HMAC_SECRET' ) );
         define( 'OIRS_API_CA', '/etc/oirs/ca.crt' );
-        define( 'OIRS_URL_FUNCIONARIOS', 'https://localhost:${OIRS_HTTPS_PUERTO_PUBLICO:-8443}/' );
+        define( 'OIRS_URL_FUNCIONARIOS', 'https://${OIRS_NOMBRE_PUBLICO:-localhost}:${OIRS_HTTPS_PUERTO_PUBLICO:-8443}/' );
       OIRS_HMAC_SECRET: ${WP_HMAC_SECRET:?definir en .env}
     ports:
       - "${WP_PUERTO_PUBLICO:-8080}:80"
