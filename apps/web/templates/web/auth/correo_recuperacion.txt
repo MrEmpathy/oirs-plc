@@ -1,0 +1,8 @@
+Hola {{ user.nombre }}:
+
+Recibimos una solicitud para restablecer su contraseña del Sistema de Gestión OIRS del DSM Padre Las Casas.
+Use este enlace (válido por 30 minutos y por una sola vez):
+
+{{ protocol }}://{{ domain }}{% url 'web:recuperar_confirmar' uidb64=uid token=token %}
+
+Si usted no lo solicitó, ignore este mensaje: su contraseña no cambiará.

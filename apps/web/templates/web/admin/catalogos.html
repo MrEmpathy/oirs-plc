@@ -1,0 +1,44 @@
+{% extends "web/app.html" %}
+{% block titulo %}Catálogos{% endblock %}
+{% block contenido %}
+<div class="encabezado"><h1>Catálogos</h1><p class="text-secondary mb-0">Los registros se desactivan en lugar de eliminarse para conservar la trazabilidad de los casos.</p></div>
+<nav aria-label="Catálogos"><ul class="nav nav-tabs mb-3">
+  <li class="nav-item"><a class="nav-link{% if pestana == 'establecimientos' %} active" aria-current="page{% endif %}" href="?p=establecimientos">Establecimientos</a></li>
+  <li class="nav-item"><a class="nav-link{% if pestana == 'unidades' %} active" aria-current="page{% endif %}" href="?p=unidades">Unidades</a></li>
+  <li class="nav-item"><a class="nav-link{% if pestana == 'categorias' %} active" aria-current="page{% endif %}" href="?p=categorias">Motivos</a></li>
+  <li class="nav-item"><a class="nav-link{% if pestana == 'feriados' %} active" aria-current="page{% endif %}" href="?p=feriados">Feriados</a></li>
+</ul></nav>
+
+{% if pestana == 'establecimientos' %}
+<div class="caso"><section class="tarjeta caso__principal"><h2 class="h5">Establecimientos</h2>
+  <div class="table-responsive"><table class="table align-middle"><thead><tr><th scope="col">Código</th><th scope="col">Nombre</th><th scope="col">Tipo</th><th scope="col">Estado</th><th scope="col"><span class="visually-hidden">Acción</span></th></tr></thead><tbody>
+  {% for e in establecimientos %}<tr><td><code>{{ e.codigo }}</code></td><td>{{ e.nombre }}</td><td>{{ e.get_tipo_display }}</td><td>{{ e.activo|yesno:"Activo,Inactivo" }}</td>
+    <td><form method="post" action="{% url 'web:catalogo_alternar' 'establecimiento' e.pk %}">{% csrf_token %}<button class="btn btn-sm btn-outline-secondary">{{ e.activo|yesno:"Desactivar,Activar" }}</button></form></td></tr>{% endfor %}
+  </tbody></table></div></section>
+  <section class="tarjeta"><h2 class="h5">Agregar establecimiento</h2><form method="post" action="{% url 'web:catalogo_crear' 'establecimiento' %}" novalidate>{% csrf_token %}
+    {% for campo in forms.establecimiento %}{% include "web/inc/campo.html" %}{% endfor %}<button class="btn btn-primary" type="submit">Agregar</button></form></section></div>
+{% elif pestana == 'unidades' %}
+<div class="caso"><section class="tarjeta caso__principal"><h2 class="h5">Unidades de derivación</h2>
+  <div class="table-responsive"><table class="table align-middle"><thead><tr><th scope="col">Establecimiento</th><th scope="col">Unidad</th><th scope="col">Estado</th><th scope="col"><span class="visually-hidden">Acción</span></th></tr></thead><tbody>
+  {% for u in unidades %}<tr><td>{{ u.establecimiento.nombre }}</td><td>{{ u.nombre }}</td><td>{{ u.activa|yesno:"Activa,Inactiva" }}</td>
+    <td><form method="post" action="{% url 'web:catalogo_alternar' 'unidad' u.pk %}">{% csrf_token %}<button class="btn btn-sm btn-outline-secondary">{{ u.activa|yesno:"Desactivar,Activar" }}</button></form></td></tr>{% endfor %}
+  </tbody></table></div></section>
+  <section class="tarjeta"><h2 class="h5">Agregar unidad</h2><form method="post" action="{% url 'web:catalogo_crear' 'unidad' %}" novalidate>{% csrf_token %}
+    {% for campo in forms.unidad %}{% include "web/inc/campo.html" %}{% endfor %}<button class="btn btn-primary" type="submit">Agregar</button></form></section></div>
+{% elif pestana == 'categorias' %}
+<div class="caso"><section class="tarjeta caso__principal"><h2 class="h5">Motivos de clasificación</h2>
+  <div class="table-responsive"><table class="table align-middle"><thead><tr><th scope="col">Nombre</th><th scope="col">Descripción</th><th scope="col">Estado</th><th scope="col"><span class="visually-hidden">Acción</span></th></tr></thead><tbody>
+  {% for c in categorias %}<tr><td>{{ c.nombre }}{% if c.es_otro %} <span class="chip chip--estado">Abierta</span>{% endif %}</td><td>{{ c.descripcion }}</td><td>{{ c.activa|yesno:"Activa,Inactiva" }}</td>
+    <td><form method="post" action="{% url 'web:catalogo_alternar' 'categoria' c.pk %}">{% csrf_token %}<button class="btn btn-sm btn-outline-secondary">{{ c.activa|yesno:"Desactivar,Activar" }}</button></form></td></tr>{% endfor %}
+  </tbody></table></div></section>
+  <section class="tarjeta"><h2 class="h5">Agregar motivo</h2><form method="post" action="{% url 'web:catalogo_crear' 'categoria' %}" novalidate>{% csrf_token %}
+    {% for campo in forms.categoria %}{% include "web/inc/campo.html" %}{% endfor %}<button class="btn btn-primary" type="submit">Agregar</button></form></section></div>
+{% else %}
+<div class="caso"><section class="tarjeta caso__principal"><h2 class="h5">Feriados (últimos 60)</h2>
+  <p class="form-text">Se usan para calcular los 15 días hábiles. Un feriado nuevo se aplica a los casos que ingresen desde ese momento.</p>
+  <div class="table-responsive"><table class="table table-sm"><thead><tr><th scope="col">Fecha</th><th scope="col">Descripción</th></tr></thead><tbody>
+  {% for f in feriados %}<tr><td>{{ f.fecha|date:"d-m-Y" }}</td><td>{{ f.descripcion }}</td></tr>{% endfor %}</tbody></table></div></section>
+  <section class="tarjeta"><h2 class="h5">Agregar feriado</h2><form method="post" action="{% url 'web:catalogo_crear' 'feriado' %}" novalidate>{% csrf_token %}
+    {% for campo in forms.feriado %}{% include "web/inc/campo.html" %}{% endfor %}<button class="btn btn-primary" type="submit">Agregar</button></form></section></div>
+{% endif %}
+{% endblock %}

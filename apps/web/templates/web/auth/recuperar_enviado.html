@@ -1,0 +1,7 @@
+{% extends "web/auth/base_auth.html" %}
+{% block titulo %}Revise su correo{% endblock %}
+{% block contenido %}
+<h1 class="h4">Revise su correo</h1>
+<p role="status">Si el correo corresponde a una cuenta activa, enviamos un enlace para definir una nueva contraseña. El enlace vence en 30 minutos.</p>
+<a class="btn btn-primary" href="{% url 'web:ingresar' %}">Volver a ingresar</a>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% if form.errors %}
+<div class="alert alert-danger" role="alert" tabindex="-1" data-enfocar>
+  <p class="fw-bold mb-1">Revise los siguientes campos:</p>
+  <ul class="mb-0">{% for campo in form %}{% if campo.errors %}<li><a href="#{{ campo.id_for_label }}">{{ campo.label }}: {{ campo.errors|join:" " }}</a></li>{% endif %}{% endfor %}
+  {% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>
+</div>{% endif %}

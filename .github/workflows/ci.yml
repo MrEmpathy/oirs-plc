@@ -1,0 +1,75 @@
+# Integración continua (Definición de Terminado, sección 3.1): pruebas en verde, cobertura de servicios,
+# sin hallazgos altos en bandit ni pip-audit, y sintaxis PHP del plugin válida.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: ci-solo-pruebas
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 20
+      mongo:
+        image: mongo:7
+        ports: ["27017:27017"]
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.adminCommand(\"ping\").ok'" --health-interval 5s --health-retries 20
+    env:
+      DJANGO_SECRET_KEY: ci-clave-no-secreta-solo-para-pruebas-automatizadas
+      DJANGO_SECURE: "0"
+      PG_HOST: 127.0.0.1
+      PG_USER: oirs_owner
+      PG_PASSWORD: ci-owner
+      PG_APP_PASSWORD: ci-app
+      PG_SSLMODE: disable
+      MONGO_URI: mongodb://127.0.0.1:27017/
+      WP_HMAC_SECRET: dev-hmac-secret-solo-pruebas
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements*.txt
+      - name: Dependencias
+        run: pip install -r requirements.txt -r requirements-dev.txt
+      - name: Roles de base de datos (igual que despliegue/postgres/01-roles.sh)
+        env:
+          PGPASSWORD: ci-solo-pruebas
+        run: |
+          psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1 <<'SQL'
+          CREATE ROLE oirs_owner LOGIN CREATEDB PASSWORD 'ci-owner';
+          CREATE ROLE oirs_app LOGIN PASSWORD 'ci-app';
+          CREATE DATABASE oirs_plc OWNER oirs_owner;
+          SQL
+      - name: Comprobaciones de Django
+        run: |
+          python manage.py check --deploy --fail-level ERROR
+          python manage.py makemigrations --check --dry-run
+      - name: Pruebas unitarias, de integración y de seguridad (con cobertura)
+        run: pytest -q --cov=apps --cov-report=term --cov-report=xml --junitxml=junit.xml
+      - name: Análisis estático (bandit)
+        run: bandit -q -r apps config -lll
+      - name: Dependencias vulnerables (pip-audit)
+        run: pip-audit -r requirements.txt
+      - name: Sintaxis PHP del plugin y del tema
+        run: find wordpress-plugin wordpress-theme -name '*.php' -print0 | xargs -0 -n1 php -l
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: resultados-pruebas
+          path: |
+            junit.xml
+            coverage.xml

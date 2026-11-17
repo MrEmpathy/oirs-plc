@@ -22,6 +22,10 @@ class JsonSeguro(JsonResponse):
 
 
 def ip_cliente(request):
+    """IP de origen. Detrás de Nginx (único punto de entrada) se usa X-Real-IP, que fija el propio proxy."""
+    from django.conf import settings
+    if getattr(settings, "CONFIAR_PROXY", False) and request.META.get("HTTP_X_REAL_IP"):
+        return request.META["HTTP_X_REAL_IP"]
     return request.META.get("REMOTE_ADDR")
 
 

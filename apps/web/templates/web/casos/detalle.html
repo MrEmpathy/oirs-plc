@@ -1,0 +1,114 @@
+{% extends "web/app.html" %}{% load oirs %}
+{% block titulo %}Caso {{ req.folio }}{% endblock %}
+{% block contenido %}
+<p class="mb-2"><a href="{% url 'web:bandeja' %}">← Volver a la bandeja</a></p>
+<div class="encabezado encabezado--caso">
+  <div>
+    <h1><span class="folio">{{ req.folio }}</span></h1>
+    <p class="mb-0">{{ req.get_tipo_display }} · {{ req.establecimiento.nombre }} · canal {{ req.get_canal_display|lower }}</p>
+  </div>
+  <div class="d-flex flex-wrap gap-2 align-items-center">{% estado req.estado req.get_estado_display %}{% semaforo req.semaforo req.restantes %}</div>
+</div>
+
+{% if req.semaforo == 'ROJO' %}<div class="alert alert-danger" role="alert">Plazo legal vencido el {{ req.fecha_vencimiento|date:"d-m-Y" }}. Priorice la respuesta.</div>{% endif %}
+{% if not gestiona and req.estado != 'CERRADO' %}<div class="alert alert-secondary" role="status">Vista de solo lectura para su perfil.</div>{% endif %}
+
+<div class="caso">
+  <section class="tarjeta caso__principal" aria-labelledby="t-desc">
+    <h2 id="t-desc">Descripción</h2>
+    <p class="texto-largo">{{ req.descripcion }}</p>
+    {% if req.peticion_concreta %}<h3 class="h6">Petición concreta</h3><p class="texto-largo">{{ req.peticion_concreta }}</p>{% endif %}
+    <dl class="datos">
+      <div><dt>Ingreso</dt><dd>{{ req.fecha_ingreso|date:"d-m-Y H:i" }}</dd></div>
+      <div><dt>Vencimiento legal</dt><dd>{{ req.fecha_vencimiento|date:"d-m-Y" }}</dd></div>
+      <div><dt>Fecha de atención</dt><dd>{{ req.fecha_atencion|date:"d-m-Y"|default:"—" }}</dd></div>
+      <div><dt>Motivo</dt><dd>{{ req.categoria.nombre|default:"Sin clasificar" }}</dd></div>
+      <div><dt>Unidad</dt><dd>{{ req.unidad_derivada.nombre|default:"Sin derivar" }}</dd></div>
+    </dl>
+  </section>
+
+  <section class="tarjeta" aria-labelledby="t-sol">
+    <h2 id="t-sol">Solicitante</h2>
+    {% if not req.solicitante %}<p class="mb-0">Anónimo.</p>
+    {% elif ve_contacto %}
+      <dl class="datos datos--una">
+        <div><dt>Nombre</dt><dd>{{ req.solicitante.nombre }} {{ req.solicitante.apellidos }}</dd></div>
+        <div><dt>Correo</dt><dd>{{ req.solicitante.email|default:"—" }}</dd></div>
+        <div><dt>Teléfono</dt><dd>{{ req.solicitante.telefono|default:"—" }}</dd></div>
+        <div><dt>Respuesta por correo</dt><dd>{{ req.solicitante.autoriza_respuesta_email|yesno:"Autorizada,No autorizada (carta)" }}</dd></div>
+      </dl>
+    {% else %}<p class="mb-0">Identificado. Los datos de contacto solo son visibles para el establecimiento.</p>{% endif %}
+  </section>
+</div>
+
+{% if gestiona and req.estado != 'CERRADO' %}
+<section class="tarjeta acciones-caso" aria-labelledby="t-acc">
+  <h2 id="t-acc">Acciones</h2>
+  <div class="d-flex flex-wrap gap-2">
+    {% if form_derivar %}<button class="btn {% if req.estado == 'INGRESADO' %}btn-primary{% else %}btn-outline-primary{% endif %}" type="button" data-bs-toggle="modal" data-bs-target="#m-derivar">{% if req.estado == 'INGRESADO' %}Clasificar y derivar{% else %}Reasignar unidad{% endif %}</button>{% endif %}
+    {% if form_respuesta %}<button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#m-responder">Registrar respuesta</button>{% endif %}
+    {% if req.estado == 'RESPONDIDO' %}<button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#m-cerrar">Cerrar caso</button>{% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% if respuesta %}
+<section class="tarjeta" aria-labelledby="t-resp">
+  <h2 id="t-resp">Respuesta</h2>
+  <p class="texto-largo">{{ respuesta.contenido }}</p>
+  <p class="mb-0 text-secondary">{{ respuesta.get_medio_display }} · emitida el {{ respuesta.fecha_emision|date:"d-m-Y" }} ·
+    <strong>{{ respuesta.dentro_plazo|yesno:"dentro del plazo legal,fuera del plazo legal" }}</strong></p>
+</section>
+{% endif %}
+
+<section class="tarjeta" aria-labelledby="t-hist">
+  <h2 id="t-hist">Historial</h2>
+  <ol class="historial">
+    {% for h in historial %}
+    <li><span class="historial__fecha">{{ h.fecha|date:"d-m-Y H:i" }}</span>
+      <span><strong>{{ h.get_estado_nuevo_display }}</strong> · {{ h.accion|lower|capfirst }}{% if h.comentario %} · {{ h.comentario }}{% endif %}
+      <span class="text-secondary">· {% if h.usuario %}{{ h.usuario.nombre }} {{ h.usuario.apellidos }}{% else %}Sitio web{% endif %}</span></span></li>
+    {% endfor %}
+  </ol>
+  {% for d in derivaciones %}{% if d.instrucciones %}<p class="mb-1 text-secondary">Instrucciones a {{ d.unidad.nombre }} ({{ d.fecha|date:"d-m-Y" }}): {{ d.instrucciones }}</p>{% endif %}{% endfor %}
+  <p class="form-text mb-0">El historial no puede modificarse ni eliminarse (registro inmutable).</p>
+</section>
+
+{% if form_derivar %}
+<div class="modal fade" id="m-derivar" tabindex="-1" aria-labelledby="m-derivar-t" aria-hidden="true"{% if form_derivar.errors %} data-abrir{% endif %}>
+  <div class="modal-dialog"><form class="modal-content" method="post" action="{% url 'web:derivar' req.folio %}" novalidate>{% csrf_token %}
+    <div class="modal-header"><h2 class="modal-title h5" id="m-derivar-t">Clasificar y derivar</h2>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>
+    <div class="modal-body">{% for campo in form_derivar %}{% include "web/inc/campo.html" %}{% endfor %}</div>
+    <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+      <button class="btn btn-primary" type="submit">Derivar</button></div>
+  </form></div>
+</div>
+{% endif %}
+{% if form_respuesta %}
+<div class="modal fade" id="m-responder" tabindex="-1" aria-labelledby="m-resp-t" aria-hidden="true"{% if form_respuesta.errors %} data-abrir{% endif %}>
+  <div class="modal-dialog modal-lg"><form class="modal-content" method="post" action="{% url 'web:responder' req.folio %}" novalidate>{% csrf_token %}
+    <div class="modal-header"><h2 class="modal-title h5" id="m-resp-t">Registrar respuesta</h2>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>
+    <div class="modal-body">
+      <p class="form-text">Vencimiento legal: {{ req.fecha_vencimiento|date:"d-m-Y" }}. El sistema registrará si la respuesta se emitió dentro del plazo.</p>
+      {% for campo in form_respuesta %}{% include "web/inc/campo.html" %}{% endfor %}</div>
+    <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+      <button class="btn btn-primary" type="submit">Registrar respuesta</button></div>
+  </form></div>
+</div>
+{% endif %}
+{% if gestiona and req.estado == 'RESPONDIDO' %}
+<div class="modal fade" id="m-cerrar" tabindex="-1" aria-labelledby="m-cerrar-t" aria-hidden="true">
+  <div class="modal-dialog"><form class="modal-content" method="post" action="{% url 'web:cerrar' req.folio %}">{% csrf_token %}
+    <div class="modal-header"><h2 class="modal-title h5" id="m-cerrar-t">¿Cerrar el caso {{ req.folio }}?</h2>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>
+    <div class="modal-body"><p>Confirme que la respuesta ya fue enviada al solicitante. <strong>Un caso cerrado no puede modificarse.</strong></p>
+      <label class="form-label" for="comentario-cierre">Comentario (opcional)</label>
+      <input class="form-control" id="comentario-cierre" name="comentario" maxlength="500"></div>
+    <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+      <button class="btn btn-danger" type="submit">Sí, cerrar caso</button></div>
+  </form></div>
+</div>
+{% endif %}
+{% endblock %}

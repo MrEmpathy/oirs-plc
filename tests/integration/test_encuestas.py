@@ -31,3 +31,15 @@ def test_pi09_rechaza_respuestas_fuera_de_definicion(anon, encuesta, catalogo, c
 def test_pi10_rechaza_faltantes_obligatorias_y_establecimiento_inexistente(anon, encuesta, catalogo):
     assert post_firmado(anon, URL, {**VALIDA, "respuestas": {"p1": 5}}).status_code == 400
     assert post_firmado(anon, URL, {**VALIDA, "establecimiento": "X"}).status_code == 400
+
+
+@pytest.mark.django_db
+def test_pi23_reporte_refleja_una_respuesta_nueva_pese_a_la_cache(catalogo, encuesta, mdb):
+    """DEF-06: el resumen está en caché 5 min, pero una respuesta nueva debe verse de inmediato."""
+    from apps.encuestas import servicio as encuestas
+    mdb.respuestas_encuesta.delete_many({})
+    resp = {"p1": 7, "p2": 7, "p3": 7, "p4": 7, "p5": 7}
+    encuestas.registrar_respuesta(codigo=encuesta.codigo, establecimiento_codigo="CESFAM-PLC", respuestas=resp)
+    assert encuestas.resumen(encuesta.id)[0]["n"] == 1          # queda en caché
+    encuestas.registrar_respuesta(codigo=encuesta.codigo, establecimiento_codigo="CESFAM-PLC", respuestas=resp)
+    assert encuestas.resumen(encuesta.id)[0]["n"] == 2

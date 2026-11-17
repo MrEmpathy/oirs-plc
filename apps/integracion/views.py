@@ -53,8 +53,44 @@ def responder_encuesta(request, codigo):
 
 @require_GET
 @_firmado
+@manejar_errores
+def definicion_encuesta(request, codigo):
+    """Preguntas de la versión activa: el plugin las dibuja sin tenerlas escritas en su código, por lo que
+    una nueva versión de la encuesta no requiere modificar WordPress (sección 6.4)."""
+    from apps.encuestas.models import Encuesta
+    encuesta = Encuesta.objects.filter(codigo=codigo, activa=True).first()
+    if not encuesta:
+        return JsonSeguro({"error": "Encuesta no disponible"}, status=404)
+    d = encuestas.definicion(encuesta)
+    return JsonSeguro({"codigo": encuesta.codigo, "version": encuesta.version, "nombre": encuesta.nombre,
+                       "preguntas": d["preguntas"]})
+
+
+@require_GET
+@_firmado
 def catalogos(request):
     return JsonSeguro({
         "establecimientos": list(Establecimiento.objects.filter(activo=True).values("codigo", "nombre")),
         "categorias": list(Categoria.objects.filter(activa=True).values("id", "nombre")),
     })
+
+
+@require_GET
+def salud(request):
+    """Comprobación de disponibilidad para el monitoreo y el botón «Probar conexión» del plugin.
+    Responde solo el estado de cada componente, sin versiones ni detalles internos."""
+    from django.db import connection
+    from apps.core.documental import db as mongo
+    estado = {}
+    try:
+        connection.ensure_connection()
+        estado["postgresql"] = "ok"
+    except Exception:
+        estado["postgresql"] = "error"
+    try:
+        mongo().command("ping")
+        estado["documental"] = "ok"
+    except Exception:
+        estado["documental"] = "error"
+    ok = all(v == "ok" for v in estado.values())
+    return JsonSeguro({"estado": "ok" if ok else "degradado", **estado}, status=200 if ok else 503)

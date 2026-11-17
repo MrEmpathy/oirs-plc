@@ -1,0 +1,47 @@
+# Proxy inverso del Sistema de Gestión OIRS (sección 4.5): único componente expuesto (80/443).
+# Plantilla procesada por la imagen oficial de nginx (envsubst): ${OIRS_SERVER_NAME}, ${OIRS_HTTPS_PUERTO_PUBLICO}.
+
+# Solo los POST cuentan para el límite (una clave vacía no se limita): ver la página de login no consume intentos.
+map $request_method $clave_login { POST $binary_remote_addr; default ""; }
+limit_req_zone $clave_login zone=login:10m rate=5r/m;   # 5 intentos de login por minuto e IP
+limit_req_status 429;
+server_tokens off;                                      # no revela la versión de nginx
+
+server {
+  listen 80;
+  server_name ${OIRS_SERVER_NAME};
+  return 301 https://$host:${OIRS_HTTPS_PUERTO_PUBLICO}$request_uri;
+}
+
+server {
+  listen 443 ssl;
+  http2 on;
+  server_name ${OIRS_SERVER_NAME};
+
+  ssl_certificate     /etc/nginx/certs/servidor.crt;
+  ssl_certificate_key /etc/nginx/certs/servidor.key;
+  ssl_protocols TLSv1.2 TLSv1.3;
+  ssl_prefer_server_ciphers off;
+
+  add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+  client_max_body_size 1m;
+
+  # Cabeceras para la aplicación (DEF-01: la imagen alpine no trae el archivo proxy_params de Debian).
+  proxy_set_header Host              $http_host;
+  proxy_set_header X-Real-IP         $remote_addr;
+  proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+  proxy_set_header X-Forwarded-Proto https;
+
+  # Límite de tasa sobre los dos puntos de inicio de sesión (API y formulario web).
+  location = /api/v1/sesion/iniciar { limit_req zone=login burst=3 nodelay; proxy_pass http://app:8000; }
+  location = /ingresar              { limit_req zone=login burst=3 nodelay; proxy_pass http://app:8000; }
+
+  location /static/ {
+    alias /srv/static/;
+    expires 7d;
+    add_header Cache-Control "public";
+    add_header X-Content-Type-Options nosniff;
+  }
+
+  location / { proxy_pass http://app:8000; }
+}

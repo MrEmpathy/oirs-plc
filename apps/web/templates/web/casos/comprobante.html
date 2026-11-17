@@ -1,0 +1,16 @@
+{% extends "web/app.html" %}
+{% block titulo %}Comprobante {{ req.folio }}{% endblock %}
+{% block contenido %}
+<div class="comprobante tarjeta" role="status">
+  <p class="text-secondary mb-1">Comprobante de ingreso · OIRS {{ req.establecimiento.nombre }}</p>
+  <h1 class="h3">{{ req.get_tipo_display }} registrado</h1>
+  <p class="mb-1">Folio</p>
+  <p class="folio folio--grande">{{ req.folio }}</p>
+  <p>Ingresado el {{ req.fecha_ingreso|date:"d-m-Y H:i" }}.{% if req.solicitante %} Plazo legal de respuesta: <strong>{{ req.fecha_vencimiento|date:"d-m-Y" }}</strong> (15 días hábiles, Ley N.° 20.584).{% endif %}</p>
+  <div class="d-flex flex-wrap gap-2 no-imprimir">
+    <button class="btn btn-outline-primary" type="button" data-imprimir>Imprimir comprobante</button>
+    <a class="btn btn-primary" href="{% url 'web:detalle' req.folio %}">Ver el caso</a>
+    <a class="btn btn-outline-secondary" href="{% url 'web:ingreso_presencial' %}">Registrar otro</a>
+  </div>
+</div>
+{% endblock %}

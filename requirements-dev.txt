@@ -1,0 +1,7 @@
+# Herramientas de prueba y análisis (sección 8.9 del Informe 2). No se instalan en producción.
+pytest==9.2.0
+pytest-django==4.14.0
+pytest-cov==7.1.0
+bandit==1.9.4
+pip-audit==2.10.1
+locust==2.47.0

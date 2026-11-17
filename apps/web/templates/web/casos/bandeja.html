@@ -1,0 +1,52 @@
+{% extends "web/app.html" %}{% load oirs %}
+{% block titulo %}Bandeja de casos{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Bandeja de casos</h1>
+  <p class="text-secondary mb-0">{% if ve_red %}Toda la red de salud comunal{% else %}{{ user.establecimiento.nombre }}{% endif %} · ordenados por vencimiento</p>
+</div>
+
+<div class="indicadores" role="group" aria-label="Indicadores (filtran la bandeja)">
+  <a class="indicador{% if estado == 'abiertos' %} indicador--activo{% endif %}" href="?estado=abiertos"{% if estado == 'abiertos' %} aria-current="true"{% endif %}>
+    <span class="indicador__valor">{{ ind.abiertos }}</span><span class="indicador__texto">Abiertos</span></a>
+  <a class="indicador indicador--amarillo{% if estado == 'por_vencer' %} indicador--activo{% endif %}" href="?estado=por_vencer"{% if estado == 'por_vencer' %} aria-current="true"{% endif %}>
+    <span class="indicador__valor">{{ ind.por_vencer }}</span><span class="indicador__texto">Por vencer</span></a>
+  <a class="indicador indicador--rojo{% if estado == 'vencidos' %} indicador--activo{% endif %}" href="?estado=vencidos"{% if estado == 'vencidos' %} aria-current="true"{% endif %}>
+    <span class="indicador__valor">{{ ind.vencidos }}</span><span class="indicador__texto">Vencidos</span></a>
+  <a class="indicador{% if estado == 'RESPONDIDO' %} indicador--activo{% endif %}" href="?estado=RESPONDIDO"{% if estado == 'RESPONDIDO' %} aria-current="true"{% endif %}>
+    <span class="indicador__valor">{{ ind.respondidos }}</span><span class="indicador__texto">Por cerrar</span></a>
+</div>
+
+<form class="filtros" method="get" role="search" aria-label="Filtrar casos">
+  <div class="campo">{{ form.estado.label_tag }}{% load oirs %}{{ form.estado|control }}</div>
+  {% if ve_red %}<div class="campo">{{ form.establecimiento.label_tag }}{{ form.establecimiento|control }}</div>{% endif %}
+  <div class="campo campo--ancho">{{ form.q.label_tag }}{{ form.q|control }}</div>
+  <div class="filtros__acciones"><button class="btn btn-primary" type="submit">Filtrar</button>
+    <a class="btn btn-outline-secondary" href="{% url 'web:bandeja' %}">Limpiar</a></div>
+</form>
+
+{% if pagina.object_list %}
+<div class="tabla-casos" role="region" aria-label="Casos" tabindex="0">
+<table class="table align-middle">
+  <caption class="visually-hidden">Casos según los filtros aplicados</caption>
+  <thead><tr><th scope="col">Folio</th><th scope="col">Tipo</th>{% if ve_red %}<th scope="col">Establecimiento</th>{% endif %}<th scope="col">Ingreso</th><th scope="col">Vence</th><th scope="col">Estado</th><th scope="col">Plazo</th></tr></thead>
+  <tbody>
+  {% for r in pagina %}
+    <tr>
+      <td data-titulo="Folio"><a class="folio" href="{% url 'web:detalle' r.folio %}">{{ r.folio }}</a></td>
+      <td data-titulo="Tipo">{{ r.get_tipo_display }}{% if r.canal == 'PRESENCIAL' %} <span class="text-secondary">(presencial)</span>{% endif %}</td>
+      {% if ve_red %}<td data-titulo="Establecimiento">{{ r.establecimiento.nombre }}</td>{% endif %}
+      <td data-titulo="Ingreso">{{ r.fecha_ingreso|date:"d-m-Y" }}</td>
+      <td data-titulo="Vence">{{ r.fecha_vencimiento|date:"d-m-Y" }}</td>
+      <td data-titulo="Estado">{% estado r.estado r.get_estado_display %}</td>
+      <td data-titulo="Plazo">{% semaforo r.semaforo r.restantes %}{% if not r.semaforo %}<span class="text-secondary">—</span>{% endif %}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% include "web/inc/paginacion.html" %}
+{% else %}
+<div class="vacio" role="status"><p class="fw-bold mb-1">No hay casos con estos filtros.</p><p class="mb-0">Pruebe con «Todos» o limpie la búsqueda.</p></div>
+{% endif %}
+{% endblock %}

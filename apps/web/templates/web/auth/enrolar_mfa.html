@@ -1,0 +1,19 @@
+{% extends "web/auth/base_auth.html" %}
+{% block titulo %}Activar verificación en dos pasos{% endblock %}
+{% block contenido %}
+<h1 class="h4 mb-2">Active la verificación en dos pasos</h1>
+<p>Su perfil accede a información de toda la red, por lo que requiere un segundo factor.</p>
+<ol class="pasos">
+  <li>Instale una aplicación autenticadora (Google Authenticator, Microsoft Authenticator, FreeOTP…).</li>
+  <li>Escanee este código QR con la aplicación.
+    <div class="qr" role="img" aria-label="Código QR para registrar la cuenta en la aplicación autenticadora">{{ qr|safe }}</div>
+    <p class="form-text">Si no puede escanearlo, ingrese esta clave manualmente: <code class="clave-manual">{{ secreto }}</code></p></li>
+  <li>Escriba el código de 6 dígitos que muestra la aplicación.</li>
+</ol>
+{% if error %}<div class="alert alert-danger" role="alert" data-enfocar tabindex="-1">{{ error }}</div>{% endif %}
+<form method="post" novalidate>
+  {% csrf_token %}
+  {% include "web/inc/campo.html" with campo=form.codigo clase="campo--codigo" %}
+  <button class="btn btn-primary w-100" type="submit">Activar e ingresar</button>
+</form>
+{% endblock %}

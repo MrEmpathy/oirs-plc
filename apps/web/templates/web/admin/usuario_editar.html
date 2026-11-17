@@ -1,0 +1,37 @@
+{% extends "web/app.html" %}
+{% block titulo %}{{ u.nombre }} {{ u.apellidos }}{% endblock %}
+{% block contenido %}
+<p class="mb-2"><a href="{% url 'web:usuarios' %}">← Volver a usuarios</a></p>
+<div class="encabezado"><h1>{{ u.nombre }} {{ u.apellidos }}</h1>
+  <p class="text-secondary mb-0">{{ u.email }} · creada el {{ u.fecha_creacion|date:"d-m-Y" }} · último ingreso {{ u.last_login|date:"d-m-Y H:i"|default:"nunca" }}</p></div>
+<div class="caso">
+  <section class="tarjeta caso__principal"><h2>Datos y perfil</h2>
+    {% include "web/inc/resumen_errores.html" %}
+    <form method="post" novalidate>{% csrf_token %}
+      {% for campo in form %}{% include "web/inc/campo.html" %}{% endfor %}
+      <button class="btn btn-primary" type="submit">Guardar cambios</button></form>
+  </section>
+  <section class="tarjeta"><h2>Acceso</h2>
+    <dl class="datos datos--una">
+      <div><dt>Estado</dt><dd>{% if not u.is_active %}Desactivada{% elif u.esta_bloqueado %}Bloqueada hasta {{ u.bloqueado_hasta|date:"H:i" }}{% else %}Activa{% endif %}</dd></div>
+      <div><dt>Verificación en dos pasos</dt><dd>{% if u.mfa_secreto %}Activa{% elif u.requiere_mfa %}Pendiente de enrolar (obligatoria){% else %}No activada (opcional){% endif %}</dd></div>
+      <div><dt>Contraseña</dt><dd>{% if u.debe_cambiar_clave %}Temporal (debe cambiarla){% else %}Definida por el usuario{% endif %}</dd></div>
+    </dl>
+    <div class="d-grid gap-2">
+      {% if u.esta_bloqueado %}<form method="post" action="{% url 'web:usuario_accion' u.pk 'desbloquear' %}">{% csrf_token %}<button class="btn btn-outline-primary w-100">Desbloquear</button></form>{% endif %}
+      <form method="post" action="{% url 'web:usuario_accion' u.pk 'clave-temporal' %}">{% csrf_token %}<button class="btn btn-outline-primary w-100">Emitir contraseña temporal</button></form>
+      {% if u.mfa_secreto %}<form method="post" action="{% url 'web:usuario_accion' u.pk 'restablecer-mfa' %}">{% csrf_token %}<button class="btn btn-outline-primary w-100">Restablecer segundo factor</button></form>{% endif %}
+      {% if u.pk != user.pk %}{% if u.is_active %}
+        <button class="btn btn-outline-danger w-100" type="button" data-bs-toggle="modal" data-bs-target="#m-desactivar">Desactivar cuenta</button>
+      {% else %}<form method="post" action="{% url 'web:usuario_accion' u.pk 'activar' %}">{% csrf_token %}<button class="btn btn-outline-primary w-100">Activar cuenta</button></form>{% endif %}{% endif %}
+    </div>
+  </section>
+</div>
+<div class="modal fade" id="m-desactivar" tabindex="-1" aria-labelledby="m-desac-t" aria-hidden="true">
+  <div class="modal-dialog"><form class="modal-content" method="post" action="{% url 'web:usuario_accion' u.pk 'desactivar' %}">{% csrf_token %}
+    <div class="modal-header"><h2 class="modal-title h5" id="m-desac-t">¿Desactivar la cuenta?</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>
+    <div class="modal-body"><p>{{ u.nombre }} no podrá ingresar. Sus acciones anteriores se conservan en el historial.</p></div>
+    <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-danger" type="submit">Desactivar</button></div>
+  </form></div>
+</div>
+{% endblock %}

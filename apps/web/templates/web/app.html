@@ -1,0 +1,34 @@
+{% extends "web/base.html" %}{% load static %}
+{% block cuerpo %}
+<div class="consola">
+  <header class="consola__barra">
+    <a class="marca" href="{% url 'web:inicio' %}">
+      <img src="{% static 'web/img/icono.svg' %}" alt="" width="36" height="36">
+      <span><strong>Sistema de Gestión OIRS</strong><span>DSM Padre Las Casas</span></span>
+    </a>
+    <button class="btn btn-outline-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#menu"
+            aria-controls="menu">Menú</button>
+  </header>
+  <nav class="consola__menu offcanvas-lg offcanvas-start" id="menu" tabindex="-1" aria-label="Menú principal">
+    <div class="offcanvas-header d-lg-none">
+      <h2 class="offcanvas-title h5">Menú</h2>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#menu" aria-label="Cerrar menú"></button>
+    </div>
+    <div class="offcanvas-body flex-column">
+      <ul class="menu">
+        {% for op in menu %}<li><a href="{% url op.url %}" {% if seccion == op.clave %}aria-current="page"{% endif %}>{{ op.texto }}</a></li>{% endfor %}
+      </ul>
+      <div class="usuario">
+        <p class="mb-1"><strong>{{ user.nombre }} {{ user.apellidos }}</strong></p>
+        <p class="usuario__rol mb-2">{{ user.get_rol_display }}{% if user.establecimiento %} · {{ user.establecimiento.nombre }}{% endif %}</p>
+        <a class="d-block mb-2" href="{% url 'web:cambiar_clave' %}">Cambiar contraseña</a>
+        <form method="post" action="{% url 'web:salir' %}">{% csrf_token %}<button class="btn btn-outline-light btn-sm" type="submit">Salir</button></form>
+      </div>
+    </div>
+  </nav>
+  <main class="consola__contenido" id="principal" tabindex="-1">
+    {% include "web/inc/mensajes.html" %}
+    {% block contenido %}{% endblock %}
+  </main>
+</div>
+{% endblock %}

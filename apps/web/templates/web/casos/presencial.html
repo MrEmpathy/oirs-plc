@@ -1,0 +1,36 @@
+{% extends "web/app.html" %}
+{% block titulo %}Ingreso presencial{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Ingreso presencial</h1>
+  <p class="text-secondary mb-0">Digitalice el formulario en papel recibido en {{ establecimiento.nombre }}. El sistema asigna folio y plazo legal.</p>
+</div>
+{% include "web/inc/resumen_errores.html" %}
+<form method="post" novalidate class="formulario">
+  {% csrf_token %}
+  {{ form.establecimiento }}
+  <fieldset class="tarjeta"><legend class="h5">Solicitud</legend>
+    <div class="rejilla">
+      {% include "web/inc/campo.html" with campo=form.tipo %}
+      {% include "web/inc/campo.html" with campo=form.fecha_atencion %}
+    </div>
+    {% include "web/inc/campo.html" with campo=form.descripcion %}
+    {% include "web/inc/campo.html" with campo=form.peticion_concreta %}
+  </fieldset>
+  <fieldset class="tarjeta"><legend class="h5">Solicitante</legend>
+    <p class="form-text">Obligatorio para reclamos, consultas y solicitudes (nombre y un correo o teléfono). Opcional para sugerencias y felicitaciones.</p>
+    <div class="rejilla">
+      {% include "web/inc/campo.html" with campo=form.nombre %}
+      {% include "web/inc/campo.html" with campo=form.apellidos %}
+      {% include "web/inc/campo.html" with campo=form.email %}
+      {% include "web/inc/campo.html" with campo=form.telefono %}
+      {% include "web/inc/campo.html" with campo=form.edad %}
+      {% include "web/inc/campo.html" with campo=form.sexo %}
+    </div>
+    {% include "web/inc/campo.html" with campo=form.autoriza_respuesta_email %}
+  </fieldset>
+  {% include "web/inc/campo.html" with campo=form.acepta_tratamiento_datos %}
+  <div class="d-flex gap-2 mt-3"><button class="btn btn-primary" type="submit">Registrar y asignar folio</button>
+    <a class="btn btn-outline-secondary" href="{% url 'web:bandeja' %}">Cancelar</a></div>
+</form>
+{% endblock %}
