@@ -90,6 +90,7 @@ services:
       DJANGO_CONFIAR_PROXY: "0"
       WP_HMAC_SECRET: dev-hmac-secret-solo-pruebas
       REDIS_URL: ""
+      HOME: /tmp                    # caché de pip-audit/bandit en un directorio escribible
     volumes: [".:/app"]
     working_dir: /app
     user: "${UID:-1000}:${GID:-1000}"
