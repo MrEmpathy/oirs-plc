@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from apps.cuentas import views as cuentas
 from apps.integracion import views as publico
@@ -21,4 +21,7 @@ urlpatterns = [
     path("api/v1/requerimientos/<str:folio>/cerrar", req.cerrar),
     path("api/v1/reportes/indicadores", reportes.indicadores),
     path("api/v1/reportes/requerimientos.csv", reportes.exportar_csv),
+    path("api/v1/salud", publico.salud),
+    # Front administrativo (plantillas Django)
+    path("", include("apps.web.urls")),
 ]

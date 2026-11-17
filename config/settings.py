@@ -20,6 +20,9 @@ def env(nombre, defecto=None, obligatorio=False):
 DEBUG = env("DJANGO_DEBUG", "0") == "1"
 SECRET_KEY = env("DJANGO_SECRET_KEY", obligatorio=True)
 ALLOWED_HOSTS = [h.strip() for h in env("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")]
+CSRF_TRUSTED_ORIGINS = [o.strip() for o in env("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()]
+# Detrás de Nginx la IP real llega en X-Real-IP; solo se confía en ella si el proxy es el único acceso.
+CONFIAR_PROXY = env("DJANGO_CONFIAR_PROXY", "0") == "1"
 
 INSTALLED_APPS = [
     "django.contrib.auth",
@@ -34,6 +37,7 @@ INSTALLED_APPS = [
     "apps.auditoria",
     "apps.reportes",
     "apps.integracion",
+    "apps.web",
 ]
 
 MIDDLEWARE = [
@@ -45,6 +49,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "apps.cuentas.middleware.CabecerasSeguridadMiddleware",
+    "apps.web.middleware.CambioClaveObligatorioMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -59,6 +64,7 @@ TEMPLATES = [
             "django.template.context_processors.request",
             "django.contrib.auth.context_processors.auth",
             "django.contrib.messages.context_processors.messages",
+            "apps.web.contexto.menu",
         ]},
     }
 ]
@@ -102,6 +108,17 @@ AUTH_PASSWORD_VALIDATORS = [
 LOGIN_MAX_INTENTOS = 5
 LOGIN_BLOQUEO_MINUTOS = 15
 ROLES_CON_MFA = ("ADMIN", "OIRS_DSM")
+LOGIN_URL = "web:ingresar"
+LOGIN_REDIRECT_URL = "web:inicio"
+PASSWORD_RESET_TIMEOUT = 30 * 60        # enlace de recuperación válido 30 min (sección 7.2)
+MFA_EMISOR = "OIRS DSM Padre Las Casas"
+
+# --- Correo (recuperación de contraseña). En desarrollo se muestra en el log de la aplicación. ---
+EMAIL_BACKEND = env("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
+EMAIL_HOST = env("EMAIL_HOST", "localhost")
+EMAIL_PORT = int(env("EMAIL_PORT", "25"))
+EMAIL_USE_TLS = env("EMAIL_USE_TLS", "0") == "1"
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", "OIRS DSM Padre Las Casas <no-responder@salud.padrelascasas.cl>")
 
 # --- Sesión y cookies -------------------------------------------------------
 SESSION_COOKIE_AGE = 30 * 60           # 30 min de inactividad
@@ -128,6 +145,7 @@ USE_I18N = True
 USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # --- Registro de errores: nunca se exponen trazas al usuario ---------------
@@ -145,3 +163,7 @@ CACHE_TTL_REPORTES = 300
 
 # --- Reglas de negocio -----------------------------------------------------
 PLAZO_DIAS_HABILES = 15  # Ley N.° 20.584
+
+# --- Retención (sección 6.1 y 6.4). Valores provisorios hasta que el DSM confirme los plazos. ---
+RETENCION_DATOS_PERSONALES_DIAS = int(env("RETENCION_DATOS_PERSONALES_DIAS", str(5 * 365)))
+RETENCION_BITACORA_DIAS = int(env("RETENCION_BITACORA_DIAS", str(2 * 365)))

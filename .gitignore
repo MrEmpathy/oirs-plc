@@ -1,0 +1,19 @@
+# Secretos y configuración local (SC-05: nunca se versionan)
+.env
+despliegue/certs/
+despliegue/secrets/
+respaldos/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+staticfiles/
+
+# Resultados de pruebas generados en cada ejecución
+evidencias/es3/playwright/trazas/
+node_modules/

@@ -1,4 +1,5 @@
 """PS-13..PS-20: inyección SQL, XSS, CSRF, integridad del canal WordPress y mínimo privilegio en BD."""
+import os
 import time
 
 import psycopg
@@ -64,7 +65,9 @@ def test_ps18_errores_no_exponen_trazas(anon, catalogo):
 def test_ps19_usuario_app_sin_privilegio_update_delete_en_historial(anon, catalogo):
     post_firmado(anon, URL, RECLAMO_VALIDO)
     nombre_bd = connection.settings_dict["NAME"]
-    with psycopg.connect(host="127.0.0.1", dbname=nombre_bd, user="oirs_app", password="app_dev_only") as c:
+    # Credenciales del rol de la aplicación desde el entorno (DEF-02: antes estaban escritas en el código).
+    with psycopg.connect(host=connection.settings_dict["HOST"], port=connection.settings_dict["PORT"],
+                         dbname=nombre_bd, user="oirs_app", password=os.environ["PG_APP_PASSWORD"]) as c:
         with pytest.raises(psycopg.errors.InsufficientPrivilege):
             c.execute("DELETE FROM historial_estado")
 

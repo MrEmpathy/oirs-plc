@@ -1,0 +1,188 @@
+# Entorno completo del Sistema de Gestión OIRS (desarrollo, demostración y referencia de producción).
+# Preparación: ./scripts/preparar_entorno.sh   ·   Arranque: docker compose up -d --build
+#
+#   https://localhost:8443  -> Nginx -> Sistema de Gestión OIRS (funcionarios)
+#   http://localhost:8080   -> WordPress de demostración con el plugin DSM OIRS (ciudadanos)
+#
+# Redes: "datos" es interna (sin salida ni puertos publicados): solo la aplicación alcanza las bases (sección 4.5).
+
+x-app: &app
+  build:
+    context: .
+    args: {INSTALAR_DEV: "${INSTALAR_DEV:-0}"}
+  image: oirs-plc/app:local
+  env_file: .env
+  networks: [datos, web]
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: ${PG_SUPERUSER_PASSWORD:?definir en .env}
+      PG_OWNER_PASSWORD: ${PG_OWNER_PASSWORD:?definir en .env}
+      PG_APP_PASSWORD: ${PG_PASSWORD:?definir en .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./despliegue/postgres:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d oirs_plc"]
+      interval: 5s
+      retries: 20
+    networks: [datos]
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:7
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?definir en .env}
+      MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD:?definir en .env}
+    volumes:
+      - mongodata:/data/db
+      - ./despliegue/mongo:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      retries: 20
+    networks: [datos]
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    networks: [datos]
+    restart: unless-stopped
+
+  # Tarea única: migraciones con el rol propietario + datos iniciales. La aplicación usa el rol oirs_app.
+  migrar:
+    <<: *app
+    environment:
+      PG_USER: oirs_owner
+      PG_PASSWORD: ${PG_OWNER_PASSWORD}
+    command: ["sh", "-c", "python manage.py migrate --noinput && python manage.py sembrar_datos"]
+    depends_on:
+      postgres: {condition: service_healthy}
+      mongo: {condition: service_healthy}
+    restart: "no"
+
+  app:
+    <<: *app
+    depends_on:
+      migrar: {condition: service_completed_successfully}
+      redis: {condition: service_started}
+    volumes:
+      - static:/app/staticfiles
+    restart: unless-stopped
+
+  # Pruebas automatizadas (pytest, cobertura, bandit, pip-audit) con el código montado en vivo.
+  pruebas:
+    <<: *app
+    build:
+      context: .
+      args: {INSTALAR_DEV: "1"}
+    image: oirs-plc/app:dev
+    profiles: [herramientas]
+    environment:
+      PG_USER: oirs_owner           # crea y destruye la BD de pruebas (CREATEDB)
+      PG_PASSWORD: ${PG_OWNER_PASSWORD}
+      PG_APP_PASSWORD: ${PG_PASSWORD}   # PS-19 se conecta como oirs_app para comprobar sus privilegios
+      DJANGO_SECURE: "0"
+      DJANGO_CONFIAR_PROXY: "0"
+      WP_HMAC_SECRET: dev-hmac-secret-solo-pruebas
+      REDIS_URL: ""
+    volumes: [".:/app"]
+    working_dir: /app
+    user: "${UID:-1000}:${GID:-1000}"
+    command: ["pytest", "-q"]
+    depends_on:
+      postgres: {condition: service_healthy}
+      mongo: {condition: service_healthy}
+
+  nginx:
+    image: nginx:1.27-alpine
+    environment:
+      OIRS_SERVER_NAME: ${OIRS_SERVER_NAME:-localhost nginx}
+      OIRS_HTTPS_PUERTO_PUBLICO: ${OIRS_HTTPS_PUERTO_PUBLICO:-8443}
+    ports:
+      - "${OIRS_HTTPS_PUERTO_PUBLICO:-8443}:443"
+      - "${OIRS_HTTP_PUERTO_PUBLICO:-8081}:80"
+    volumes:
+      - ./despliegue/nginx/oirs.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - ./despliegue/certs:/etc/nginx/certs:ro
+      - static:/srv/static:ro
+    depends_on: [app]
+    networks: [web]
+    restart: unless-stopped
+
+  # --- Canal público de demostración (reemplaza al WordPress municipal, sin acceso en esta etapa) ---
+  mariadb:
+    image: mariadb:11.4
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: ${WP_DB_PASSWORD:?definir en .env}
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+    volumes:
+      - wpdb:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      retries: 20
+    networks: [wp]
+    restart: unless-stopped
+
+  wordpress:
+    image: wordpress:6.9-php8.3-apache
+    environment:
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: ${WP_DB_PASSWORD}
+      WORDPRESS_DB_NAME: wordpress
+      # Constantes que el plugin lee de wp-config.php (SC-08: el secreto nunca se guarda en la BD de WordPress).
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'OIRS_API_URL', 'https://nginx/' );
+        define( 'OIRS_HMAC_SECRET', getenv( 'OIRS_HMAC_SECRET' ) );
+        define( 'OIRS_API_CA', '/etc/oirs/ca.crt' );
+        define( 'OIRS_URL_FUNCIONARIOS', 'https://localhost:${OIRS_HTTPS_PUERTO_PUBLICO:-8443}/' );
+      OIRS_HMAC_SECRET: ${WP_HMAC_SECRET:?definir en .env}
+    ports:
+      - "${WP_PUERTO_PUBLICO:-8080}:80"
+    volumes:
+      - wpdata:/var/www/html
+      - ./wordpress-plugin/dsm-oirs-formularios:/var/www/html/wp-content/plugins/dsm-oirs-formularios:ro
+      - ./wordpress-theme/dsm-demo:/var/www/html/wp-content/themes/dsm-demo:ro
+      - ./despliegue/certs/ca.crt:/etc/oirs/ca.crt:ro
+    depends_on:
+      mariadb: {condition: service_healthy}
+    networks: [wp, web]
+    restart: unless-stopped
+
+  # Herramienta de línea de comandos de WordPress (solo para scripts/instalar_wordpress.sh).
+  wpcli:
+    image: wordpress:cli-php8.3
+    profiles: [herramientas]
+    user: "33:33"
+    environment:
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: ${WP_DB_PASSWORD}
+      WORDPRESS_DB_NAME: wordpress
+      HOME: /tmp
+    volumes:
+      - wpdata:/var/www/html
+      - ./wordpress-plugin/dsm-oirs-formularios:/var/www/html/wp-content/plugins/dsm-oirs-formularios:ro
+      - ./wordpress-theme/dsm-demo:/var/www/html/wp-content/themes/dsm-demo:ro
+    depends_on: [wordpress]
+    networks: [wp]
+
+networks:
+  datos: {internal: true}
+  web: {}
+  wp: {internal: true}
+
+volumes:
+  pgdata: {}
+  mongodata: {}
+  static: {}
+  wpdata: {}
+  wpdb: {}

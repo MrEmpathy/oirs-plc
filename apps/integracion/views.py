@@ -58,3 +58,24 @@ def catalogos(request):
         "establecimientos": list(Establecimiento.objects.filter(activo=True).values("codigo", "nombre")),
         "categorias": list(Categoria.objects.filter(activa=True).values("id", "nombre")),
     })
+
+
+@require_GET
+def salud(request):
+    """Comprobación de disponibilidad para el monitoreo y el botón «Probar conexión» del plugin.
+    Responde solo el estado de cada componente, sin versiones ni detalles internos."""
+    from django.db import connection
+    from apps.core.documental import db as mongo
+    estado = {}
+    try:
+        connection.ensure_connection()
+        estado["postgresql"] = "ok"
+    except Exception:
+        estado["postgresql"] = "error"
+    try:
+        mongo().command("ping")
+        estado["documental"] = "ok"
+    except Exception:
+        estado["documental"] = "error"
+    ok = all(v == "ok" for v in estado.values())
+    return JsonSeguro({"estado": "ok" if ok else "degradado", **estado}, status=200 if ok else 503)
