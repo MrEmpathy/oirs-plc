@@ -205,11 +205,11 @@ HOST=${OIRS_NOMBRE_PUBLICO:-localhost}
 paso "6/6 Verificación final"
 codigo=$(curl -s -o /dev/null -w '%{http_code}' --cacert despliegue/certs/ca.crt "https://localhost:$P_HTTPS/ingresar")
 [ "$codigo" = 200 ] && ok "Página de ingreso de funcionarios: 200" || fallar "La página de ingreso respondió $codigo."
-codigo=$(curl -s -o /dev/null -w '%{http_code}' -H "Host: $HOST:$P_WP" "http://localhost:$P_WP/oirs/")
+codigo=$(curl -s -o /dev/null -w '%{http_code}' --cacert despliegue/certs/ca.crt --resolve "$HOST:$P_WP:127.0.0.1" "https://$HOST:$P_WP/oirs/")
 [ "$codigo" = 200 ] && ok "Formulario OIRS en WordPress: 200" || fallar "WordPress respondió $codigo."
 if [ "$CON_ENCUESTA" = 1 ]; then
   i=0
-  until curl -fsS "http://localhost:$P_ENC/api/encuesta" 2>/dev/null | grep -q '"preguntas"'; do
+  until curl -fsS --cacert despliegue/certs/ca.crt "https://localhost:$P_ENC/api/encuesta" 2>/dev/null | grep -q '"preguntas"'; do
     i=$((i + 1)); [ "$i" -gt 12 ] && fallar "La encuesta de demostración no responde."
     sleep 5
   done
@@ -223,9 +223,9 @@ cat <<EOF
  Instalación completa
 ────────────────────────────────────────────────────────────────────────
  Funcionarios (Sistema OIRS):   https://$HOST:$P_HTTPS
- Ciudadanos (WordPress demo):   http://$HOST:$P_WP
+ Ciudadanos (WordPress demo):   https://$HOST:$P_WP
 EOF
-[ "$CON_ENCUESTA" = 1 ] && echo " Encuesta sin WordPress:        http://$HOST:$P_ENC/?est=CESFAM-PLC"
+[ "$CON_ENCUESTA" = 1 ] && echo " Encuesta sin WordPress:        https://$HOST:$P_ENC/?est=CESFAM-PLC"
 cat <<EOF
 
  Usuarios de demostración: admin@dsm.test, oirs.dsm@dsm.test, oirs.plc@dsm.test,

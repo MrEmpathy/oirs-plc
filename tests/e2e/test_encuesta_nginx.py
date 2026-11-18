@@ -1,6 +1,7 @@
 """E2E-09: encuesta de satisfacción servida por Nginx sin WordPress (despliegue/encuesta-demo).
 Recorre el mismo flujo que E2E-03, pero la página es estática y la firma HMAC la hace Nginx (njs) en el servidor."""
 import re
+import ssl
 import urllib.request
 from pathlib import Path
 
@@ -12,7 +13,8 @@ RAIZ = Path(__file__).resolve().parents[2]
 
 def _encuesta_activa():
     try:
-        with urllib.request.urlopen(f"{ENCUESTA}/", timeout=3) as r:   # noqa: S310 (URL local de pruebas)
+        ca = ssl.create_default_context(cafile=str(RAIZ / "despliegue" / "certs" / "ca.crt"))
+        with urllib.request.urlopen(f"{ENCUESTA}/", timeout=3, context=ca) as r:   # noqa: S310 (URL local de pruebas)
             return r.status == 200
     except OSError:
         return False

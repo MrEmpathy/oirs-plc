@@ -1,9 +1,10 @@
-# Encuesta servida por Nginx sin WordPress (despliegue/encuesta-demo) — verificación 2026-11-18 13:38 -03
+# Encuesta servida por Nginx sin WordPress (despliegue/encuesta-demo) — verificación 2026-11-18 14:02 -03
 # nginx version: nginx/1.27.5 · njs 0.8.10
 
 ## 1. Cabeceras de seguridad de la página
 HTTP/1.1 200 OK
 Server: nginx
+Strict-Transport-Security: max-age=31536000; includeSubDomains
 Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'
 X-Content-Type-Options: nosniff
 X-Frame-Options: DENY
@@ -26,7 +27,7 @@ Envío desde otro sitio (Sec-Fetch-Site)  {"error":"Origen no permitido"}  → H
 Método GET                               {"error":"Método no permitido"}  → HTTP 405
 Ruta de la API no expuesta                  → HTTP 404
 Cuerpo mayor a 8 KB                         → HTTP 413
-Respuestas en MongoDB: antes 13, después 14 (solo se guardó la válida)
+Respuestas en MongoDB: antes 20, después 21 (solo se guardó la válida)
 
 ## 5. El secreto HMAC no llega al navegador (apariciones en cada respuesta)
 /: 0
@@ -39,9 +40,9 @@ Respuestas en MongoDB: antes 13, después 14 (solo se guardó la válida)
 {"error":"Demasiados envíos desde este equipo. Intente más tarde."}
 
 ## 7. Registro de accesos sin IP (anonimato). El de errores solo la anota al rechazar un cuerpo excesivo (abuso)
-[18/Nov/2026:16:38:26 +0000] "POST /api/respuestas HTTP/1.1" 429 69
-[18/Nov/2026:16:38:26 +0000] "POST /api/respuestas HTTP/1.1" 429 69
-[18/Nov/2026:16:38:26 +0000] "POST /api/respuestas HTTP/1.1" 429 69
+[18/Nov/2026:17:02:25 +0000] "POST /api/respuestas HTTP/1.1" 429 69
+[18/Nov/2026:17:02:25 +0000] "POST /api/respuestas HTTP/1.1" 429 69
+[18/Nov/2026:17:02:25 +0000] "POST /api/respuestas HTTP/1.1" 429 69
 
 ## 8. Última respuesta guardada en MongoDB (sin IP, sin hora, sin datos personales)
 [

@@ -109,18 +109,24 @@ de red del servidor y/o su IP (por ejemplo, desde un notebook en la misma red):
 
 El script agrega esos nombres a `DJANGO_ALLOWED_HOSTS` y `DJANGO_CSRF_TRUSTED_ORIGINS`, renueva el certificado
 del servidor con la misma CA local, cambia la dirección de WordPress y reinicia `app`, `nginx` y `wordpress`.
-Luego: `http://ls.local:8080` (ciudadanos), `http://ls.local:8082` (encuesta sin WordPress) y
+Luego: `https://ls.local:8080` (ciudadanos), `https://ls.local:8082` (encuesta sin WordPress) y
 `https://ls.local:8443` (funcionarios).
+
+**Todo por HTTPS.** WordPress (puerto 8080) y la encuesta (8082) también se sirven con TLS y el mismo
+certificado. Nginx publica WordPress, que ya no tiene puerto propio. Es necesario porque HSTS se aplica al nombre
+completo, sin importar el puerto: después de entrar al sistema en `https://ls.local:8443`, el navegador exige
+HTTPS en `ls.local:8080`, y un sitio HTTP en ese nombre fallaría con `SSL_ERROR_RX_RECORD_TOO_LONG` (DEF-13).
+Si se escribe `http://`, Nginx redirige a `https://`.
 
 **Certificado:** el navegador mostrará una advertencia porque la CA es local. Puede aceptarse o importarse
 `despliegue/certs/ca.crt` como autoridad de confianza en el navegador.
 
-**Encuesta sin WordPress (solo demostración).** El servicio `encuesta` (http://localhost:8082) muestra la
+**Encuesta sin WordPress (solo demostración).** El servicio `encuesta` (https://localhost:8082) muestra la
 encuesta de satisfacción en una página estática servida por Nginx, sin WordPress. Sirve para presentar el canal
 ciudadano cuando no se quiere levantar el sitio de demostración. Cumple el mismo papel que el plugin:
 
 ```
-Navegador ──HTTP──► encuesta (Nginx + njs) ──HTTPS + HMAC──► nginx ──► Django ──► MongoDB
+Navegador ──HTTPS──► encuesta (Nginx + njs) ──HTTPS + HMAC──► nginx ──► Django ──► MongoDB
   página estática      firma en el servidor con WP_HMAC_SECRET
 ```
 
@@ -149,7 +155,7 @@ curl --cacert despliegue/certs/ca.crt https://localhost:8443/api/v1/salud
 
 Operación básica de punta a punta (la misma que ejecuta automáticamente la prueba E2E-01):
 
-1. Abrir http://localhost:8080 → «OIRS en línea» → elegir «Reclamo», el CESFAM Padre Las Casas, escribir
+1. Abrir https://localhost:8080 → «OIRS en línea» → elegir «Reclamo», el CESFAM Padre Las Casas, escribir
    «Prueba DEMO-01», nombre y correo, aceptar el tratamiento de datos y enviar. Se muestra un folio
    `PLC-AAAA-NNNNNN` y la fecha límite.
 2. Comprobar que se guardó:

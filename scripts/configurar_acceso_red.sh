@@ -40,14 +40,13 @@ echo "· Certificado renovado para: $SAN"
 
 # 3. Servicios que leen esa configuración
 docker compose up -d --force-recreate app nginx wordpress >/dev/null 2>&1
-WP_URL="http://$NOMBRE:$P_WP"
+case ",${COMPOSE_PROFILES:-}," in *,encuesta,*) docker compose up -d --force-recreate encuesta >/dev/null 2>&1 ;; esac
+# Dirección de WordPress (siempre HTTPS, DEF-13): reemplaza la anterior en opciones, menú y contenidos.
+WP_URL="https://$NOMBRE:$P_WP"
 docker compose --profile herramientas run --rm -T wpcli sh -c \
-  "wp option update home '$WP_URL' && wp option update siteurl '$WP_URL' && wp menu item list Principal --fields=db_id,link --format=csv" \
-  2>/dev/null | grep -E '^[0-9]+,http' | while IFS=, read -r id enlace; do
-    case "$enlace" in http://localhost:*/|http://*:"$P_WP"/) \
-      docker compose --profile herramientas run --rm -T wpcli wp menu item update "$id" --link="$WP_URL/" >/dev/null 2>&1 ;; esac
-  done
+  "anterior=\$(wp option get home) && [ \"\$anterior\" = '$WP_URL' ] || wp search-replace \"\$anterior\" '$WP_URL' --all-tables --skip-columns=guid" \
+  >/dev/null 2>&1
 echo "Listo:"
 echo "  Ciudadanos:    $WP_URL"
-case ",${COMPOSE_PROFILES:-}," in *,encuesta,*) echo "  Encuesta (sin WordPress): http://$NOMBRE:${ENCUESTA_PUERTO_PUBLICO:-8082}" ;; esac
+case ",${COMPOSE_PROFILES:-}," in *,encuesta,*) echo "  Encuesta (sin WordPress): https://$NOMBRE:${ENCUESTA_PUERTO_PUBLICO:-8082}" ;; esac
 echo "  Funcionarios:  https://$NOMBRE:$P_HTTPS   (importe $CERTS/ca.crt en el navegador para evitar la advertencia)"

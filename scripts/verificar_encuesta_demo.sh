@@ -6,7 +6,8 @@
 set -eu
 cd "$(dirname "$0")/.."
 . ./.env
-U="http://localhost:${ENCUESTA_PUERTO_PUBLICO:-8082}"
+U="https://localhost:${ENCUESTA_PUERTO_PUBLICO:-8082}"
+curl() { command curl --cacert despliegue/certs/ca.crt "$@"; }   # CA local del entorno
 case ",${COMPOSE_PROFILES:-}," in
   *,encuesta,*) ;;
   *) echo "La encuesta de demostración no está activada (COMPOSE_PROFILES sin «encuesta»). Use ./scripts/instalar.sh --con-encuesta"; exit 1 ;;
@@ -23,7 +24,7 @@ docker compose restart encuesta >/dev/null 2>&1 && sleep 2
 echo "# Encuesta servida por Nginx sin WordPress (despliegue/encuesta-demo) — verificación $(date '+%Y-%m-%d %H:%M %Z')"
 echo "# $(docker compose exec -T encuesta nginx -v 2>&1) · njs $(docker compose exec -T encuesta njs -v)"
 echo; echo "## 1. Cabeceras de seguridad de la página"
-curl -s -D - -o /dev/null "$U/" | grep -iE "^(HTTP|content-security|x-frame|x-content|referrer|permissions|server)"
+curl -s -D - -o /dev/null "$U/" | grep -iE "^(HTTP|strict-transport|content-security|x-frame|x-content|referrer|permissions|server)"
 echo; echo "## 2. Preguntas de la versión activa (GET /api/encuesta, firmado por njs)"
 curl -s "$U/api/encuesta" | head -c 300; echo " …"
 echo; echo "## 3. Establecimientos (GET /api/catalogos: solo código y nombre, sin el DSM)"

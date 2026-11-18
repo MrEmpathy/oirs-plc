@@ -12,8 +12,8 @@ from playwright.sync_api import sync_playwright
 
 RAIZ = Path(__file__).resolve().parents[2]
 OIRS = os.environ.get("E2E_OIRS", "https://localhost:8443")
-WP = os.environ.get("E2E_WP", "http://localhost:8080")
-ENCUESTA = os.environ.get("E2E_ENCUESTA", "http://localhost:8082")
+WP = os.environ.get("E2E_WP", "https://localhost:8080")
+ENCUESTA = os.environ.get("E2E_ENCUESTA", "https://localhost:8082")
 CAPTURAS = RAIZ / "evidencias" / "es3" / "capturas"
 
 SCRIPT_USUARIOS = """

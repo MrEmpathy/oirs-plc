@@ -17,6 +17,8 @@ server {
   listen 443 ssl;
   http2 on;
   server_name ${OIRS_SERVER_NAME};
+  error_page 497 = @https;                              # http:// a este puerto TLS → misma dirección con https
+  location @https { return 301 https://$http_host$request_uri; }
 
   ssl_certificate     /etc/nginx/certs/servidor.crt;
   ssl_certificate_key /etc/nginx/certs/servidor.key;
@@ -44,4 +46,34 @@ server {
   }
 
   location / { proxy_pass http://app:8000; }
+}
+
+# Sitio WordPress de demostración, también por HTTPS (DEF-13). HSTS se aplica al nombre completo, sin importar el
+# puerto: tras visitar el sistema, el navegador exige HTTPS en cualquier puerto de ese nombre, y un sitio HTTP en
+# el mismo nombre queda inaccesible. Además, el sitio real del DSM usa HTTPS.
+server {
+  listen 8080 ssl default_server;
+  http2 on;
+
+  ssl_certificate     /etc/nginx/certs/servidor.crt;
+  ssl_certificate_key /etc/nginx/certs/servidor.key;
+  ssl_protocols TLSv1.2 TLSv1.3;
+  ssl_prefer_server_ciphers off;
+
+  add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+  client_max_body_size 16m;                             # medios que sube la Unidad de Comunicaciones
+  error_page 497 = @https;
+  location @https { return 301 https://$http_host$request_uri; }
+
+  # WordPress recibe la IP real del ciudadano (límite de envíos del plugin). X-Forwarded-For se reemplaza, no se
+  # agrega: Apache (mod_remoteip) confía en redes privadas y un valor enviado por el cliente permitiría falsearla.
+  proxy_set_header Host              $http_host;
+  proxy_set_header X-Real-IP         $remote_addr;
+  proxy_set_header X-Forwarded-For   $remote_addr;
+  proxy_set_header X-Forwarded-Proto https;             # wp-config de la imagen oficial activa HTTPS con esto
+
+  # Resolución diferida: Nginx arranca aunque WordPress aún no exista (o no se haya instalado).
+  resolver 127.0.0.11 ipv6=off valid=30s;
+  set $wordpress http://wordpress:80;
+  location / { proxy_pass $wordpress; }
 }

@@ -6,9 +6,9 @@ Informe N.º 2: gestión de reclamos, sugerencias, consultas, solicitudes y feli
 WordPress del Departamento de Salud Municipal mediante un plugin.
 
 ```
-Ciudadano ──► WordPress + plugin DSM OIRS ──HTTPS + HMAC──► Nginx ──► Django (gunicorn) ──► PostgreSQL 16
-                                                               ▲                       └──► MongoDB 7 (encuestas, bitácora)
-Funcionarios ──────────────── HTTPS (sesión + 2FA) ────────────┘                       └──► Redis 7 (caché)
+Ciudadano ──HTTPS──► WordPress + plugin DSM OIRS ──HTTPS + HMAC──► Nginx ──► Django (gunicorn) ──► PostgreSQL 16
+                                                                      ▲                       └──► MongoDB 7 (encuestas, bitácora)
+Funcionarios ─────────────────── HTTPS (sesión + 2FA) ────────────────┘                       └──► Redis 7 (caché)
 ```
 
 ## Puesta en marcha rápida
@@ -33,8 +33,8 @@ docker compose up -d --build           # PostgreSQL, MongoDB, Redis, app, Nginx,
 | Dirección | Qué es | Quién la usa |
 |---|---|---|
 | https://localhost:8443 | Sistema de Gestión OIRS (Nginx → Django) | Funcionarios |
-| http://localhost:8080 | Sitio WordPress de demostración con el plugin | Ciudadanos |
-| http://localhost:8082 | Encuesta de satisfacción servida por Nginx, sin WordPress (solo demostración; se instala con `--con-encuesta`) | Ciudadanos |
+| https://localhost:8080 | Sitio WordPress de demostración con el plugin (por HTTPS, a través de Nginx) | Ciudadanos |
+| https://localhost:8082 | Encuesta de satisfacción servida por Nginx, sin WordPress (solo demostración; se instala con `--con-encuesta`) | Ciudadanos |
 
 Usuarios de demostración: `admin@dsm.test`, `oirs.dsm@dsm.test`, `oirs.plc@dsm.test`, `oirs.pul@dsm.test`,
 `dir.plc@dsm.test`. Contraseña inicial: valor `CLAVE_DEMO` del `.env` (se pide cambiarla en el primer ingreso).

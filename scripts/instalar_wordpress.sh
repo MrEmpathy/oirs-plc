@@ -6,7 +6,7 @@ set -eu
 cd "$(dirname "$0")/.."
 . ./.env
 
-WP_URL="http://${OIRS_NOMBRE_PUBLICO:-localhost}:${WP_PUERTO_PUBLICO:-8080}"
+WP_URL="https://${OIRS_NOMBRE_PUBLICO:-localhost}:${WP_PUERTO_PUBLICO:-8080}"   # Nginx publica WordPress con TLS
 wp() { docker compose --profile herramientas run --rm -T wpcli wp "$@"; }
 
 echo "· Esperando a WordPress…"
@@ -21,6 +21,13 @@ if ! wp core is-installed >/dev/null 2>&1; then
      --admin_user=admin_wp --admin_password="$WP_ADMIN_CLAVE" --admin_email=admin@dsm.test --skip-email
   echo "WP_ADMIN_CLAVE=$WP_ADMIN_CLAVE" >> .env
   echo "· WordPress instalado. Usuario admin_wp (contraseña guardada en .env como WP_ADMIN_CLAVE)."
+fi
+
+# Instalaciones anteriores usaban http:// (DEF-13): se reemplaza la dirección en opciones, menú y contenidos.
+anterior=$(wp option get home)
+if [ "$anterior" != "$WP_URL" ]; then
+  wp search-replace "$anterior" "$WP_URL" --all-tables --skip-columns=guid >/dev/null
+  echo "· Dirección del sitio actualizada: $anterior → $WP_URL"
 fi
 
 wp option update blogdescription "Sitio de demostración" >/dev/null
