@@ -13,7 +13,16 @@ Funcionarios ──────────────── HTTPS (sesión + 2
 
 ## Puesta en marcha rápida
 
-Requisitos: Linux con Docker 24+ y Docker Compose v2, `openssl`, 4 GB de RAM y 6 GB de disco libres.
+Requisitos: Linux (x86-64 con AVX o arm64 ARMv8.2, p. ej. Raspberry Pi 5), `openssl`, `curl`, 4 GB de RAM y 6 GB
+de disco libres. Docker 24+ con Compose v2: si falta, `./scripts/instalar.sh --instalar-docker` lo instala.
+
+```bash
+./scripts/instalar.sh                  # todo en un paso: requisitos, .env, certificados, servicios, WordPress
+./scripts/instalar.sh --red            # además, acceso desde otros equipos (nombre .local e IP del servidor)
+./scripts/instalar.sh --sin-encuesta   # sin la encuesta de demostración servida por Nginx
+```
+
+Paso a paso (lo mismo que hace el instalador):
 
 ```bash
 ./scripts/preparar_entorno.sh          # .env con secretos aleatorios + certificados TLS de desarrollo
@@ -25,7 +34,7 @@ docker compose up -d --build           # PostgreSQL, MongoDB, Redis, app, Nginx,
 |---|---|---|
 | https://localhost:8443 | Sistema de Gestión OIRS (Nginx → Django) | Funcionarios |
 | http://localhost:8080 | Sitio WordPress de demostración con el plugin | Ciudadanos |
-| http://localhost:8082 | Encuesta de satisfacción servida por Nginx, sin WordPress (solo demostración) | Ciudadanos |
+| http://localhost:8082 | Encuesta de satisfacción servida por Nginx, sin WordPress (solo demostración; opcional) | Ciudadanos |
 
 Usuarios de demostración: `admin@dsm.test`, `oirs.dsm@dsm.test`, `oirs.plc@dsm.test`, `oirs.pul@dsm.test`,
 `dir.plc@dsm.test`. Contraseña inicial: valor `CLAVE_DEMO` del `.env` (se pide cambiarla en el primer ingreso).

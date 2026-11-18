@@ -15,6 +15,7 @@ Versión: rama `es3/implementacion` · Fecha de verificación: 17-11-2026.
 | Redis | 7 (redis:7-alpine) | Caché de indicadores |
 | Nginx | 1.27 (nginx:1.27-alpine) | TLS 1.2/1.3, HSTS, límite de tasa del inicio de sesión |
 | WordPress / PHP / MariaDB | 6.9 / 8.3 / 11.4 | Sitio de demostración (reemplaza al WordPress municipal) |
+| Procesador | x86-64 con AVX o arm64 ARMv8.2-A | Exigencia de MongoDB 7: sirve una Raspberry Pi 5, no una Pi 4. `instalar.sh` lo revisa antes de descargar nada |
 | Recursos | 4 GB de RAM, 6 GB de disco | Medido el 17-11-2026: ~1,2 GB de RAM con los 7 servicios en marcha (suma de memoria residente de sus procesos; WordPress ocupa 511 MB) |
 
 Dependencias Python fijadas en `requirements.txt` (ejecución) y `requirements-dev.txt` (pruebas y análisis).
@@ -40,9 +41,41 @@ Se definen en `.env`, que **no se versiona**. `scripts/preparar_entorno.sh` lo c
 
 ## 2. Procedimiento reproducible
 
+### 2.1 Instalación automática (recomendada)
+
 ```bash
 git clone https://github.com/MrEmpathy/oirs-plc.git && cd oirs-plc
-git checkout es3/implementacion
+./scripts/instalar.sh --red
+```
+
+`scripts/instalar.sh` ejecuta en orden los pasos de la sección 2.2 y se detiene con un mensaje claro si algo
+falla. El detalle de cada comando queda en `instalacion.log`. Puede ejecutarse de nuevo sin perder datos: conserva
+el `.env`, los certificados y los volúmenes. Etapas:
+
+1. **Requisitos:** Linux, `openssl` y `curl`, Docker 24 o superior con Compose v2, procesador compatible con
+   MongoDB 7, memoria, disco libre (6 GB si faltan imágenes, 1 GB si ya están) y puertos libres.
+2. **Configuración:** `preparar_entorno.sh` (`.env` y certificados) y la opción de la encuesta en Nginx.
+3. **Servicios:** `docker compose up -d --build` y espera hasta que `/api/v1/salud` responda «ok».
+4. **WordPress:** `instalar_wordpress.sh`.
+5. **Red (opcional):** `configurar_acceso_red.sh`.
+6. **Verificación:** página de ingreso, formulario de WordPress y, si se incluyó, la encuesta en Nginx. Al final
+   muestra las direcciones, la contraseña de demostración y la ubicación de la CA.
+
+| Opción | Efecto |
+|---|---|
+| *(ninguna)* | Instalación local (`localhost`) con la encuesta de demostración incluida |
+| `--sin-encuesta` / `--con-encuesta` | Excluye o incluye la encuesta servida por Nginx sin WordPress (`COMPOSE_PROFILES` en el `.env`). Sin estas opciones se conserva lo que diga el `.env` |
+| `--nombre NOMBRE`, `--ip IP` | Acceso desde otros equipos con ese nombre y esa IP (`--ip` puede repetirse) |
+| `--red` | Igual que `--nombre "$(hostname).local" --ip <IP principal>` |
+| `--instalar-docker` | Si falta Docker, lo instala desde el repositorio oficial (Debian, Ubuntu, Raspberry Pi OS) y continúa sin cerrar sesión. Sin la opción, lo pregunta |
+
+Otros puertos (solo en una instalación nueva):
+`OIRS_HTTPS_PUERTO_PUBLICO=9443 OIRS_HTTP_PUERTO_PUBLICO=9081 WP_PUERTO_PUBLICO=9080 ENCUESTA_PUERTO_PUBLICO=9082 ./scripts/instalar.sh`.
+
+### 2.2 Instalación paso a paso
+
+```bash
+git clone https://github.com/MrEmpathy/oirs-plc.git && cd oirs-plc
 ./scripts/preparar_entorno.sh
 docker compose up -d --build
 ./scripts/instalar_wordpress.sh
@@ -102,7 +135,9 @@ Navegador ──HTTP──► encuesta (Nginx + njs) ──HTTPS + HMAC──►
 - `./scripts/verificar_encuesta_demo.sh` comprueba todo lo anterior y deja la evidencia en
   `evidencias/es3/encuesta_nginx.txt`. La prueba E2E-09 recorre la página en el navegador.
 
-Para levantar solo este canal: `docker compose up -d encuesta` (arranca también la API de la que depende).
+Es un servicio opcional (perfil `encuesta` de Compose). Está activo cuando el `.env` contiene
+`COMPOSE_PROFILES=encuesta`, el valor por defecto. Se quita con `./scripts/instalar.sh --sin-encuesta` y se
+vuelve a agregar con `--con-encuesta`. La prueba E2E-09 se omite si el servicio no está levantado.
 
 ## 3. Verificación de funcionamiento
 
@@ -131,6 +166,21 @@ Clonado del repositorio en un directorio vacío, con puertos 9443/9081/9080 para
 `ok`, formulario con 5 establecimientos, envío real con folio `PLC-2026-000001` guardado en PostgreSQL e ingreso
 de `oirs.plc@dsm.test` redirigido al cambio obligatorio de contraseña. Esta verificación detectó DEF-10 (puerto
 fijo en `CSRF_TRUSTED_ORIGINS`), corregido antes de repetirla.
+
+### Verificación del instalador automático (18-11-2026)
+
+Copia limpia de los archivos versionados (sin `.env`, certificados ni volúmenes) en otro directorio y con los
+puertos 9443/9081/9080/9082, en paralelo con la instalación principal:
+
+| Ejecución | Resultado |
+|---|---|
+| `./scripts/instalar.sh --red` (instalación nueva) | 6/6 etapas aprobadas en 2 min 8 s (imágenes ya descargadas). API «ok»; ingreso 200; WordPress 200; encuesta en Nginx con preguntas firmadas; acceso como `ls.local` y `192.168.1.191`. Un envío real a la encuesta respondió 201 |
+| `./scripts/instalar.sh --sin-encuesta` (repetición) | `.env` conservado (solo cambió `COMPOSE_PROFILES`); el contenedor `encuesta` se retiró y el puerto 9082 dejó de responder; el resto de los servicios quedó sano |
+| `./scripts/instalar.sh --con-encuesta` (repetición) | Encuesta de vuelta; se conservó el acceso por red configurado antes |
+| `./scripts/instalar.sh` en otra copia con los puertos por defecto ocupados | Se detuvo en la etapa 2 con «El puerto 8443 está ocupado» y la sugerencia de otros puertos, sin levantar contenedores |
+
+No se probó en un equipo sin Docker (`--instalar-docker`): esa rama sigue el procedimiento oficial de
+docs.docker.com para Debian, Ubuntu y Raspberry Pi OS.
 
 ## 4. Operación
 

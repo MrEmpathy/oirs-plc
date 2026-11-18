@@ -116,8 +116,10 @@ services:
     restart: unless-stopped
 
   # --- Encuesta de satisfacción sin WordPress (solo demostración): página estática + firma HMAC en Nginx (njs) ---
+  # Opcional: se activa con COMPOSE_PROFILES=encuesta en el .env (scripts/instalar.sh --sin-encuesta lo quita).
   encuesta:
     image: nginx:1.27-alpine
+    profiles: [encuesta]
     environment:
       OIRS_HMAC_SECRET: ${WP_HMAC_SECRET:?definir en .env}
       OIRS_API_URL: https://nginx/

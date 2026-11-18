@@ -17,3 +17,6 @@ staticfiles/
 # Resultados de pruebas generados en cada ejecución
 evidencias/es3/playwright/trazas/
 node_modules/
+
+# Registro del instalador (scripts/instalar.sh)
+instalacion.log

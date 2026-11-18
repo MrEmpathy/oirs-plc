@@ -55,6 +55,7 @@ Comunicaciones (WordPress).
 | C9 | Caché del resumen de satisfacción con invalidación por generación | DEF-06: la caché de INC-04 ocultaba respuestas nuevas |
 | C10 | Django 5.2.19 (antes 5.2.18), gunicorn 27, redis 8.1 | Parches de seguridad vigentes (pip-audit 0) y dependencia faltante (DEF-05) |
 | C11 | Canal alternativo de demostración para la encuesta: Nginx + njs, sin WordPress | Presentar la encuesta sin el sitio WordPress. Reutiliza `oirs.css`, el endpoint de definición (C3) y el mismo esquema HMAC, por lo que no exige cambios en la API |
+| C12 | Instalador de un solo comando (`scripts/instalar.sh`) con la encuesta en Nginx como servicio opcional (perfil de Compose) | Facilita instalar el sistema en otro equipo Linux y revisa antes los requisitos que hacían fallar la instalación a mitad de camino: procesador compatible con MongoDB 7, puertos y disco |
 
 ## 4. Trabajo colaborativo y control de versiones
 

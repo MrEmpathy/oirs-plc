@@ -49,5 +49,5 @@ docker compose --profile herramientas run --rm -T wpcli sh -c \
   done
 echo "Listo:"
 echo "  Ciudadanos:    $WP_URL"
-echo "  Encuesta (sin WordPress): http://$NOMBRE:${ENCUESTA_PUERTO_PUBLICO:-8082}"
+case ",${COMPOSE_PROFILES:-}," in *,encuesta,*) echo "  Encuesta (sin WordPress): http://$NOMBRE:${ENCUESTA_PUERTO_PUBLICO:-8082}" ;; esac
 echo "  Funcionarios:  https://$NOMBRE:$P_HTTPS   (importe $CERTS/ca.crt en el navegador para evitar la advertencia)"

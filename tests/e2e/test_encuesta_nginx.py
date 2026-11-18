@@ -1,11 +1,25 @@
 """E2E-09: encuesta de satisfacción servida por Nginx sin WordPress (despliegue/encuesta-demo).
 Recorre el mismo flujo que E2E-03, pero la página es estática y la firma HMAC la hace Nginx (njs) en el servidor."""
 import re
+import urllib.request
 from pathlib import Path
 
+import pytest
 from conftest import ENCUESTA, captura, nuevo_contexto
 
 RAIZ = Path(__file__).resolve().parents[2]
+
+
+def _encuesta_activa():
+    try:
+        with urllib.request.urlopen(f"{ENCUESTA}/", timeout=3) as r:   # noqa: S310 (URL local de pruebas)
+            return r.status == 200
+    except OSError:
+        return False
+
+
+# El servicio es opcional (scripts/instalar.sh --sin-encuesta): si no está levantado, la prueba se omite.
+pytestmark = pytest.mark.skipif(not _encuesta_activa(), reason="encuesta de demostración no levantada")
 
 
 def _secreto():

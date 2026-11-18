@@ -7,6 +7,10 @@ set -eu
 cd "$(dirname "$0")/.."
 . ./.env
 U="http://localhost:${ENCUESTA_PUERTO_PUBLICO:-8082}"
+case ",${COMPOSE_PROFILES:-}," in
+  *,encuesta,*) ;;
+  *) echo "La encuesta de demostración no está activada (COMPOSE_PROFILES sin «encuesta»). Use ./scripts/instalar.sh --con-encuesta"; exit 1 ;;
+esac
 J='Content-Type: application/json'
 O=evidencias/es3/encuesta_nginx.txt
 c() { printf '%-42s' "$1"; shift; curl -s -w '  → HTTP %{http_code}\n' "$@"; }
