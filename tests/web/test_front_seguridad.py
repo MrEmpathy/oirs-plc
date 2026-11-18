@@ -55,6 +55,8 @@ def test_ps23_enrolamiento_mfa_solo_guarda_el_secreto_tras_un_codigo_valido(clie
     assert r.url == "/ingresar/segundo-factor"
     r = client.get(r.url)
     assert b"<svg" in r.content                                     # QR generado en el servidor (sin servicios externos)
+    # DEF-15: con width/height fijos el CSS recortaba el QR y no se podía escanear; debe escalar con su viewBox.
+    assert re.search(rb"<svg[^>]*viewBox=", r.content) and not re.search(rb"<svg[^>]*\swidth=", r.content)
     secreto = client.session["mfa_nuevo"]
     client.post("/ingresar/segundo-factor", {"codigo": "123456"})
     admin.refresh_from_db()

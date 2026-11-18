@@ -1,0 +1,358 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='2180' height='1010' viewBox='0 0 2180 1010'><defs><marker id='punta' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='8' markerHeight='8' orient='auto-start-reverse'><path d='M0 0 L10 5 L0 10 z' fill='#334155'/></marker></defs><rect width='100%' height='100%' fill='#fff'/><text x='30' y='42' font-size='14' font-weight='bold' fill='#045cb4' font-family='Arial, Helvetica, sans-serif'>PostgreSQL 16 · base estructurada (3FN)</text>
+<rect x='1782' y='308' width='386' height='670' rx='12' fill='none' stroke='#146c43' stroke-dasharray='4 4'/><text x='1796' y='332' font-size='14' font-weight='bold' fill='#146c43' font-family='Arial, Helvetica, sans-serif'>MongoDB 7 · base documental</text>
+<path d='M380 150 L470 150' fill='none' stroke='#334155' stroke-width='1.4' />
+<text x='387' y='144' font-size='12' font-weight='bold' fill='#334155' text-anchor='start' font-family='Arial, Helvetica, sans-serif'>1</text>
+<text x='463' y='144' font-size='12' font-weight='bold' fill='#334155' text-anchor='end' font-family='Arial, Helvetica, sans-serif'>N</text>
+<path d='M205 215 L205 420' fill='none' stroke='#334155' stroke-width='1.4' />
+<text x='212' y='231' font-size='12' font-weight='bold' fill='#334155' text-anchor='start' font-family='Arial, Helvetica, sans-serif'>1</text>
+<text x='212' y='413' font-size='12' font-weight='bold' fill='#334155' text-anchor='start' font-family='Arial, Helvetica, sans-serif'>N</text>
+<path d='M380 210 L425 210 L425 440 L470 440' fill='none' stroke='#334155' stroke-width='1.4' />
+<text x='387' y='204' font-size='12' font-weight='bold' fill='#334155' text-anchor='start' font-family='Arial, Helvetica, sans-serif'>1</text>
+<text x='463' y='434' font-size='12' font-weight='bold' fill='#334155' text-anchor='end' font-family='Arial, Helvetica, sans-serif'>N</text>
+<path d='M380 820 L445 820 L445 580 L470 580' fill='none' stroke='#334155' stroke-width='1.4' />
+<text x='387' y='814' font-size='12' font-weight='bold' fill='#334155' text-anchor='start' font-family='Arial, Helvetica, sans-serif'>1</text>
+<text x='463' y='574' font-size='12' font-weight='bold' fill='#334155' text-anchor='end' font-family='Arial, Helvetica, sans-serif'>N</text>
+<path d='M645 236 L645 330' fill='none' stroke='#334155' stroke-width='1.4' />
+<text x='652' y='252' font-size='12' font-weight='bold' fill='#334155' text-anchor='start' font-family='Arial, Helvetica, sans-serif'>1</text>
+<text x='652' y='323' font-size='12' font-weight='bold' fill='#334155' text-anchor='start' font-family='Arial, Helvetica, sans-serif'>N</text>
+<text x='655' y='287.0' font-size='11.5' fill='#334155' font-style='italic' font-family='Arial, Helvetica, sans-serif'>derivado a</text>
+<path d='M910 150 L865 150 L865 346 L820 346' fill='none' stroke='#334155' stroke-width='1.4' />
+<text x='903' y='144' font-size='12' font-weight='bold' fill='#334155' text-anchor='end' font-family='Arial, Helvetica, sans-serif'>1</text>
+<text x='827' y='340' font-size='12' font-weight='bold' fill='#334155' text-anchor='start' font-family='Arial, Helvetica, sans-serif'>N</text>
+<path d='M820 400 L910 400' fill='none' stroke='#334155' stroke-width='1.4' />
+<text x='827' y='394' font-size='12' font-weight='bold' fill='#334155' text-anchor='start' font-family='Arial, Helvetica, sans-serif'>1</text>
+<text x='903' y='394' font-size='12' font-weight='bold' fill='#334155' text-anchor='end' font-family='Arial, Helvetica, sans-serif'>N</text>
+<path d='M820 570 L910 570' fill='none' stroke='#334155' stroke-width='1.4' />
+<text x='827' y='564' font-size='12' font-weight='bold' fill='#334155' text-anchor='start' font-family='Arial, Helvetica, sans-serif'>1</text>
+<text x='903' y='564' font-size='12' font-weight='bold' fill='#334155' text-anchor='end' font-family='Arial, Helvetica, sans-serif'>0..1</text>
+<path d='M820 634 L885 634 L885 760 L910 760' fill='none' stroke='#334155' stroke-width='1.4' />
+<text x='827' y='628' font-size='12' font-weight='bold' fill='#334155' text-anchor='start' font-family='Arial, Helvetica, sans-serif'>1</text>
+<text x='903' y='754' font-size='12' font-weight='bold' fill='#334155' text-anchor='end' font-family='Arial, Helvetica, sans-serif'>N</text>
+<path d='M1700 410 L1800 410' fill='none' stroke='#146c43' stroke-width='1.4' stroke-dasharray='6 4'/>
+<text x='1707' y='404' font-size='12' font-weight='bold' fill='#146c43' text-anchor='start' font-family='Arial, Helvetica, sans-serif'>1</text>
+<text x='1793' y='404' font-size='12' font-weight='bold' fill='#146c43' text-anchor='end' font-family='Arial, Helvetica, sans-serif'>1</text>
+<path d='M1700 480 L1765 480 L1765 580 L1800 580' fill='none' stroke='#146c43' stroke-width='1.4' stroke-dasharray='6 4'/>
+<text x='1707' y='474' font-size='12' font-weight='bold' fill='#146c43' text-anchor='start' font-family='Arial, Helvetica, sans-serif'>1</text>
+<text x='1793' y='574' font-size='12' font-weight='bold' fill='#146c43' text-anchor='end' font-family='Arial, Helvetica, sans-serif'>N</text>
+<path d='M645 664 L645 985 L1775 985 L1775 860 L1800 860' fill='none' stroke='#146c43' stroke-width='1.4' stroke-dasharray='6 4'/>
+<text x='652' y='680' font-size='12' font-weight='bold' fill='#146c43' text-anchor='start' font-family='Arial, Helvetica, sans-serif'>1</text>
+<text x='1793' y='854' font-size='12' font-weight='bold' fill='#146c43' text-anchor='end' font-family='Arial, Helvetica, sans-serif'>N</text>
+<text x='1000' y='979' font-size='11.5' fill='#146c43' font-style='italic' font-family='Arial, Helvetica, sans-serif'>referencia por folio</text>
+<rect x='30' y='70' width='350' height='145' rx='8' fill='#fff' stroke='#046bd2' stroke-width='1.6' />
+<path d='M30 78 a8 8 0 0 1 8 -8 h334 a8 8 0 0 1 8 8 v24 h-350 z' fill='#046bd2'/>
+<text x='42' y='91' fill='#fff' font-weight='bold' font-size='14' font-family='Arial, Helvetica, sans-serif'>establecimiento</text>
+<text x='42' y='118' font-size='12.5' fill='#1e293b' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>id</text>
+<text x='202' y='118' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>bigint</text>
+<text x='370' y='118' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>PK</text>
+<rect x='31' y='124' width='348' height='21' fill='#f0f5fa'/>
+<text x='42' y='139' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>codigo</text>
+<text x='202' y='139' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>varchar(12)</text>
+<text x='370' y='139' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>UK</text>
+<text x='42' y='160' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>nombre</text>
+<text x='202' y='160' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>varchar(120)</text>
+<text x='370' y='160' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>UK</text>
+<rect x='31' y='166' width='348' height='21' fill='#f0f5fa'/>
+<text x='42' y='181' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>tipo</text>
+<text x='202' y='181' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>CESFAM, SAPU, PSR…</text>
+<text x='42' y='202' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>activo</text>
+<text x='202' y='202' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>boolean</text>
+<rect x='30' y='420' width='350' height='250' rx='8' fill='#fff' stroke='#046bd2' stroke-width='1.6' />
+<path d='M30 428 a8 8 0 0 1 8 -8 h334 a8 8 0 0 1 8 8 v24 h-350 z' fill='#046bd2'/>
+<text x='42' y='441' fill='#fff' font-weight='bold' font-size='14' font-family='Arial, Helvetica, sans-serif'>usuario</text>
+<text x='42' y='468' font-size='12.5' fill='#1e293b' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>id</text>
+<text x='202' y='468' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>bigint</text>
+<text x='370' y='468' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>PK</text>
+<rect x='31' y='474' width='348' height='21' fill='#f0f5fa'/>
+<text x='42' y='489' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>email</text>
+<text x='202' y='489' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>varchar</text>
+<text x='370' y='489' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>UK</text>
+<text x='42' y='510' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>rol</text>
+<text x='202' y='510' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>ADMIN, OIRS_DSM, …</text>
+<text x='370' y='510' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>CHECK</text>
+<rect x='31' y='516' width='348' height='21' fill='#f0f5fa'/>
+<text x='42' y='531' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>establecimiento_id</text>
+<text x='202' y='531' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>→ establecimiento</text>
+<text x='370' y='531' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>FK</text>
+<text x='42' y='552' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>intentos_fallidos</text>
+<text x='202' y='552' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>smallint ≥ 0</text>
+<text x='370' y='552' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>CHECK</text>
+<rect x='31' y='558' width='348' height='21' fill='#f0f5fa'/>
+<text x='42' y='573' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>bloqueado_hasta</text>
+<text x='202' y='573' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>timestamptz</text>
+<text x='42' y='594' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>mfa_secreto</text>
+<text x='202' y='594' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>varchar(64)</text>
+<rect x='31' y='600' width='348' height='21' fill='#f0f5fa'/>
+<text x='42' y='615' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>debe_cambiar_clave</text>
+<text x='202' y='615' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>boolean</text>
+<text x='42' y='636' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>password</text>
+<text x='202' y='636' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>Argon2id</text>
+<text x='42' y='660' font-size='11.5' font-style='italic' fill='#334155' font-family='Arial, Helvetica, sans-serif'>CHECK: OIRS_EST y Dirección exigen establecimiento</text>
+<rect x='30' y='760' width='350' height='208' rx='8' fill='#fff' stroke='#046bd2' stroke-width='1.6' />
+<path d='M30 768 a8 8 0 0 1 8 -8 h334 a8 8 0 0 1 8 8 v24 h-350 z' fill='#046bd2'/>
+<text x='42' y='781' fill='#fff' font-weight='bold' font-size='14' font-family='Arial, Helvetica, sans-serif'>solicitante</text>
+<text x='42' y='808' font-size='12.5' fill='#1e293b' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>id</text>
+<text x='202' y='808' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>bigint</text>
+<text x='370' y='808' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>PK</text>
+<rect x='31' y='814' width='348' height='21' fill='#f0f5fa'/>
+<text x='42' y='829' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>nombre, apellidos</text>
+<text x='202' y='829' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>varchar(80)</text>
+<text x='42' y='850' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>email</text>
+<text x='202' y='850' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>varchar</text>
+<rect x='31' y='856' width='348' height='21' fill='#f0f5fa'/>
+<text x='42' y='871' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>telefono</text>
+<text x='202' y='871' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>varchar(15)</text>
+<text x='42' y='892' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>edad</text>
+<text x='202' y='892' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>smallint 0..120</text>
+<text x='370' y='892' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>CHECK</text>
+<rect x='31' y='898' width='348' height='21' fill='#f0f5fa'/>
+<text x='42' y='913' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>autoriza_resp_correo</text>
+<text x='202' y='913' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>boolean</text>
+<text x='42' y='934' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>anonimizado</text>
+<text x='202' y='934' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>boolean</text>
+<text x='42' y='958' font-size='11.5' font-style='italic' fill='#334155' font-family='Arial, Helvetica, sans-serif'>CHECK: respuesta por correo exige correo o teléfono</text>
+<rect x='470' y='70' width='350' height='166' rx='8' fill='#fff' stroke='#046bd2' stroke-width='1.6' />
+<path d='M470 78 a8 8 0 0 1 8 -8 h334 a8 8 0 0 1 8 8 v24 h-350 z' fill='#046bd2'/>
+<text x='482' y='91' fill='#fff' font-weight='bold' font-size='14' font-family='Arial, Helvetica, sans-serif'>unidad</text>
+<text x='482' y='118' font-size='12.5' fill='#1e293b' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>id</text>
+<text x='642' y='118' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>bigint</text>
+<text x='810' y='118' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>PK</text>
+<rect x='471' y='124' width='348' height='21' fill='#f0f5fa'/>
+<text x='482' y='139' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>establecimiento_id</text>
+<text x='642' y='139' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>→ establecimiento</text>
+<text x='810' y='139' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>FK</text>
+<text x='482' y='160' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>nombre</text>
+<text x='642' y='160' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>varchar(120)</text>
+<text x='810' y='160' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>UK*</text>
+<rect x='471' y='166' width='348' height='21' fill='#f0f5fa'/>
+<text x='482' y='181' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>responsable_id</text>
+<text x='642' y='181' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>→ usuario</text>
+<text x='810' y='181' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>FK</text>
+<text x='482' y='202' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>activa</text>
+<text x='642' y='202' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>boolean</text>
+<text x='482' y='226' font-size='11.5' font-style='italic' fill='#334155' font-family='Arial, Helvetica, sans-serif'>* único por establecimiento</text>
+<rect x='470' y='330' width='350' height='334' rx='8' fill='#fff' stroke='#046bd2' stroke-width='1.6' />
+<path d='M470 338 a8 8 0 0 1 8 -8 h334 a8 8 0 0 1 8 8 v24 h-350 z' fill='#046bd2'/>
+<text x='482' y='351' fill='#fff' font-weight='bold' font-size='14' font-family='Arial, Helvetica, sans-serif'>requerimiento</text>
+<text x='482' y='378' font-size='12.5' fill='#1e293b' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>id</text>
+<text x='642' y='378' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>bigint</text>
+<text x='810' y='378' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>PK</text>
+<rect x='471' y='384' width='348' height='21' fill='#f0f5fa'/>
+<text x='482' y='399' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>folio</text>
+<text x='642' y='399' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>PLC-AAAA-NNNNNN</text>
+<text x='810' y='399' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>UK</text>
+<text x='482' y='420' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>tipo</text>
+<text x='642' y='420' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>RECLAMO, SUGERENCIA…</text>
+<rect x='471' y='426' width='348' height='21' fill='#f0f5fa'/>
+<text x='482' y='441' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>canal</text>
+<text x='642' y='441' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>WEB, PRESENCIAL</text>
+<text x='482' y='462' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>establecimiento_id</text>
+<text x='642' y='462' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>→ establecimiento</text>
+<text x='810' y='462' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>FK</text>
+<rect x='471' y='468' width='348' height='21' fill='#f0f5fa'/>
+<text x='482' y='483' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>categoria_id</text>
+<text x='642' y='483' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>→ categoria</text>
+<text x='810' y='483' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>FK</text>
+<text x='482' y='504' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>solicitante_id</text>
+<text x='642' y='504' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>→ solicitante</text>
+<text x='810' y='504' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>FK</text>
+<rect x='471' y='510' width='348' height='21' fill='#f0f5fa'/>
+<text x='482' y='525' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>unidad_derivada_id</text>
+<text x='642' y='525' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>→ unidad</text>
+<text x='810' y='525' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>FK</text>
+<text x='482' y='546' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>creado_por_id</text>
+<text x='642' y='546' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>→ usuario</text>
+<text x='810' y='546' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>FK</text>
+<rect x='471' y='552' width='348' height='21' fill='#f0f5fa'/>
+<text x='482' y='567' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>descripcion</text>
+<text x='642' y='567' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>text (10..4000)</text>
+<text x='810' y='567' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>NN</text>
+<text x='482' y='588' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>fecha_ingreso</text>
+<text x='642' y='588' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>timestamptz</text>
+<rect x='471' y='594' width='348' height='21' fill='#f0f5fa'/>
+<text x='482' y='609' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>fecha_vencimiento</text>
+<text x='642' y='609' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>date ≥ ingreso</text>
+<text x='810' y='609' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>CHECK</text>
+<text x='482' y='630' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>estado</text>
+<text x='642' y='630' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>INGRESADO…CERRADO</text>
+<text x='482' y='654' font-size='11.5' font-style='italic' fill='#334155' font-family='Arial, Helvetica, sans-serif'>Índices: (establecimiento, estado), vencimiento, ingreso</text>
+<rect x='1350' y='200' width='350' height='103' rx='8' fill='#fff' stroke='#046bd2' stroke-width='1.6' />
+<path d='M1350 208 a8 8 0 0 1 8 -8 h334 a8 8 0 0 1 8 8 v24 h-350 z' fill='#046bd2'/>
+<text x='1362' y='221' fill='#fff' font-weight='bold' font-size='14' font-family='Arial, Helvetica, sans-serif'>correlativo_folio</text>
+<text x='1362' y='248' font-size='12.5' fill='#1e293b' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>anio</text>
+<text x='1522' y='248' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>smallint</text>
+<text x='1690' y='248' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>PK</text>
+<rect x='1351' y='254' width='348' height='21' fill='#f0f5fa'/>
+<text x='1362' y='269' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>ultimo</text>
+<text x='1522' y='269' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>integer</text>
+<text x='1362' y='293' font-size='11.5' font-style='italic' fill='#334155' font-family='Arial, Helvetica, sans-serif'>SELECT … FOR UPDATE: folio sin duplicados</text>
+<rect x='910' y='70' width='350' height='145' rx='8' fill='#fff' stroke='#046bd2' stroke-width='1.6' />
+<path d='M910 78 a8 8 0 0 1 8 -8 h334 a8 8 0 0 1 8 8 v24 h-350 z' fill='#046bd2'/>
+<text x='922' y='91' fill='#fff' font-weight='bold' font-size='14' font-family='Arial, Helvetica, sans-serif'>categoria</text>
+<text x='922' y='118' font-size='12.5' fill='#1e293b' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>id</text>
+<text x='1082' y='118' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>bigint</text>
+<text x='1250' y='118' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>PK</text>
+<rect x='911' y='124' width='348' height='21' fill='#f0f5fa'/>
+<text x='922' y='139' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>nombre</text>
+<text x='1082' y='139' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>varchar(80)</text>
+<text x='1250' y='139' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>UK</text>
+<text x='922' y='160' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>es_otro</text>
+<text x='1082' y='160' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>boolean</text>
+<text x='1250' y='160' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>UK*</text>
+<rect x='911' y='166' width='348' height='21' fill='#f0f5fa'/>
+<text x='922' y='181' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>activa</text>
+<text x='1082' y='181' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>boolean</text>
+<text x='922' y='205' font-size='11.5' font-style='italic' fill='#334155' font-family='Arial, Helvetica, sans-serif'>* una sola categoría «Otro»</text>
+<rect x='910' y='290' width='350' height='166' rx='8' fill='#fff' stroke='#046bd2' stroke-width='1.6' />
+<path d='M910 298 a8 8 0 0 1 8 -8 h334 a8 8 0 0 1 8 8 v24 h-350 z' fill='#046bd2'/>
+<text x='922' y='311' fill='#fff' font-weight='bold' font-size='14' font-family='Arial, Helvetica, sans-serif'>derivacion</text>
+<text x='922' y='338' font-size='12.5' fill='#1e293b' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>id</text>
+<text x='1082' y='338' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>bigint</text>
+<text x='1250' y='338' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>PK</text>
+<rect x='911' y='344' width='348' height='21' fill='#f0f5fa'/>
+<text x='922' y='359' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>requerimiento_id</text>
+<text x='1082' y='359' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>→ requerimiento</text>
+<text x='1250' y='359' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>FK</text>
+<text x='922' y='380' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>unidad_id</text>
+<text x='1082' y='380' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>→ unidad</text>
+<text x='1250' y='380' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>FK</text>
+<rect x='911' y='386' width='348' height='21' fill='#f0f5fa'/>
+<text x='922' y='401' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>derivado_por_id</text>
+<text x='1082' y='401' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>→ usuario</text>
+<text x='1250' y='401' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>FK</text>
+<text x='922' y='422' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>instrucciones</text>
+<text x='1082' y='422' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>text</text>
+<rect x='911' y='428' width='348' height='21' fill='#f0f5fa'/>
+<text x='922' y='443' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>fecha</text>
+<text x='1082' y='443' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>timestamptz</text>
+<rect x='910' y='480' width='350' height='187' rx='8' fill='#fff' stroke='#046bd2' stroke-width='1.6' />
+<path d='M910 488 a8 8 0 0 1 8 -8 h334 a8 8 0 0 1 8 8 v24 h-350 z' fill='#046bd2'/>
+<text x='922' y='501' fill='#fff' font-weight='bold' font-size='14' font-family='Arial, Helvetica, sans-serif'>respuesta</text>
+<text x='922' y='528' font-size='12.5' fill='#1e293b' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>id</text>
+<text x='1082' y='528' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>bigint</text>
+<text x='1250' y='528' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>PK</text>
+<rect x='911' y='534' width='348' height='21' fill='#f0f5fa'/>
+<text x='922' y='549' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>requerimiento_id</text>
+<text x='1082' y='549' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>→ requerimiento</text>
+<text x='1250' y='549' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>FK UK</text>
+<text x='922' y='570' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>contenido</text>
+<text x='1082' y='570' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>text (20..6000)</text>
+<rect x='911' y='576' width='348' height='21' fill='#f0f5fa'/>
+<text x='922' y='591' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>medio</text>
+<text x='1082' y='591' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>EMAIL, CARTA…</text>
+<text x='922' y='612' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>fecha_emision</text>
+<text x='1082' y='612' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>date</text>
+<rect x='911' y='618' width='348' height='21' fill='#f0f5fa'/>
+<text x='922' y='633' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>dentro_plazo</text>
+<text x='1082' y='633' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>boolean</text>
+<text x='922' y='654' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>registrado_por_id</text>
+<text x='1082' y='654' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>→ usuario</text>
+<text x='1250' y='654' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>FK</text>
+<rect x='910' y='700' width='350' height='208' rx='8' fill='#fff' stroke='#046bd2' stroke-width='1.6' />
+<path d='M910 708 a8 8 0 0 1 8 -8 h334 a8 8 0 0 1 8 8 v24 h-350 z' fill='#046bd2'/>
+<text x='922' y='721' fill='#fff' font-weight='bold' font-size='14' font-family='Arial, Helvetica, sans-serif'>historial_estado</text>
+<text x='922' y='748' font-size='12.5' fill='#1e293b' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>id</text>
+<text x='1082' y='748' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>bigint</text>
+<text x='1250' y='748' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>PK</text>
+<rect x='911' y='754' width='348' height='21' fill='#f0f5fa'/>
+<text x='922' y='769' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>requerimiento_id</text>
+<text x='1082' y='769' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>→ requerimiento</text>
+<text x='1250' y='769' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>FK</text>
+<text x='922' y='790' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>estado_anterior</text>
+<text x='1082' y='790' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>varchar</text>
+<rect x='911' y='796' width='348' height='21' fill='#f0f5fa'/>
+<text x='922' y='811' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>estado_nuevo</text>
+<text x='1082' y='811' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>varchar</text>
+<text x='922' y='832' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>accion</text>
+<text x='1082' y='832' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>varchar(30)</text>
+<rect x='911' y='838' width='348' height='21' fill='#f0f5fa'/>
+<text x='922' y='853' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>usuario_id</text>
+<text x='1082' y='853' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>→ usuario</text>
+<text x='1250' y='853' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>FK</text>
+<text x='922' y='874' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>fecha</text>
+<text x='1082' y='874' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>timestamptz</text>
+<text x='922' y='898' font-size='11.5' font-style='italic' fill='#334155' font-family='Arial, Helvetica, sans-serif'>Solo inserción: trigger + sin UPDATE/DELETE (RNF07)</text>
+<rect x='1350' y='70' width='350' height='103' rx='8' fill='#fff' stroke='#046bd2' stroke-width='1.6' />
+<path d='M1350 78 a8 8 0 0 1 8 -8 h334 a8 8 0 0 1 8 8 v24 h-350 z' fill='#046bd2'/>
+<text x='1362' y='91' fill='#fff' font-weight='bold' font-size='14' font-family='Arial, Helvetica, sans-serif'>feriado</text>
+<text x='1362' y='118' font-size='12.5' fill='#1e293b' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>fecha</text>
+<text x='1522' y='118' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>date</text>
+<text x='1690' y='118' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>PK</text>
+<rect x='1351' y='124' width='348' height='21' fill='#f0f5fa'/>
+<text x='1362' y='139' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>descripcion</text>
+<text x='1522' y='139' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>varchar(120)</text>
+<text x='1362' y='163' font-size='11.5' font-style='italic' fill='#334155' font-family='Arial, Helvetica, sans-serif'>Calendario para días hábiles</text>
+<rect x='1350' y='360' width='350' height='166' rx='8' fill='#fff' stroke='#046bd2' stroke-width='1.6' />
+<path d='M1350 368 a8 8 0 0 1 8 -8 h334 a8 8 0 0 1 8 8 v24 h-350 z' fill='#046bd2'/>
+<text x='1362' y='381' fill='#fff' font-weight='bold' font-size='14' font-family='Arial, Helvetica, sans-serif'>encuesta</text>
+<text x='1362' y='408' font-size='12.5' fill='#1e293b' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>id</text>
+<text x='1522' y='408' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>bigint</text>
+<text x='1690' y='408' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>PK</text>
+<rect x='1351' y='414' width='348' height='21' fill='#f0f5fa'/>
+<text x='1362' y='429' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>codigo</text>
+<text x='1522' y='429' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>slug</text>
+<text x='1690' y='429' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>UK*</text>
+<text x='1362' y='450' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>version</text>
+<text x='1522' y='450' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>smallint ≥ 1</text>
+<text x='1690' y='450' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>UK*</text>
+<rect x='1351' y='456' width='348' height='21' fill='#f0f5fa'/>
+<text x='1362' y='471' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>nombre</text>
+<text x='1522' y='471' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>varchar(120)</text>
+<text x='1362' y='492' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>activa</text>
+<text x='1522' y='492' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>boolean</text>
+<text x='1690' y='492' font-size='11' text-anchor='end' fill='#046bd2' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>UK**</text>
+<text x='1362' y='516' font-size='11.5' font-style='italic' fill='#334155' font-family='Arial, Helvetica, sans-serif'>* (codigo, version)  ** una versión activa</text>
+<rect x='1800' y='360' width='350' height='103' rx='8' fill='#fff' stroke='#146c43' stroke-width='1.6' stroke-dasharray='6 4'/>
+<path d='M1800 368 a8 8 0 0 1 8 -8 h334 a8 8 0 0 1 8 8 v24 h-350 z' fill='#146c43'/>
+<text x='1812' y='381' fill='#fff' font-weight='bold' font-size='14' font-family='Arial, Helvetica, sans-serif'>encuesta_definiciones</text>
+<text x='1812' y='408' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>encuesta_id</text>
+<text x='1972' y='408' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>int</text>
+<text x='2140' y='408' font-size='11' text-anchor='end' fill='#146c43' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>único</text>
+<rect x='1801' y='414' width='348' height='21' fill='#eaf6ef'/>
+<text x='1812' y='429' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>preguntas</text>
+<text x='1972' y='429' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>array</text>
+<text x='1812' y='450' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>escala</text>
+<text x='1972' y='450' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>1..7</text>
+<rect x='1800' y='520' width='350' height='187' rx='8' fill='#fff' stroke='#146c43' stroke-width='1.6' stroke-dasharray='6 4'/>
+<path d='M1800 528 a8 8 0 0 1 8 -8 h334 a8 8 0 0 1 8 8 v24 h-350 z' fill='#146c43'/>
+<text x='1812' y='541' fill='#fff' font-weight='bold' font-size='14' font-family='Arial, Helvetica, sans-serif'>respuestas_encuesta</text>
+<text x='1812' y='568' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>encuesta_id</text>
+<text x='1972' y='568' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>int</text>
+<text x='2140' y='568' font-size='11' text-anchor='end' fill='#146c43' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>idx*</text>
+<rect x='1801' y='574' width='348' height='21' fill='#eaf6ef'/>
+<text x='1812' y='589' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>establecimiento_id</text>
+<text x='1972' y='589' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>int</text>
+<text x='2140' y='589' font-size='11' text-anchor='end' fill='#146c43' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>idx*</text>
+<text x='1812' y='610' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>fecha</text>
+<text x='1972' y='610' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>AAAA-MM-DD</text>
+<text x='2140' y='610' font-size='11' text-anchor='end' fill='#146c43' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>idx*</text>
+<rect x='1801' y='616' width='348' height='21' fill='#eaf6ef'/>
+<text x='1812' y='631' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>canal</text>
+<text x='1972' y='631' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>WEB</text>
+<text x='1812' y='652' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>respuestas</text>
+<text x='1972' y='652' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>{p1: 1..7, …}</text>
+<rect x='1801' y='658' width='348' height='21' fill='#eaf6ef'/>
+<text x='1812' y='673' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>comentario</text>
+<text x='1972' y='673' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>string</text>
+<text x='1812' y='697' font-size='11.5' font-style='italic' fill='#334155' font-family='Arial, Helvetica, sans-serif'>* índice compuesto · sin IP ni hora</text>
+<rect x='1800' y='760' width='350' height='187' rx='8' fill='#fff' stroke='#146c43' stroke-width='1.6' stroke-dasharray='6 4'/>
+<path d='M1800 768 a8 8 0 0 1 8 -8 h334 a8 8 0 0 1 8 8 v24 h-350 z' fill='#146c43'/>
+<text x='1812' y='781' fill='#fff' font-weight='bold' font-size='14' font-family='Arial, Helvetica, sans-serif'>bitacora_auditoria</text>
+<text x='1812' y='808' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>ts</text>
+<text x='1972' y='808' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>fecha</text>
+<text x='2140' y='808' font-size='11' text-anchor='end' fill='#146c43' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>TTL 730 d</text>
+<rect x='1801' y='814' width='348' height='21' fill='#eaf6ef'/>
+<text x='1812' y='829' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>accion</text>
+<text x='1972' y='829' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>string</text>
+<text x='1812' y='850' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>folio</text>
+<text x='1972' y='850' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>string</text>
+<text x='2140' y='850' font-size='11' text-anchor='end' fill='#146c43' font-weight='bold' font-family='Arial, Helvetica, sans-serif'>idx</text>
+<rect x='1801' y='856' width='348' height='21' fill='#eaf6ef'/>
+<text x='1812' y='871' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>usuario_id, rol</text>
+<text x='1972' y='871' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>int, string</text>
+<text x='1812' y='892' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>red_origen</text>
+<text x='1972' y='892' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>IP /24</text>
+<rect x='1801' y='898' width='348' height='21' fill='#eaf6ef'/>
+<text x='1812' y='913' font-size='12.5' fill='#1e293b' font-weight='normal' font-family='Arial, Helvetica, sans-serif'>detalle</text>
+<text x='1972' y='913' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>objeto</text>
+<text x='1812' y='937' font-size='11.5' font-style='italic' fill='#334155' font-family='Arial, Helvetica, sans-serif'>Sin datos personales del solicitante</text>
+<text x='1350' y='860' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>PK clave primaria · FK clave foránea · UK única · NN no nulo</text><text x='1350' y='880' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>Línea continua: FK en PostgreSQL · discontinua: referencia lógica</text><text x='1350' y='900' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>entre bases, verificada con «verificar_referencias»</text></svg>

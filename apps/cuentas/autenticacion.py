@@ -77,7 +77,9 @@ def nuevo_secreto_mfa():
 def qr_enrolamiento(usuario, secreto):
     """Código QR (SVG en línea, sin servicios externos) para registrar el secreto en la app autenticadora."""
     uri = pyotp.TOTP(secreto).provisioning_uri(name=usuario.email, issuer_name=settings.MFA_EMISOR)
-    return segno.make(uri, error="m").svg_inline(scale=5, dark="#1e293b", light="#ffffff")
+    # omitsize: sin width/height fijos y con viewBox, para que el CSS lo escale completo. Con tamaño fijo, el SVG
+    # (≈ 250 px) se recortaba a 190 px: perdía el margen y módulos del borde derecho e inferior (DEF-15).
+    return segno.make(uri, error="m").svg_inline(omitsize=True, dark="#1e293b", light="#ffffff")
 
 
 def enrolar_mfa(usuario, secreto, codigo, ip=None):

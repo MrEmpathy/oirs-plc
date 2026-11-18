@@ -1,0 +1,78 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1400' height='720' viewBox='0 0 1400 720'><defs><marker id='punta' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='8' markerHeight='8' orient='auto-start-reverse'><path d='M0 0 L10 5 L0 10 z' fill='#334155'/></marker></defs><rect width='100%' height='100%' fill='#fff'/><rect x='300' y='20' width='1080' height='680' rx='14' fill='#fafcff' stroke='#d1d5db'/>
+<text x='320' y='46' font-size='14' font-weight='bold' fill='#045cb4' font-family='Arial, Helvetica, sans-serif'>Servidor · Docker Compose (Linux x86-64 o arm64)</text>
+<rect x='330' y='440' width='400' height='240' rx='12' fill='none' stroke='#d1d5db' stroke-dasharray='5 4'/>
+<text x='345' y='670' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>red «wp» (interna)</text>
+<rect x='860' y='300' width='500' height='380' rx='12' fill='none' stroke='#d1d5db' stroke-dasharray='5 4'/>
+<text x='875' y='670' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>red «datos» (interna, sin salida a Internet)</text>
+<rect x='20' y='90' width='230' height='90' rx='10' fill='#f0f5fa' stroke='#046bd2' stroke-width='1.6' />
+<text x='135.0' y='114' text-anchor='middle' font-size='14' font-weight='bold' fill='#1e293b' font-family='Arial, Helvetica, sans-serif'>Usuario de la red</text>
+<text x='135.0' y='134' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>sin cuenta · navegador o móvil</text>
+<text x='135.0' y='151' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>QR por establecimiento</text>
+<rect x='20' y='470' width='230' height='90' rx='10' fill='#f0f5fa' stroke='#046bd2' stroke-width='1.6' />
+<text x='135.0' y='494' text-anchor='middle' font-size='14' font-weight='bold' fill='#1e293b' font-family='Arial, Helvetica, sans-serif'>Funcionarios</text>
+<text x='135.0' y='514' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>4 perfiles · sesión + 2FA</text>
+<text x='135.0' y='531' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>(Admin, OIRS DSM, OIRS est.,</text>
+<text x='135.0' y='548' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>Dirección)</text>
+<rect x='380' y='90' width='320' height='150' rx='10' fill='#fff' stroke='#045cb4' stroke-width='1.6' />
+<text x='540.0' y='114' text-anchor='middle' font-size='14' font-weight='bold' fill='#1e293b' font-family='Arial, Helvetica, sans-serif'>Nginx 1.27 (proxy inverso)</text>
+<text x='540.0' y='134' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>TLS 1.2/1.3 · HSTS</text>
+<text x='540.0' y='151' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>:8443 sistema · :8080 sitio web</text>
+<text x='540.0' y='168' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>límite: 5 inicios de sesión/min por IP</text>
+<text x='540.0' y='185' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>único punto expuesto</text>
+<rect x='380' y='300' width='190' height='90' rx='10' fill='#fff' stroke='#046bd2' stroke-width='1.6' stroke-dasharray='6 4'/>
+<text x='475.0' y='324' text-anchor='middle' font-size='14' font-weight='bold' fill='#1e293b' font-family='Arial, Helvetica, sans-serif'>encuesta (opcional)</text>
+<text x='475.0' y='344' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>Nginx + njs · :8082</text>
+<text x='475.0' y='361' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>página estática</text>
+<rect x='360' y='470' width='350' height='80' rx='10' fill='#fff' stroke='#046bd2' stroke-width='1.6' />
+<text x='535.0' y='494' text-anchor='middle' font-size='14' font-weight='bold' fill='#1e293b' font-family='Arial, Helvetica, sans-serif'>WordPress 6.9 + plugin DSM OIRS</text>
+<text x='535.0' y='514' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>PHP 8.3 · formularios y encuesta</text>
+<text x='535.0' y='531' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>límite 10 envíos/h por IP</text>
+<path d='M465 585 v40 a70.0 10 0 0 0 140 0 v-40' fill='#fff' stroke='#046bd2' stroke-width='1.6'/>
+<ellipse cx='535.0' cy='585' rx='70.0' ry='10' fill='#fff' stroke='#046bd2' stroke-width='1.6'/>
+<text x='535.0' y='611' text-anchor='middle' font-size='14' font-weight='bold' fill='#1e293b' font-family='Arial, Helvetica, sans-serif'>MariaDB 11.4</text>
+<rect x='880' y='90' width='470' height='160' rx='10' fill='#fff' stroke='#045cb4' stroke-width='1.6' />
+<text x='1115.0' y='114' text-anchor='middle' font-size='14' font-weight='bold' fill='#1e293b' font-family='Arial, Helvetica, sans-serif'>Sistema de Gestión OIRS</text>
+<text x='1115.0' y='134' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>Django 5.2 LTS + gunicorn (Python 3.13)</text>
+<text x='1115.0' y='151' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>cuentas · requerimientos · encuestas · reportes</text>
+<text x='1115.0' y='168' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>catalogos · auditoria · web (front) · integracion (API)</text>
+<text x='1115.0' y='185' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>usuario sin privilegios (uid 10001)</text>
+<path d='M880 340 v100 a72.5 10 0 0 0 145 0 v-100' fill='#fff' stroke='#046bd2' stroke-width='1.6'/>
+<ellipse cx='952.5' cy='340' rx='72.5' ry='10' fill='#fff' stroke='#046bd2' stroke-width='1.6'/>
+<text x='952.5' y='366' text-anchor='middle' font-size='14' font-weight='bold' fill='#1e293b' font-family='Arial, Helvetica, sans-serif'>PostgreSQL 16</text>
+<text x='952.5' y='386' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>casos, usuarios,</text>
+<text x='952.5' y='403' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>catálogos (3FN)</text>
+<path d='M1045 340 v100 a72.5 10 0 0 0 145 0 v-100' fill='#fff' stroke='#146c43' stroke-width='1.6'/>
+<ellipse cx='1117.5' cy='340' rx='72.5' ry='10' fill='#fff' stroke='#146c43' stroke-width='1.6'/>
+<text x='1117.5' y='366' text-anchor='middle' font-size='14' font-weight='bold' fill='#1e293b' font-family='Arial, Helvetica, sans-serif'>MongoDB 7</text>
+<text x='1117.5' y='386' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>encuestas,</text>
+<text x='1117.5' y='403' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>bitácora (TTL)</text>
+<path d='M1210 340 v100 a65.0 10 0 0 0 130 0 v-100' fill='#fff' stroke='#334155' stroke-width='1.6'/>
+<ellipse cx='1275.0' cy='340' rx='65.0' ry='10' fill='#fff' stroke='#334155' stroke-width='1.6'/>
+<text x='1275.0' y='366' text-anchor='middle' font-size='14' font-weight='bold' fill='#1e293b' font-family='Arial, Helvetica, sans-serif'>Redis 7</text>
+<text x='1275.0' y='386' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>caché de</text>
+<text x='1275.0' y='403' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>indicadores</text>
+<rect x='880' y='530' width='460' height='90' rx='10' fill='#f0f5fa' stroke='#334155' stroke-width='1.6' />
+<text x='1110.0' y='554' text-anchor='middle' font-size='14' font-weight='bold' fill='#1e293b' font-family='Arial, Helvetica, sans-serif'>Operación (anfitrión)</text>
+<text x='1110.0' y='574' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>respaldo.sh: PostgreSQL + MongoDB cifrados (AES-256)</text>
+<text x='1110.0' y='591' text-anchor='middle' font-size='12' fill='#334155' font-family='Arial, Helvetica, sans-serif'>anonimización y verificación de referencias diarias</text>
+<path d='M250 130 L380 130' fill='none' stroke='#334155' stroke-width='1.6' marker-end='url(#punta)' />
+<text x='315' y='122' text-anchor='middle' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>HTTPS</text>
+<path d='M250 160 L320 160 L320 345 L380 345' fill='none' stroke='#334155' stroke-width='1.6' marker-end='url(#punta)' stroke-dasharray='6 4'/>
+<text x='350' y='337' text-anchor='middle' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>HTTPS</text>
+<path d='M250 515 L290 515 L290 210 L380 210' fill='none' stroke='#334155' stroke-width='1.6' marker-end='url(#punta)' />
+<text x='270' y='507' text-anchor='middle' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>HTTPS</text>
+<path d='M610 240 L610 470' fill='none' stroke='#334155' stroke-width='1.6' marker-end='url(#punta)' />
+<text x='603' y='455' text-anchor='end' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>:8080</text>
+<path d='M680 470 L680 240' fill='none' stroke='#045cb4' stroke-width='1.6' marker-end='url(#punta)' />
+<text x='690' y='330' text-anchor='start' font-size='11.5' fill='#045cb4' font-family='Arial, Helvetica, sans-serif'>HTTPS + HMAC-SHA256</text>
+<text x='690' y='345' text-anchor='start' font-size='11.5' fill='#045cb4' font-family='Arial, Helvetica, sans-serif'>/api/v1/publico</text>
+<path d='M475 300 L475 240' fill='none' stroke='#045cb4' stroke-width='1.6' marker-end='url(#punta)' stroke-dasharray='6 4'/>
+<text x='483' y='275' text-anchor='start' font-size='11.5' fill='#045cb4' font-family='Arial, Helvetica, sans-serif'>HMAC</text>
+<path d='M535 550 L535 575' fill='none' stroke='#334155' stroke-width='1.6' marker-end='url(#punta)' />
+<path d='M700 160 L880 160' fill='none' stroke='#334155' stroke-width='1.6' marker-end='url(#punta)' />
+<text x='790' y='150' text-anchor='middle' font-size='11.5' fill='#334155' font-family='Arial, Helvetica, sans-serif'>HTTP interno (red «web»)</text>
+<path d='M950 250 L950 330' fill='none' stroke='#334155' stroke-width='1.6' marker-end='url(#punta)' />
+<path d='M1115 250 L1115 330' fill='none' stroke='#334155' stroke-width='1.6' marker-end='url(#punta)' />
+<path d='M1275 250 L1275 330' fill='none' stroke='#334155' stroke-width='1.6' marker-end='url(#punta)' />
+<path d='M950 530 L950 452' fill='none' stroke='#334155' stroke-width='1.6' marker-end='url(#punta)' stroke-dasharray='6 4'/>
+<path d='M1115 530 L1115 452' fill='none' stroke='#334155' stroke-width='1.6' marker-end='url(#punta)' stroke-dasharray='6 4'/></svg>

@@ -1,3 +1,11 @@
+ Container oirs-plc-mongo-1 Running 
+ Container oirs-plc-postgres-1 Running 
+ Container oirs-plc-postgres-1 Waiting 
+ Container oirs-plc-mongo-1 Waiting 
+ Container oirs-plc-postgres-1 Healthy 
+ Container oirs-plc-mongo-1 Healthy 
+ Container oirs-plc-pruebas-run-452ffb30e954 Creating 
+ Container oirs-plc-pruebas-run-452ffb30e954 Created 
 ........................................................................ [ 54%]
 ............................................................             [100%]
 ================================ tests coverage ================================
@@ -87,4 +95,4 @@ apps/web/vistas/errores.py                                              12      
 apps/web/vistas/supervision.py                                          44      2    95%
 ----------------------------------------------------------------------------------------
 TOTAL                                                                 1789    147    92%
-132 passed in 22.13s
+132 passed in 22.88s

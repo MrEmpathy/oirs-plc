@@ -23,7 +23,7 @@ Base: Informe N.º 2 (diseño y PoC, 18-10-2026). Versión evaluada: rama `es3/i
 | T21, T22, T25 | SUS, OWASP ZAP, carga en staging, aceptación | **Pendiente** | Ver [pruebas](03_pruebas.md), sección 1.2 |
 | — | Tótem de autoservicio (Could) e integración con Rayen (Won't) | **Excluida**, como en el diseño | — |
 
-Perfiles cubiertos: los 5 del sistema administrativo, más el usuario de la red (sin cuenta) y la Unidad de
+Perfiles cubiertos: los 4 del sistema administrativo (Administrador, OIRS DSM, OIRS de establecimiento y Dirección), más el usuario de la red (sin cuenta) y la Unidad de
 Comunicaciones (WordPress).
 
 ## 2. Restricciones de esta etapa

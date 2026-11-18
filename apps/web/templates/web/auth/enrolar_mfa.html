@@ -5,9 +5,15 @@
 <p>Su perfil accede a información de toda la red, por lo que requiere un segundo factor.</p>
 <ol class="pasos">
   <li>Instale una aplicación autenticadora (Google Authenticator, Microsoft Authenticator, FreeOTP…).</li>
-  <li>Escanee este código QR con la aplicación.
-    <div class="qr" role="img" aria-label="Código QR para registrar la cuenta en la aplicación autenticadora">{{ qr|safe }}</div>
-    <p class="form-text">Si no puede escanearlo, ingrese esta clave manualmente: <code class="clave-manual">{{ secreto }}</code></p></li>
+  <li>Escanee este código QR con la aplicación.</li>
+</ol>
+{# Fuera de la lista para centrarlo respecto de la tarjeta (dentro del paso quedaba con la sangría de la lista). #}
+<div class="qr-bloque">
+  <div class="qr" role="img" aria-label="Código QR para registrar la cuenta en la aplicación autenticadora">{{ qr|safe }}</div>
+  <p class="form-text mb-0">Si no puede escanearlo, ingrese esta clave manualmente:</p>
+  <code class="clave-manual">{{ secreto }}</code>
+</div>
+<ol class="pasos" start="3">
   <li>Escriba el código de 6 dígitos que muestra la aplicación.</li>
 </ol>
 {% if error %}<div class="alert alert-danger" role="alert" data-enfocar tabindex="-1">{{ error }}</div>{% endif %}

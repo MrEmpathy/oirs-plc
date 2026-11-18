@@ -1,11 +1,12 @@
 # Plan, ejecución y validación de pruebas (Unidad 3)
 
-Ejecución final: 17-11-2026 · rama `es3/implementacion` · entorno Docker del [manual de instalación](01_instalacion.md)
+Ejecución final: 18-11-2026 (pytest y E2E, tras DEF-15) · rama `main` · entorno Docker del [manual de instalación](01_instalacion.md)
 (PostgreSQL 16, **MongoDB 7**, Redis 7, Nginx 1.27, WordPress 6.9) · ejecutado por: N. Beltrán (equipo local, Raspberry Pi 5).
 
 Evidencias en `evidencias/es3/`: `junit_pytest.xml`, `pytest_ejecucion_final.txt` (con cobertura),
 `junit_e2e.xml`, `e2e_ejecucion_final.txt`, `pi12_php.txt`, `bandit.txt`, `pip_audit.txt`,
-`django_check_deploy.txt` y `capturas/` (15 capturas de los recorridos E2E).
+`django_check_deploy.txt`, `bd_evidencias.txt`, `encuesta_nginx.txt` y `capturas/` (recorridos E2E y capturas
+INF-01 a INF-05 del informe).
 
 ## 1. Alcance y cobertura
 
@@ -82,7 +83,7 @@ defectos.
 
 | ID | HU / CU | Objetivo | Precondición | Procedimiento y datos | Resultado esperado | Resultado obtenido | Estado |
 |---|---|---|---|---|---|---|---|
-| E2E-01 | HU01, HU03, HU04 / CU01, CU04, CU05 | Recorrido completo del reclamo, del sitio web al cierre | Entorno Docker; usuario E2E OIRS_EST del CESFAM PLC | En WordPress: Reclamo, CESFAM PLC, descripción con marca `E2E-<hora>`, María Pérez (ficticia), correo autorizado → Enviar. Recargar la confirmación. En el sistema: buscar el folio → derivar a SOME (Tiempos de espera) → responder por correo → cerrar | Folio con formato `PLC-AAAA-NNNNNN` y fecha límite; recargar no duplica; historial INGRESADO → EN_PROCESO → RESPONDIDO → CERRADO | Folio **PLC-2026-000008** con vencimiento 10-12-2026 y título «Reclamo recibido»; el folio se mantiene tras recargar; mensajes «Caso derivado a SOME», «dentro del plazo legal» y «Caso PLC-2026-000008 cerrado»; historial con los 4 estados (capturas E2E-01a..f) | Aprobado |
+| E2E-01 | HU01, HU03, HU04 / CU01, CU04, CU05 | Recorrido completo del reclamo, del sitio web al cierre | Entorno Docker; usuario E2E OIRS_EST del CESFAM PLC | En WordPress: Reclamo, CESFAM PLC, descripción con marca `E2E-<hora>`, María Pérez (ficticia), correo autorizado → Enviar. Recargar la confirmación. En el sistema: buscar el folio → derivar a SOME (Tiempos de espera) → responder por correo → cerrar | Folio con formato `PLC-AAAA-NNNNNN` y fecha límite; recargar no duplica; historial INGRESADO → EN_PROCESO → RESPONDIDO → CERRADO | Folio **PLC-2026-000009** con vencimiento 10-12-2026 y título «Reclamo recibido»; el folio se mantiene tras recargar; mensajes «Caso derivado a SOME», «dentro del plazo legal» y «Caso PLC-2026-000009 cerrado»; historial con los 4 estados (capturas E2E-01a..f) | Aprobado |
 | E2E-02 | HU01 / CU01 (alternativo) | Validación del formulario ciudadano | Página `/oirs/` | Reclamo sin nombre ni contacto | Resumen de errores, error junto al campo, lo escrito se conserva, ningún caso creado | Resumen visible; «Indique su nombre…» en `#oirs-err-nombre`; `aria-invalid="true"`; la descripción se conserva; sin folio (captura E2E-02) | Aprobado |
 | E2E-03 | HU02, HU08 / CU02, CU08 | La encuesta por QR llega al reporte del DSM | Usuario E2E OIRS_DSM con TOTP | `?est=CESFAM-PLC` en móvil (390 px); notas 6, 5, 7, 6, 6; Dental | Establecimiento preseleccionado; agradecimiento; el reporte suma una respuesta | **1.ª ejecución: Fallido** (`assert 1 == 2`: el reporte no cambió, DEF-06). **2.ª ejecución tras la corrección:** preselección correcta, «¡Gracias por su opinión!» y n = n_antes + 1 (capturas E2E-03a/b) | Aprobado (2.ª) |
 | E2E-07 | HU07 / CU11 (borde) | Límite de tasa del inicio de sesión en Nginx | Ninguna | 8 POST seguidos a `/api/v1/sesion/iniciar` desde la misma IP | Algún 429 a partir del 6.º intento | Nginx respondió 429 dentro de los primeros 6 intentos | Aprobado |
@@ -121,7 +122,7 @@ El listado de las 132 ejecuciones automatizadas (ID, módulo, función, tiempo y
 
 | | Aprobado | Fallido | Bloqueado | No ejecutado |
 |---|---|---|---|---|
-| Ejecución final (17-11-2026) | 91 casos / 142 ejecuciones | 0 | 1 (instalación en el WordPress municipal) | 4 (SUS, ZAP, carga en staging, aceptación) |
+| Ejecución final (17 y 18-11-2026) | 92 casos / 143 ejecuciones | 0 | 1 (instalación en el WordPress municipal) | 4 (SUS, ZAP, carga en staging, aceptación) |
 
 Ejecuciones fallidas **durante** la etapa (conservadas, sin borrar): primera corrida en Docker 80/81 (DEF-02);
 E2E-03 (DEF-06); PI-14 y PI-24 (DEF-07); E2E-01..03 por el límite anti-spam (DEF-08). Todas se repitieron tras la
