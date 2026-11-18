@@ -18,9 +18,9 @@ datos) más los recorridos de extremo a extremo.
 | Unitarias | PU-01..PU-24 | 24 | 69 | pytest |
 | Integración | PI-01..PI-26 (PI-12 en PHP) | 26 | 29 | pytest + PHP CLI |
 | Seguridad | PS-01..PS-32 | 32 | 35 | pytest |
-| Extremo a extremo (navegador) | E2E-01..E2E-08 | 8 | 8 | Playwright (Chromium) |
+| Extremo a extremo (navegador) | E2E-01..E2E-09 | 9 | 9 | Playwright (Chromium) |
 | Manual | CP-M01 | 1 | 1 | WP-CLI / revisión |
-| **Total** | | **91** | **142** | |
+| **Total** | | **92** | **143** | |
 
 ### 1.1 Cobertura de casos de uso (base de cálculo explícita)
 
@@ -31,7 +31,7 @@ escenarios normales (N), alternativos o de error (A) y de borde o seguridad (B).
 | CU | Caso de uso | HU | N | A | B |
 |---|---|---|---|---|---|
 | CU01 | Ingresar requerimiento (web) | HU01 | PI-01, E2E-01 | PU-18, PI-16, E2E-02, PS-16, PS-17 | PI-11 (40 concurrentes), PU-01..08, E2E-08 |
-| CU02 | Responder encuesta anónima | HU02 | PI-07, E2E-03 | PI-08, PI-09, PI-10 | PI-23 (caché) |
+| CU02 | Responder encuesta anónima | HU02 | PI-07, E2E-03, E2E-09 | PI-08, PI-09, PI-10, E2E-09 (validación) | PI-23 (caché) |
 | CU03 | Ingresar requerimiento presencial | HU01, HU03 | PI-15 | PI-16 | PS-24 (Dirección sin acceso) |
 | CU04 | Clasificar y derivar | HU03 | PI-02, PI-14, E2E-01 | PI-04, PU-23 | PS-25, PS-26 |
 | CU05 | Registrar respuesta y cerrar | HU04 | PI-02, PI-14, E2E-01 | PI-03 (fuera de plazo), PU-10 | PS-19, PS-20 |
@@ -82,10 +82,11 @@ defectos.
 
 | ID | HU / CU | Objetivo | Precondición | Procedimiento y datos | Resultado esperado | Resultado obtenido | Estado |
 |---|---|---|---|---|---|---|---|
-| E2E-01 | HU01, HU03, HU04 / CU01, CU04, CU05 | Recorrido completo del reclamo, del sitio web al cierre | Entorno Docker; usuario E2E OIRS_EST del CESFAM PLC | En WordPress: Reclamo, CESFAM PLC, descripción con marca `E2E-<hora>`, María Pérez (ficticia), correo autorizado → Enviar. Recargar la confirmación. En el sistema: buscar el folio → derivar a SOME (Tiempos de espera) → responder por correo → cerrar | Folio con formato `PLC-AAAA-NNNNNN` y fecha límite; recargar no duplica; historial INGRESADO → EN_PROCESO → RESPONDIDO → CERRADO | Folio **PLC-2026-000004** con vencimiento 09-12-2026; el folio se mantiene tras recargar; mensajes «Caso derivado a SOME», «dentro del plazo legal» y «Caso PLC-2026-000004 cerrado»; historial con los 4 estados (capturas E2E-01a..f) | Aprobado |
+| E2E-01 | HU01, HU03, HU04 / CU01, CU04, CU05 | Recorrido completo del reclamo, del sitio web al cierre | Entorno Docker; usuario E2E OIRS_EST del CESFAM PLC | En WordPress: Reclamo, CESFAM PLC, descripción con marca `E2E-<hora>`, María Pérez (ficticia), correo autorizado → Enviar. Recargar la confirmación. En el sistema: buscar el folio → derivar a SOME (Tiempos de espera) → responder por correo → cerrar | Folio con formato `PLC-AAAA-NNNNNN` y fecha límite; recargar no duplica; historial INGRESADO → EN_PROCESO → RESPONDIDO → CERRADO | Folio **PLC-2026-000007** con vencimiento 10-12-2026 y título «Reclamo recibido»; el folio se mantiene tras recargar; mensajes «Caso derivado a SOME», «dentro del plazo legal» y «Caso PLC-2026-000007 cerrado»; historial con los 4 estados (capturas E2E-01a..f) | Aprobado |
 | E2E-02 | HU01 / CU01 (alternativo) | Validación del formulario ciudadano | Página `/oirs/` | Reclamo sin nombre ni contacto | Resumen de errores, error junto al campo, lo escrito se conserva, ningún caso creado | Resumen visible; «Indique su nombre…» en `#oirs-err-nombre`; `aria-invalid="true"`; la descripción se conserva; sin folio (captura E2E-02) | Aprobado |
 | E2E-03 | HU02, HU08 / CU02, CU08 | La encuesta por QR llega al reporte del DSM | Usuario E2E OIRS_DSM con TOTP | `?est=CESFAM-PLC` en móvil (390 px); notas 6, 5, 7, 6, 6; Dental | Establecimiento preseleccionado; agradecimiento; el reporte suma una respuesta | **1.ª ejecución: Fallido** (`assert 1 == 2`: el reporte no cambió, DEF-06). **2.ª ejecución tras la corrección:** preselección correcta, «¡Gracias por su opinión!» y n = n_antes + 1 (capturas E2E-03a/b) | Aprobado (2.ª) |
 | E2E-07 | HU07 / CU11 (borde) | Límite de tasa del inicio de sesión en Nginx | Ninguna | 8 POST seguidos a `/api/v1/sesion/iniciar` desde la misma IP | Algún 429 a partir del 6.º intento | Nginx respondió 429 dentro de los primeros 6 intentos | Aprobado |
+| E2E-09 | HU02 / CU02 | Encuesta servida por Nginx sin WordPress (firma HMAC en njs) | Servicio `encuesta`; `.env` con `WP_HMAC_SECRET` | `?est=CESFAM-PUL`; enviar vacío; luego notas 6 en las 5 escalas, Dental y comentario; revisar `/`, `/encuesta.js` y `/api/*`; repetir en 390 px | Preselección; resumen de errores y `aria-invalid` en las 5 escalas; 201 y agradecimiento; el secreto no aparece en ninguna respuesta; sin desplazamiento horizontal | Igual al esperado (capturas E2E-09a..d). Casos de rechazo, límite de envíos y documento guardado en `encuesta_nginx.txt` | Aprobado |
 | E2E-08 | — / CU01 (amenaza «spam y bots») | Límite de 10 envíos por hora del plugin | Contadores de WordPress limpios | 11 envíos incompletos de sugerencia (no crean casos) | Envíos 1–10: «Revise los campos marcados»; envío 11: rechazo genérico | Igual al esperado (captura E2E-08) | Aprobado |
 | PI-12 | HU01 / CU01 | Firma del plugin PHP aceptada por la API Python a través de Nginx/TLS | API en marcha; secreto de `.env` | `php tests/integration/test_firma_php.php` dentro del contenedor de WordPress | 201 con la firma correcta; 401 con un secreto incorrecto | `HTTP 201 {"folio": "PLC-2026-000005", …}` / `HTTP 401 {"error": "Firma inválida"}` (`pi12_php.txt`) | Aprobado |
 | PI-14 | HU03, HU04 / CU04, CU05 | Ciclo completo desde los formularios del front | Sesión OIRS_EST PLC | POST derivar → responder (EMAIL, hoy) → cerrar | Estado CERRADO, 4 estados en el historial y eventos en la bitácora | **1.ª ejecución: Fallido** (5 eventos en lugar de 4: defecto de la prueba, DEF-07). **2.ª:** estados y acciones de bitácora correctos | Aprobado (2.ª) |
@@ -98,7 +99,7 @@ defectos.
 ### 2.2 Registro completo
 
 El listado de las 132 ejecuciones automatizadas (ID, módulo, función, tiempo y estado) está en
-`evidencias/es3/junit_pytest.xml`; el de las 8 E2E, en `junit_e2e.xml`. Resumen por caso:
+`evidencias/es3/junit_pytest.xml`; el de las 9 E2E, en `junit_e2e.xml`. Resumen por caso:
 
 | ID | Escenario | Ejec. | Estado |
 |---|---|---|---|
@@ -113,7 +114,7 @@ El listado de las 132 ejecuciones automatizadas (ID, módulo, función, tiempo y
 | PI-24..PI-26 | Administración de catálogos y cuentas | 3 | Aprobado |
 | PS-01..PS-20 | Autenticación, autorización, inyección, XSS, CSRF, canal HMAC, mínimo privilegio | 23 | Aprobado |
 | PS-21..PS-32 | Front: contraseña temporal, MFA, enrolamiento, matriz, IDOR, CSRF, redirección abierta, administración, recuperación, CSP, errores | 12 | Aprobado |
-| E2E-01..E2E-08 | Recorridos en el navegador | 8 | Aprobado |
+| E2E-01..E2E-09 | Recorridos en el navegador (E2E-09: encuesta sin WordPress) | 9 | Aprobado |
 | CP-M01 | Rol Editor en WordPress | 1 | Aprobado |
 
 ## 3. Validación de resultados

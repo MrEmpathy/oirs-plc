@@ -1,0 +1,65 @@
+# Encuesta servida por Nginx sin WordPress (despliegue/encuesta-demo) — verificación 2026-11-18 13:38 -03
+# nginx version: nginx/1.27.5 · njs 0.8.10
+
+## 1. Cabeceras de seguridad de la página
+HTTP/1.1 200 OK
+Server: nginx
+Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Referrer-Policy: no-referrer
+Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+## 2. Preguntas de la versión activa (GET /api/encuesta, firmado por njs)
+{"nombre":"Encuesta de satisfacción usuaria","version":1,"preguntas":[{"id":"p1","texto":"¿Cómo evalúa la calidad de la atención recibida?","tipo":"escala","min":1,"max":7,"obligatoria":true},{"id":"p2","texto":"¿Cómo evalúa el tiempo de espera?","tipo":"escala","min":1,"max":7,"obligatoria" …
+
+## 3. Establecimientos (GET /api/catalogos: solo código y nombre, sin el DSM)
+{"establecimientos":[{"codigo":"CESFAM-CON","nombre":"CESFAM Conunhuenu"},{"codigo":"CESFAM-PLC","nombre":"CESFAM Padre Las Casas"},{"codigo":"CESFAM-PUL","nombre":"CESFAM Pulmahue"},{"codigo":"PSR-01","nombre":"Posta de Salud Rural 1 (dato de prueba)"},{"codigo":"SAPU-PLC","nombre":"SAPU Padre Las Casas"}]}
+
+## 4. Casos de envío (POST /api/respuestas)
+Respuesta válida                         {"ok":true}  → HTTP 201
+Trampa para bots (honeypot) completada    {"error":"No fue posible registrar su respuesta. Intente más tarde."}  → HTTP 400
+Establecimiento inexistente               {"error":"No fue posible registrar su respuesta.","detalle":["Establecimiento inválido."]}  → HTTP 400
+Datos personales en las respuestas        {"error":"No fue posible registrar su respuesta.","detalle":["La encuesta es anónima: no se aceptan datos personales."]}  → HTTP 400
+JSON mal formado                          {"error":"Solicitud inválida"}  → HTTP 400
+Envío desde otro sitio (Sec-Fetch-Site)  {"error":"Origen no permitido"}  → HTTP 403
+Método GET                               {"error":"Método no permitido"}  → HTTP 405
+Ruta de la API no expuesta                  → HTTP 404
+Cuerpo mayor a 8 KB                         → HTTP 413
+Respuestas en MongoDB: antes 13, después 14 (solo se guardó la válida)
+
+## 5. El secreto HMAC no llega al navegador (apariciones en cada respuesta)
+/: 0
+/encuesta.js: 0
+/api/encuesta: 0
+/api/catalogos: 0
+
+## 6. Límite de envíos por IP (ráfaga de 10 y luego 1 por minuto): 14 envíos seguidos tras reiniciar
+400 400 400 400 400 400 400 400 400 400 400 429 429 429 
+{"error":"Demasiados envíos desde este equipo. Intente más tarde."}
+
+## 7. Registro de accesos sin IP (anonimato). El de errores solo la anota al rechazar un cuerpo excesivo (abuso)
+[18/Nov/2026:16:38:26 +0000] "POST /api/respuestas HTTP/1.1" 429 69
+[18/Nov/2026:16:38:26 +0000] "POST /api/respuestas HTTP/1.1" 429 69
+[18/Nov/2026:16:38:26 +0000] "POST /api/respuestas HTTP/1.1" 429 69
+
+## 8. Última respuesta guardada en MongoDB (sin IP, sin hora, sin datos personales)
+[
+  {
+    encuesta_id: 1,
+    encuesta_codigo: 'satisfaccion-usuaria',
+    version: 1,
+    establecimiento_id: 2,
+    fecha: '2026-11-18',
+    canal: 'WEB',
+    respuestas: {
+      p1: 6,
+      p2: 6,
+      p3: 7,
+      p4: 6,
+      p5: 7,
+      p6: 'Médica'
+    },
+    comentario: ''
+  }
+]

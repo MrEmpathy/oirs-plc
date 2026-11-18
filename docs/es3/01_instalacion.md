@@ -35,7 +35,7 @@ Se definen en `.env`, que **no se versiona**. `scripts/preparar_entorno.sh` lo c
 | `WP_DB_PASSWORD`, `WP_ADMIN_CLAVE` | Base de datos y administrador del WordPress de demostración |
 | `CLAVE_DEMO` | Contraseña inicial de los usuarios de demostración |
 | `RESPALDO_CLAVE` | Clave de cifrado de los respaldos (se crea en el primer respaldo) |
-| `OIRS_HTTPS_PUERTO_PUBLICO`, `OIRS_HTTP_PUERTO_PUBLICO`, `WP_PUERTO_PUBLICO` | Puertos publicados (8443, 8081, 8080) |
+| `OIRS_HTTPS_PUERTO_PUBLICO`, `OIRS_HTTP_PUERTO_PUBLICO`, `WP_PUERTO_PUBLICO`, `ENCUESTA_PUERTO_PUBLICO` | Puertos publicados (8443, 8081, 8080, 8082) |
 | `RETENCION_DATOS_PERSONALES_DIAS`, `RETENCION_BITACORA_DIAS` | Plazos de retención (por defecto 5 y 2 años; pendientes de confirmar con el DSM) |
 
 ## 2. Procedimiento reproducible
@@ -76,10 +76,33 @@ de red del servidor y/o su IP (por ejemplo, desde un notebook en la misma red):
 
 El script agrega esos nombres a `DJANGO_ALLOWED_HOSTS` y `DJANGO_CSRF_TRUSTED_ORIGINS`, renueva el certificado
 del servidor con la misma CA local, cambia la dirección de WordPress y reinicia `app`, `nginx` y `wordpress`.
-Luego: `http://ls.local:8080` (ciudadanos) y `https://ls.local:8443` (funcionarios).
+Luego: `http://ls.local:8080` (ciudadanos), `http://ls.local:8082` (encuesta sin WordPress) y
+`https://ls.local:8443` (funcionarios).
 
 **Certificado:** el navegador mostrará una advertencia porque la CA es local. Puede aceptarse o importarse
 `despliegue/certs/ca.crt` como autoridad de confianza en el navegador.
+
+**Encuesta sin WordPress (solo demostración).** El servicio `encuesta` (http://localhost:8082) muestra la
+encuesta de satisfacción en una página estática servida por Nginx, sin WordPress. Sirve para presentar el canal
+ciudadano cuando no se quiere levantar el sitio de demostración. Cumple el mismo papel que el plugin:
+
+```
+Navegador ──HTTP──► encuesta (Nginx + njs) ──HTTPS + HMAC──► nginx ──► Django ──► MongoDB
+  página estática      firma en el servidor con WP_HMAC_SECRET
+```
+
+- `despliegue/encuesta-demo/html/`: página, estilos del esqueleto y `encuesta.js`, que dibuja las preguntas de
+  la versión activa con el mismo marcado que el plugin. Usa la misma hoja `oirs.css` del plugin y el logo del tema.
+- `despliegue/encuesta-demo/njs/oirs.js`: módulo njs (JavaScript dentro de Nginx) que firma con HMAC-SHA256 las
+  llamadas a la API pública. El secreto llega como variable de entorno y nunca se envía al navegador. Además
+  descarta la trampa para bots y los campos desconocidos.
+- `despliegue/encuesta-demo/nginx.conf`: CSP sin JavaScript en línea, límite de 10 envíos seguidos por IP
+  (luego 1 por minuto), cuerpo máximo de 8 KB y registro de accesos sin IP.
+- `?est=CESFAM-PLC` preselecciona el establecimiento (código QR), igual que en el plugin.
+- `./scripts/verificar_encuesta_demo.sh` comprueba todo lo anterior y deja la evidencia en
+  `evidencias/es3/encuesta_nginx.txt`. La prueba E2E-09 recorre la página en el navegador.
+
+Para levantar solo este canal: `docker compose up -d encuesta` (arranca también la API de la que depende).
 
 ## 3. Verificación de funcionamiento
 
@@ -133,7 +156,7 @@ servidor; sin `RESPALDO_CLAVE` no pueden descifrarse, por lo que esa clave debe 
 | HTTP 429 al iniciar sesión | Límite de Nginx: 5 intentos por minuto por IP | Esperar un minuto |
 | El correo de recuperación no llega | En desarrollo los correos se escriben en el log | `docker compose logs app` y buscar «Recuperación de contraseña» |
 | «Bad Request (400)» al entrar con un nombre o IP distinto de `localhost` | El nombre no está en `DJANGO_ALLOWED_HOSTS` | `./scripts/configurar_acceso_red.sh <nombre> [ip]` |
-| Puertos 8080/8081/8443 ocupados | Otro servicio en el equipo | Cambiar los puertos al ejecutar `preparar_entorno.sh` (ver paso 1) |
+| Puertos 8080/8081/8082/8443 ocupados | Otro servicio en el equipo | Cambiar los puertos al ejecutar `preparar_entorno.sh` (ver paso 1) |
 
 ## 6. Ubicación del código, datos y configuración
 

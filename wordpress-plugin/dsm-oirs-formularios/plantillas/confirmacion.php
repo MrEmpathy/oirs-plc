@@ -2,10 +2,11 @@
 /** Confirmación de un requerimiento registrado. Variable: $resultado (folio, vencimiento, tipo). */
 defined( 'ABSPATH' ) || exit;
 $tipo = DSM_OIRS_TIPOS[ $resultado['tipo'] ] ?? 'Solicitud';
+$participio = 'RECLAMO' === $resultado['tipo'] ? 'recibido' : 'recibida'; // concordancia: el reclamo / la sugerencia…
 ?>
 <div class="oirs" id="oirs-resultado">
 	<div class="oirs-confirmacion" role="status" tabindex="-1">
-		<h2 class="oirs-confirmacion__titulo"><?php echo esc_html( $tipo ); ?> recibida</h2>
+		<h2 class="oirs-confirmacion__titulo"><?php echo esc_html( $tipo . ' ' . $participio ); ?></h2>
 		<p>Su número de folio es</p>
 		<p class="oirs-folio"><?php echo esc_html( $resultado['folio'] ); ?></p>
 		<p>Guárdelo: lo necesitará para cualquier consulta en la OIRS.</p>

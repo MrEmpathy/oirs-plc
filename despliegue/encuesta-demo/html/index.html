@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Encuesta de satisfacción usuaria</title>
+	<meta name="description" content="Encuesta anónima de satisfacción de la red de salud comunal de Padre Las Casas (demostración).">
+	<link rel="stylesheet" href="/pagina.css">
+	<link rel="stylesheet" href="/oirs.css">
+	<script src="/encuesta.js" defer></script>
+</head>
+<body>
+<a class="saltar" href="#contenido">Ir al contenido</a>
+<p class="demo-aviso">Demostración académica: página estática servida por Nginx, sin WordPress. Representa cómo el sitio del DSM
+	publicaría la encuesta del Sistema de Gestión OIRS. Datos ficticios.</p>
+<header class="cabecera">
+	<div class="contenedor">
+		<span class="marca">
+			<img src="/logo.svg" alt="" width="48" height="48">
+			<span><strong>Departamento de Salud Municipal</strong><span>Padre Las Casas</span></span>
+		</span>
+	</div>
+</header>
+<main id="contenido" class="contenido">
+	<div class="contenedor">
+		<h1>Encuesta de satisfacción usuaria</h1>
+		<p class="entrada">Cuéntenos cómo fue su atención en nuestros establecimientos. Toma menos de dos minutos.</p>
+
+		<div class="oirs" id="oirs-encuesta" aria-live="polite">
+			<p class="oirs-nota" id="oirs-cargando">Cargando la encuesta…</p>
+			<noscript>
+				<div class="oirs-aviso oirs-aviso--error"><p>Esta demostración necesita JavaScript. En el sitio del DSM la
+					encuesta la entrega el plugin de WordPress y funciona sin él.</p></div>
+			</noscript>
+		</div>
+	</div>
+</main>
+<footer class="pie">
+	<div class="contenedor">
+		<p><strong>Departamento de Salud Municipal de Padre Las Casas</strong><br>Sitio de demostración (no oficial).</p>
+		<p>Sus respuestas son anónimas: no se guardan junto a su nombre, su correo ni su dirección IP.</p>
+	</div>
+</footer>
+</body>
+</html>

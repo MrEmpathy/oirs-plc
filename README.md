@@ -17,7 +17,7 @@ Requisitos: Linux con Docker 24+ y Docker Compose v2, `openssl`, 4 GB de RAM y 6
 
 ```bash
 ./scripts/preparar_entorno.sh          # .env con secretos aleatorios + certificados TLS de desarrollo
-docker compose up -d --build           # PostgreSQL, MongoDB, Redis, app, Nginx, WordPress, MariaDB
+docker compose up -d --build           # PostgreSQL, MongoDB, Redis, app, Nginx, encuesta, WordPress, MariaDB
 ./scripts/instalar_wordpress.sh        # WordPress de demostración con el plugin y sus páginas
 ```
 
@@ -25,6 +25,7 @@ docker compose up -d --build           # PostgreSQL, MongoDB, Redis, app, Nginx,
 |---|---|---|
 | https://localhost:8443 | Sistema de Gestión OIRS (Nginx → Django) | Funcionarios |
 | http://localhost:8080 | Sitio WordPress de demostración con el plugin | Ciudadanos |
+| http://localhost:8082 | Encuesta de satisfacción servida por Nginx, sin WordPress (solo demostración) | Ciudadanos |
 
 Usuarios de demostración: `admin@dsm.test`, `oirs.dsm@dsm.test`, `oirs.plc@dsm.test`, `oirs.pul@dsm.test`,
 `dir.plc@dsm.test`. Contraseña inicial: valor `CLAVE_DEMO` del `.env` (se pide cambiarla en el primer ingreso).
@@ -35,7 +36,7 @@ El detalle está en el [manual de instalación](docs/es3/01_instalacion.md) y en
 
 ```bash
 docker compose --profile herramientas run --rm pruebas pytest -q --cov=apps     # 132 pruebas (unitarias, integración, seguridad, front)
-.venv/bin/pytest -c tests/e2e/pytest.ini tests/e2e                                # 8 recorridos E2E con Playwright
+.venv/bin/pytest -c tests/e2e/pytest.ini tests/e2e                                # 9 recorridos E2E con Playwright
 ```
 
 Resultados, cobertura y trazabilidad: [plan y ejecución de pruebas](docs/es3/03_pruebas.md) ·

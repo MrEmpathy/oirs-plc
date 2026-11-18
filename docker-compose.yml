@@ -115,6 +115,25 @@ services:
     networks: [web]
     restart: unless-stopped
 
+  # --- Encuesta de satisfacción sin WordPress (solo demostración): página estática + firma HMAC en Nginx (njs) ---
+  encuesta:
+    image: nginx:1.27-alpine
+    environment:
+      OIRS_HMAC_SECRET: ${WP_HMAC_SECRET:?definir en .env}
+      OIRS_API_URL: https://nginx/
+    ports:
+      - "${ENCUESTA_PUERTO_PUBLICO:-8082}:80"
+    volumes:
+      - ./despliegue/encuesta-demo/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./despliegue/encuesta-demo/njs:/etc/nginx/njs:ro
+      - ./despliegue/encuesta-demo/html:/usr/share/nginx/html:ro
+      - ./wordpress-plugin/dsm-oirs-formularios/assets:/srv/plugin:ro      # se monta la carpeta (no el archivo)
+      - ./wordpress-theme/dsm-demo:/srv/tema:ro                              # para ver siempre la versión actual
+      - ./despliegue/certs/ca.crt:/etc/oirs/ca.crt:ro
+    depends_on: [nginx]
+    networks: [web]
+    restart: unless-stopped
+
   # --- Canal público de demostración (reemplaza al WordPress municipal, sin acceso en esta etapa) ---
   mariadb:
     image: mariadb:11.4

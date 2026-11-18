@@ -33,6 +33,9 @@ Comunicaciones (WordPress).
   pie. No reproduce sus contenidos ni su marca: usa un ícono genérico y un aviso de «sitio de demostración».
   El plugin es el mismo que se instalaría en el sitio real (en el sitio del DSM: subir el plugin y agregar dos
   constantes en `wp-config.php`).
+- **Encuesta sin WordPress, solo para demostración** (servicio `encuesta`, puerto 8082): página estática en
+  Nginx que firma las llamadas con njs. No reemplaza al plugin: permite mostrar la encuesta sin levantar el
+  sitio de demostración. La validación en el navegador requiere JavaScript; el plugin funciona sin él.
 - **Datos ficticios** en todo el entorno, incluidos los usuarios `@dsm.test`, solicitantes de ejemplo y
   establecimientos (con una posta marcada como «dato de prueba»).
 - Los correos de recuperación se escriben en el log; no hay servidor SMTP institucional.
@@ -51,6 +54,7 @@ Comunicaciones (WordPress).
 | C8 | Respaldo como script del anfitrión (cron) en lugar de un contenedor `respaldo` | El contenedor de referencia necesitaba `pg_dump` y `mongodump` en una sola imagen. El script usa las herramientas de cada contenedor y se probó una restauración real |
 | C9 | Caché del resumen de satisfacción con invalidación por generación | DEF-06: la caché de INC-04 ocultaba respuestas nuevas |
 | C10 | Django 5.2.19 (antes 5.2.18), gunicorn 27, redis 8.1 | Parches de seguridad vigentes (pip-audit 0) y dependencia faltante (DEF-05) |
+| C11 | Canal alternativo de demostración para la encuesta: Nginx + njs, sin WordPress | Presentar la encuesta sin el sitio WordPress. Reutiliza `oirs.css`, el endpoint de definición (C3) y el mismo esquema HMAC, por lo que no exige cambios en la API |
 
 ## 4. Trabajo colaborativo y control de versiones
 
