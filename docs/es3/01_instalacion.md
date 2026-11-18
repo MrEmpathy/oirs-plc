@@ -63,8 +63,8 @@ el `.env`, los certificados y los volúmenes. Etapas:
 
 | Opción | Efecto |
 |---|---|
-| *(ninguna)* | Instalación local (`localhost`) con la encuesta de demostración incluida |
-| `--sin-encuesta` / `--con-encuesta` | Excluye o incluye la encuesta servida por Nginx sin WordPress (`COMPOSE_PROFILES` en el `.env`). Sin estas opciones se conserva lo que diga el `.env` |
+| *(ninguna)* | Instalación local (`localhost`) sin la encuesta de demostración en Nginx |
+| `--con-encuesta` / `--sin-encuesta` | Incluye o quita la encuesta servida por Nginx sin WordPress (`COMPOSE_PROFILES` en el `.env`). Una instalación nueva no la incluye; al repetir la instalación sin estas opciones se conserva lo que diga el `.env` |
 | `--nombre NOMBRE`, `--ip IP` | Acceso desde otros equipos con ese nombre y esa IP (`--ip` puede repetirse) |
 | `--red` | Igual que `--nombre "$(hostname).local" --ip <IP principal>` |
 | `--instalar-docker` | Si falta Docker, lo instala desde el repositorio oficial (Debian, Ubuntu, Raspberry Pi OS) y continúa sin cerrar sesión. Sin la opción, lo pregunta |
@@ -136,8 +136,8 @@ Navegador ──HTTP──► encuesta (Nginx + njs) ──HTTPS + HMAC──►
   `evidencias/es3/encuesta_nginx.txt`. La prueba E2E-09 recorre la página en el navegador.
 
 Es un servicio opcional (perfil `encuesta` de Compose). Está activo cuando el `.env` contiene
-`COMPOSE_PROFILES=encuesta`, el valor por defecto. Se quita con `./scripts/instalar.sh --sin-encuesta` y se
-vuelve a agregar con `--con-encuesta`. La prueba E2E-09 se omite si el servicio no está levantado.
+`COMPOSE_PROFILES=encuesta`. Por defecto no se instala: se agrega con `./scripts/instalar.sh --con-encuesta` y se
+quita con `--sin-encuesta`. La prueba E2E-09 se omite si el servicio no está levantado.
 
 ## 3. Verificación de funcionamiento
 
@@ -174,9 +174,10 @@ puertos 9443/9081/9080/9082, en paralelo con la instalación principal:
 
 | Ejecución | Resultado |
 |---|---|
-| `./scripts/instalar.sh --red` (instalación nueva) | 6/6 etapas aprobadas en 2 min 8 s (imágenes ya descargadas). API «ok»; ingreso 200; WordPress 200; encuesta en Nginx con preguntas firmadas; acceso como `ls.local` y `192.168.1.191`. Un envío real a la encuesta respondió 201 |
+| `./scripts/instalar.sh --red` (instalación nueva; en esa versión la encuesta se incluía por defecto, hoy equivale a `--red --con-encuesta`) | 6/6 etapas aprobadas en 2 min 8 s (imágenes ya descargadas). API «ok»; ingreso 200; WordPress 200; encuesta en Nginx con preguntas firmadas; acceso como `ls.local` y `192.168.1.191`. Un envío real a la encuesta respondió 201 |
 | `./scripts/instalar.sh --sin-encuesta` (repetición) | `.env` conservado (solo cambió `COMPOSE_PROFILES`); el contenedor `encuesta` se retiró y el puerto 9082 dejó de responder; el resto de los servicios quedó sano |
 | `./scripts/instalar.sh --con-encuesta` (repetición) | Encuesta de vuelta; se conservó el acceso por red configurado antes |
+| Valor por defecto de la encuesta (otra copia limpia, detenida en la etapa 2 por los puertos ocupados) | Instalación nueva sin opciones → «no incluida» y `COMPOSE_PROFILES=` vacío; repetición sin opciones → se conserva; `--con-encuesta` → «incluida» y se conserva al repetir; `.env` antiguo sin la variable → «no incluida» |
 | `./scripts/instalar.sh` en otra copia con los puertos por defecto ocupados | Se detuvo en la etapa 2 con «El puerto 8443 está ocupado» y la sugerencia de otros puertos, sin levantar contenedores |
 
 No se probó en un equipo sin Docker (`--instalar-docker`): esa rama sigue el procedimiento oficial de

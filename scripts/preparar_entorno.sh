@@ -30,7 +30,7 @@ OIRS_HTTP_PUERTO_PUBLICO=${P_HTTP}
 WP_PUERTO_PUBLICO=${P_WP}
 ENCUESTA_PUERTO_PUBLICO=${P_ENC}
 # Servicios opcionales de docker compose: «encuesta» = encuesta de demostración servida por Nginx sin WordPress.
-COMPOSE_PROFILES=${COMPOSE_PROFILES-encuesta}
+COMPOSE_PROFILES=${COMPOSE_PROFILES-}
 
 PG_SUPERUSER_PASSWORD=$(aleatorio)
 PG_OWNER_PASSWORD=$(aleatorio)

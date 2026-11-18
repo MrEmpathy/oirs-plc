@@ -4,8 +4,8 @@
 # demostración y, si se pide, habilita el acceso desde la red. Puede ejecutarse de nuevo sin perder datos.
 #
 # Uso:  ./scripts/instalar.sh [opciones]
-#   --sin-encuesta        No levantar la encuesta de demostración servida por Nginx (puerto 8082)
-#   --con-encuesta        Levantarla (valor por defecto en una instalación nueva)
+#   --con-encuesta        Levantar también la encuesta de demostración servida por Nginx (puerto 8082)
+#   --sin-encuesta        Quitarla (valor por defecto: una instalación nueva no la incluye)
 #   --nombre NOMBRE       Nombre con que otros equipos de la red llegarán al servidor (ej.: ls.local)
 #   --ip IP               IP adicional aceptada (puede repetirse); requiere --nombre
 #   --red                 Igual que --nombre "$(hostname).local" --ip <IP principal del equipo>
@@ -147,7 +147,7 @@ fijar() { # variable valor: cambia o agrega una línea del .env
 case "$ENCUESTA" in
   si) fijar COMPOSE_PROFILES encuesta ;;
   no) fijar COMPOSE_PROFILES "" ;;
-  *) grep -q '^COMPOSE_PROFILES=' .env || fijar COMPOSE_PROFILES encuesta ;;   # .env anterior a la opción
+  *) grep -q '^COMPOSE_PROFILES=' .env || fijar COMPOSE_PROFILES "" ;;   # .env anterior a la opción: sin encuesta
 esac
 . ./.env
 case ",${COMPOSE_PROFILES:-}," in *,encuesta,*) CON_ENCUESTA=1 ;; *) CON_ENCUESTA=0 ;; esac
@@ -155,7 +155,7 @@ P_HTTPS=${OIRS_HTTPS_PUERTO_PUBLICO:-8443}; P_HTTP=${OIRS_HTTP_PUERTO_PUBLICO:-8
 P_WP=${WP_PUERTO_PUBLICO:-8080}; P_ENC=${ENCUESTA_PUERTO_PUBLICO:-8082}
 [ "$nuevo" = 1 ] && ok ".env creado con secretos aleatorios" || ok ".env existente conservado"
 [ "$CON_ENCUESTA" = 1 ] && ok "Encuesta de demostración en Nginx: incluida (puerto $P_ENC)" \
-                        || ok "Encuesta de demostración en Nginx: no incluida"
+                        || ok "Encuesta de demostración en Nginx: no incluida (agregar con --con-encuesta)"
 
 # Puertos: solo se revisan si esta instalación aún no está en marcha (si lo está, los ocupa ella misma).
 if [ -z "$(docker compose ps -q 2>/dev/null)" ] && command -v ss >/dev/null 2>&1; then
