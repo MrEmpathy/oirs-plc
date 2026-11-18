@@ -15,4 +15,4 @@ tests/e2e/test_recorridos.py::test_e2e08_plugin_limita_envios_por_ip PASSED [ 88
 tests/e2e/test_recorridos.py::test_e2e07_nginx_limita_intentos_de_inicio_de_sesion PASSED [100%]
 
 - generated xml file: /home/nbeltran/projects/oirs-plc/evidencias/es3/junit_e2e.xml -
-============================== 9 passed in 29.60s ==============================
+============================== 9 passed in 29.30s ==============================

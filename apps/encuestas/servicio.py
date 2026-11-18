@@ -2,16 +2,20 @@
 
 Anonimato por diseño: el documento no contiene datos personales, IP, agente de usuario ni hora exacta
 (solo la fecha), y está físicamente separado de la base que contiene datos de solicitantes."""
+import logging
+
 from django.conf import settings
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 from apps.catalogos.models import Establecimiento
+from apps.core.disponibilidad import ERRORES_CACHE
 from apps.core.documental import db
 
 from .models import Encuesta
 
+log = logging.getLogger("oirs")
 CLAVES_PII = {"nombre", "apellidos", "rut", "run", "email", "correo", "telefono", "fono", "direccion", "ip"}
 
 
@@ -62,19 +66,30 @@ def _clave_generacion(encuesta_id):
 
 def _invalidar_resumen(encuesta_id):
     """DEF-06: cada respuesta nueva cambia la «generación» de la clave de caché, de modo que el reporte
-    la refleja de inmediato sin renunciar a la caché de 5 minutos entre respuestas (INC-04)."""
+    la refleja de inmediato sin renunciar a la caché de 5 minutos entre respuestas (INC-04).
+    DEF-18: si la caché está caída, la respuesta YA quedó guardada: no se informa un error (el ciudadano la
+    reenviaría y quedaría duplicada). El resumen puede verse desactualizado hasta 5 min tras volver la caché."""
     try:
-        cache.incr(_clave_generacion(encuesta_id))
-    except ValueError:                      # la clave aún no existe (o expiró)
-        cache.set(_clave_generacion(encuesta_id), 1, None)
+        try:
+            cache.incr(_clave_generacion(encuesta_id))
+        except ValueError:                  # la clave aún no existe (o expiró)
+            cache.set(_clave_generacion(encuesta_id), 1, None)
+    except ERRORES_CACHE as e:
+        log.warning("Caché no disponible al invalidar el resumen de la encuesta %s: %s", encuesta_id, type(e).__name__)
 
 
 def resumen(encuesta_id, establecimiento_id=None, desde=None, hasta=None):
-    """Promedio por pregunta (agregación en la base documental), con caché de 5 minutos."""
-    generacion = cache.get_or_set(_clave_generacion(encuesta_id), 0, None)
-    clave = f"resumen-enc:{encuesta_id}:{generacion}:{establecimiento_id}:{desde}:{hasta}"
-    return cache.get_or_set(clave, lambda: _resumen(encuesta_id, establecimiento_id, desde, hasta),
-                            settings.CACHE_TTL_REPORTES)
+    """Promedio por pregunta (agregación en la base documental), con caché de 5 minutos.
+    Si la caché está caída se calcula directamente (DEF-18): más lento, pero el reporte sigue disponible."""
+    try:
+        generacion = cache.get_or_set(_clave_generacion(encuesta_id), 0, None)
+        clave = f"resumen-enc:{encuesta_id}:{generacion}:{establecimiento_id}:{desde}:{hasta}"
+        return cache.get_or_set(clave, lambda: _resumen(encuesta_id, establecimiento_id, desde, hasta),
+                                settings.CACHE_TTL_REPORTES)
+    except ERRORES_CACHE as e:
+        log.warning("Caché no disponible; resumen de la encuesta %s calculado sin caché: %s", encuesta_id,
+                    type(e).__name__)
+        return _resumen(encuesta_id, establecimiento_id, desde, hasta)
 
 
 def _resumen(encuesta_id, establecimiento_id=None, desde=None, hasta=None):

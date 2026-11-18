@@ -1,6 +1,11 @@
 """Páginas de error: mensaje genérico y una salida clara. Para rutas /api/ se responde JSON."""
-from django.shortcuts import render
+import sys
 
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.template.loader import render_to_string
+
+from apps.core import disponibilidad
 from apps.core.http import JsonSeguro
 
 
@@ -19,4 +24,19 @@ def no_encontrado(request, exception=None):
 
 
 def error_interno(request):
-    return _respuesta(request, 500, "Error interno", "Ocurrió un problema. Intente nuevamente; si persiste, avise al administrador.")
+    """Se dibuja sin la petición: los procesadores de contexto (menú, usuario) consultan la sesión en PostgreSQL y,
+    si la falla es justamente la base caída, la página de error también fallaría (DEF-16). Ante una caída de una
+    base o de la caché responde 503 «Servicio no disponible» con Retry-After."""
+    if disponibilidad.es_caida(sys.exc_info()[1]):
+        codigo, titulo, texto = 503, disponibilidad.TITULO, disponibilidad.TEXTO
+    else:
+        codigo, titulo = 500, "Error interno"
+        texto = "Ocurrió un problema. Intente nuevamente; si persiste, avise al administrador."
+    if request.path.startswith("/api/"):
+        resp = JsonSeguro({"error": titulo}, status=codigo)
+    else:
+        resp = HttpResponse(render_to_string("web/error.html", {"codigo": codigo, "titulo": titulo, "texto": texto}),
+                            status=codigo)
+    if codigo == 503:
+        resp["Retry-After"] = str(disponibilidad.REINTENTAR_EN_SEG)
+    return resp

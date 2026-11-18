@@ -1,0 +1,78 @@
+# E2E-10 · caída de las bases durante una sesión · etapa «despues» · 18-11-2026 15:54
+
+E2E-10.1 · PostgreSQL caído: el funcionario navega a la bandeja
+   Esperado: Página «Servicio no disponible» (503) sin detalles técnicos
+   Obtenido: HTTP 503 · «Servicio no disponible · DSM Padre Las Casas»
+   Cumple:   Sí
+
+E2E-10.2 · PostgreSQL caído: el funcionario envía un ingreso presencial
+   Esperado: «Servicio no disponible» (503) en menos de 5 s; el caso no se crea a medias
+   Obtenido: HTTP 503 en 0.2 s · «Servicio no disponible · DSM Padre Las Casas»
+   Cumple:   Sí
+
+E2E-10.3 · PostgreSQL caído: el ciudadano envía el formulario OIRS
+   Esperado: Aviso de servicio no disponible y el texto escrito se conserva
+   Obtenido: «El servicio no está disponible en este momento. Sus datos se conservan: intente enviarlos de nuevo en unos minutos.» · texto conservado: sí
+   Cumple:   Sí
+
+E2E-10.4 · PostgreSQL de vuelta: 12 peticiones seguidas con la misma sesión
+   Esperado: Todas 200, sin volver a iniciar sesión
+   Obtenido: 12/12 con 200; la sesión siguió activa
+   Cumple:   Sí
+
+E2E-10.5 · Integridad tras la caída
+   Esperado: Ningún caso nuevo ni caso sin historial
+   Obtenido: casos antes 13, después 13; casos sin historial: 0
+   Cumple:   Sí
+
+E2E-10.6 · Reintento del ciudadano con la base de vuelta
+   Esperado: Folio asignado, una sola vez
+   Obtenido: folio PLC-2026-000014
+   Cumple:   Sí
+
+E2E-10.7 · MongoDB caído: la Dirección inicia sesión
+   Esperado: Ingresa sin demora perceptible (< 2 s)
+   Obtenido: ingresó en 1.1 s
+   Cumple:   Sí
+
+E2E-10.8 · MongoDB caído: el encargado sigue trabajando con los casos
+   Esperado: Bandeja disponible (200) sin demora
+   Obtenido: HTTP 200 en 0.1 s
+   Cumple:   Sí
+
+E2E-10.9 · MongoDB caído: el ciudadano envía la encuesta
+   Esperado: Aviso de servicio no disponible
+   Obtenido: error: El servicio no está disponible en este momento. Sus datos se conservan: intente enviarlos de nuevo en unos minutos.
+   Cumple:   Sí
+
+E2E-10.10 · Bitácora durante la caída de MongoDB
+   Esperado: Los eventos quedan completos en el registro de la aplicación (no se pierden)
+   Obtenido: 2 evento(s) completos en el registro
+   Cumple:   Sí
+
+E2E-10.11 · Redis caído: el encargado abre los reportes
+   Esperado: Reportes disponibles (200), calculados sin caché
+   Obtenido: HTTP 200 · «Reportes e indicadores · DSM Padre Las Casas»
+   Cumple:   Sí
+
+E2E-10.12 · Redis caído: el ciudadano envía la encuesta
+   Esperado: Confirmación y exactamente una respuesta guardada
+   Obtenido: confirmación «¡Gracias por su opinión!»; respuestas guardadas: 1
+   Cumple:   Sí
+
+E2E-10.13 · MariaDB caído: sitio público y sistema
+   Esperado: El sitio WordPress cae; el sistema de funcionarios sigue disponible
+   Obtenido: sitio HTTP 500; sistema HTTP 200
+   Cumple:   Sí
+
+E2E-10.14 · MariaDB de vuelta
+   Esperado: El sitio vuelve sin intervención
+   Obtenido: HTTP 200
+   Cumple:   Sí
+
+E2E-10.15 · Consistencia entre bases al final
+   Esperado: Sin referencias huérfanas
+   Obtenido: sin referencias huérfanas
+   Cumple:   Sí
+
+Resultado: 15/15 cumplen

@@ -1,0 +1,78 @@
+# E2E-10 · caída de las bases durante una sesión · etapa «antes» · 18-11-2026 15:48
+
+E2E-10.1 · PostgreSQL caído: el funcionario navega a la bandeja
+   Esperado: Página «Servicio no disponible» (503) sin detalles técnicos
+   Obtenido: HTTP 500 · «Internal Server Error» · error sin formato
+   Cumple:   NO
+
+E2E-10.2 · PostgreSQL caído: el funcionario envía un ingreso presencial
+   Esperado: «Servicio no disponible» (503); el caso no se crea a medias
+   Obtenido: HTTP 500 · «Internal Server Error» · error sin formato
+   Cumple:   NO
+
+E2E-10.3 · PostgreSQL caído: el ciudadano envía el formulario OIRS
+   Esperado: Aviso de servicio no disponible y el texto escrito se conserva
+   Obtenido: «No fue posible registrar su solicitud. Revise los campos marcados.» · texto conservado: sí
+   Cumple:   NO
+
+E2E-10.4 · PostgreSQL de vuelta: 12 peticiones seguidas con la misma sesión
+   Esperado: Todas 200, sin volver a iniciar sesión
+   Obtenido: 10/12 con 200; la sesión siguió activa
+   Cumple:   NO
+
+E2E-10.5 · Integridad tras la caída
+   Esperado: Ningún caso nuevo ni caso sin historial
+   Obtenido: casos antes 10, después 10; casos sin historial: 0
+   Cumple:   Sí
+
+E2E-10.6 · Reintento del ciudadano con la base de vuelta
+   Esperado: Folio asignado, una sola vez
+   Obtenido: sin folio
+   Cumple:   NO
+
+E2E-10.7 · MongoDB caído: la Dirección inicia sesión
+   Esperado: Ingresa sin demora perceptible (< 2 s)
+   Obtenido: ingresó en 3.4 s
+   Cumple:   NO
+
+E2E-10.8 · MongoDB caído: el encargado sigue trabajando con los casos
+   Esperado: Bandeja disponible (200) sin demora
+   Obtenido: HTTP 200 en 0.1 s
+   Cumple:   Sí
+
+E2E-10.9 · MongoDB caído: el ciudadano envía la encuesta
+   Esperado: Aviso de servicio no disponible
+   Obtenido: error: No fue posible registrar su solicitud. Revise los campos marcados.
+   Cumple:   NO
+
+E2E-10.10 · Bitácora durante la caída de MongoDB
+   Esperado: Los eventos quedan completos en el registro de la aplicación (no se pierden)
+   Obtenido: 0 evento(s) completos en el registro
+   Cumple:   NO
+
+E2E-10.11 · Redis caído: el encargado abre los reportes
+   Esperado: Reportes disponibles (200), calculados sin caché
+   Obtenido: HTTP 500 · «Error interno · DSM Padre Las Casas»
+   Cumple:   NO
+
+E2E-10.12 · Redis caído: el ciudadano envía la encuesta
+   Esperado: Confirmación y exactamente una respuesta guardada
+   Obtenido: error: No fue posible registrar su solicitud. Revise los campos marcados.; respuestas guardadas: 1
+   Cumple:   NO
+
+E2E-10.13 · MariaDB caído: sitio público y sistema
+   Esperado: El sitio WordPress cae; el sistema de funcionarios sigue disponible
+   Obtenido: sitio HTTP 500; sistema HTTP 200
+   Cumple:   Sí
+
+E2E-10.14 · MariaDB de vuelta
+   Esperado: El sitio vuelve sin intervención
+   Obtenido: HTTP 200
+   Cumple:   Sí
+
+E2E-10.15 · Consistencia entre bases al final
+   Esperado: Sin referencias huérfanas
+   Obtenido: sin referencias huérfanas
+   Cumple:   Sí
+
+Resultado: 5/15 cumplen · no cumplen: E2E-10.1, E2E-10.2, E2E-10.3, E2E-10.4, E2E-10.6, E2E-10.7, E2E-10.9, E2E-10.10, E2E-10.11, E2E-10.12
