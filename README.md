@@ -38,6 +38,7 @@ docker compose up -d --build           # PostgreSQL, MongoDB, Redis, app, Nginx,
 
 Usuarios de demostración: `admin@dsm.test`, `oirs.dsm@dsm.test`, `oirs.plc@dsm.test`, `oirs.pul@dsm.test`,
 `dir.plc@dsm.test`. Contraseña inicial: valor `CLAVE_DEMO` del `.env` (se pide cambiarla en el primer ingreso).
+Para verlas, junto con las de WordPress y el estado de cada cuenta: `./scripts/mostrar_credenciales.sh`.
 
 El detalle está en el [manual de instalación](docs/es3/01_instalacion.md) y en el [manual de usuario](docs/es3/02_manual_usuario.md).
 

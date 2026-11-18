@@ -199,6 +199,7 @@ docs.docker.com para Debian, Ubuntu y Raspberry Pi OS.
 | Anonimizar datos personales vencidos | `docker compose exec app python manage.py anonimizar_solicitantes` (`--simular` para revisar) | Diaria |
 | Consistencia entre bases | `docker compose exec app python manage.py verificar_referencias` | Diaria (nocturna) |
 | Registro de la aplicación | `docker compose logs -f app` | Ante incidentes |
+| Ver las credenciales de demostración (del `.env`) y si cada usuario ya cambió su contraseña | `./scripts/mostrar_credenciales.sh` (`--restablecer-comunicaciones` genera una nueva para el Editor de WordPress) | Cuando se necesite |
 
 Los respaldos quedan en `respaldos/` (retención local de 30 días). La regla 3-2-1 exige además copiarlos fuera del
 servidor; sin `RESPALDO_CLAVE` no pueden descifrarse, por lo que esa clave debe guardarse también aparte.
