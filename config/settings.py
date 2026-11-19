@@ -79,6 +79,7 @@ DATABASES = {
         "HOST": env("PG_HOST", "127.0.0.1"),
         "PORT": env("PG_PORT", "5432"),
         "CONN_MAX_AGE": 60,
+        "CONN_HEALTH_CHECKS": True,   # comprueba la conexión antes de reutilizarla tras una caída de la base (DEF-17)
         "OPTIONS": {"sslmode": env("PG_SSLMODE", "prefer")},
     }
 }
@@ -161,7 +162,9 @@ LOGGING = {
 }
 
 # --- Caché (producción: Redis; desarrollo: memoria local) --------------------
-CACHES = {"default": {"BACKEND": "django.core.cache.backends.redis.RedisCache", "LOCATION": env("REDIS_URL")}
+# Tiempos de espera cortos: una caché caída no debe dejar esperando a nadie (DEF-18).
+CACHES = {"default": {"BACKEND": "django.core.cache.backends.redis.RedisCache", "LOCATION": env("REDIS_URL"),
+                      "OPTIONS": {"socket_connect_timeout": 1, "socket_timeout": 1}}
           if env("REDIS_URL") else {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}
 CACHE_TTL_REPORTES = 300
 

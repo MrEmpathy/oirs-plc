@@ -3,13 +3,17 @@
 Regla SC-07: nunca se registran contraseñas, tokens ni datos personales del solicitante; la IP se
 almacena truncada (/24) para equilibrar trazabilidad y minimización."""
 import ipaddress
+import json
 import logging
+import time
 
 from django.utils import timezone
 
-from apps.core.documental import db
+from apps.core.disponibilidad import REINTENTAR_EN_SEG
+from apps.core.documental import db_bitacora as db
 
 log = logging.getLogger("oirs")
+_documental_caida_hasta = 0.0   # mientras la base documental está caída no se reintenta en cada evento (DEF-19)
 CAMPOS_PROHIBIDOS = {"password", "clave", "token", "codigo_totp", "email", "telefono", "nombre", "apellidos"}
 
 
@@ -33,8 +37,16 @@ def registrar(accion, *, usuario=None, folio=None, ip=None, resultado="OK", **de
         "red_origen": _ip_truncada(ip) if ip else None,
         "detalle": limpio,
     }
-    try:
-        db().bitacora_auditoria.insert_one(evento)
-    except Exception:  # la falla de auditoría se registra pero no expone detalles al usuario
-        log.exception("No fue posible escribir en la bitácora documental: %s", accion)
+    global _documental_caida_hasta
+    if time.monotonic() >= _documental_caida_hasta:
+        try:
+            db().bitacora_auditoria.insert_one(dict(evento))
+            return evento
+        except Exception as e:  # la falla de auditoría no se expone al usuario ni interrumpe su operación
+            _documental_caida_hasta = time.monotonic() + REINTENTAR_EN_SEG
+            log.warning("Bitácora documental no disponible (%s): los eventos se respaldan en el registro de la "
+                        "aplicación durante %s s", type(e).__name__, REINTENTAR_EN_SEG)
+    # Respaldo (DEF-19): el evento completo (ya sin datos personales) queda en el registro de la aplicación y
+    # puede reincorporarse a la bitácora buscando la marca BITACORA_RESPALDO.
+    log.warning("BITACORA_RESPALDO %s", json.dumps(evento, default=str, ensure_ascii=False))
     return evento

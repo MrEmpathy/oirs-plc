@@ -214,6 +214,7 @@ servidor; sin `RESPALDO_CLAVE` no pueden descifrarse, por lo que esa clave debe 
 | HTTP 429 al iniciar sesión | Límite de Nginx: 5 intentos por minuto por IP | Esperar un minuto |
 | El correo de recuperación no llega | En desarrollo los correos se escriben en el log | `docker compose logs app` y buscar «Recuperación de contraseña» |
 | «Bad Request (400)» al entrar con un nombre o IP distinto de `localhost` | El nombre no está en `DJANGO_ALLOWED_HOSTS` | `./scripts/configurar_acceso_red.sh <nombre> [ip]` |
+| Página «Servicio no disponible» (503) | Una base de datos (PostgreSQL o MongoDB) está detenida | Revisar `docker compose ps` y `/api/v1/salud`; el sistema se recupera solo al volver la base, sin perder la sesión ni datos. Con MongoDB caído la bitácora se respalda en `docker compose logs app` (marca `BITACORA_RESPALDO`). Prueba: `.venv/bin/python tests/e2e/caida_bases.py <etapa>` (E2E-10, interrumpe el servicio unos segundos) |
 | Puertos 8080/8081/8082/8443 ocupados | Otro servicio en el equipo | Cambiar los puertos al ejecutar `preparar_entorno.sh` (ver paso 1) |
 
 ## 6. Ubicación del código, datos y configuración

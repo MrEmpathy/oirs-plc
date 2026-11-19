@@ -1,13 +1,13 @@
- Container oirs-plc-mongo-1 Running 
  Container oirs-plc-postgres-1 Running 
- Container oirs-plc-postgres-1 Waiting 
+ Container oirs-plc-mongo-1 Running 
  Container oirs-plc-mongo-1 Waiting 
+ Container oirs-plc-postgres-1 Waiting 
  Container oirs-plc-postgres-1 Healthy 
  Container oirs-plc-mongo-1 Healthy 
- Container oirs-plc-pruebas-run-452ffb30e954 Creating 
- Container oirs-plc-pruebas-run-452ffb30e954 Created 
-........................................................................ [ 54%]
-............................................................             [100%]
+ Container oirs-plc-pruebas-run-5e85ab334d50 Creating 
+ Container oirs-plc-pruebas-run-5e85ab334d50 Created 
+........................................................................ [ 52%]
+................................................................         [100%]
 ================================ tests coverage ================================
 _______________ coverage: platform linux, python 3.13.18-final-0 _______________
 
@@ -18,7 +18,7 @@ apps/auditoria/__init__.py                                               0      
 apps/auditoria/apps.py                                                   4      0   100%
 apps/auditoria/migrations/__init__.py                                    0      0   100%
 apps/auditoria/models.py                                                 1      0   100%
-apps/auditoria/servicio.py                                              20      2    90%
+apps/auditoria/servicio.py                                              28      0   100%
 apps/catalogos/__init__.py                                               0      0   100%
 apps/catalogos/apps.py                                                   4      0   100%
 apps/catalogos/management/__init__.py                                    0      0   100%
@@ -30,8 +30,9 @@ apps/catalogos/migrations/__init__.py                                    0      
 apps/catalogos/models.py                                                46      1    98%
 apps/catalogos/servicios.py                                             35      3    91%
 apps/core/__init__.py                                                    0      0   100%
-apps/core/documental.py                                                 20      1    95%
-apps/core/http.py                                                       40      9    78%
+apps/core/disponibilidad.py                                             14      2    86%
+apps/core/documental.py                                                 25      1    96%
+apps/core/http.py                                                       46      7    85%
 apps/cuentas/__init__.py                                                 0      0   100%
 apps/cuentas/apps.py                                                     4      0   100%
 apps/cuentas/autenticacion.py                                           72      2    97%
@@ -49,7 +50,7 @@ apps/encuestas/apps.py                                                   4      
 apps/encuestas/migrations/0001_initial.py                                5      0   100%
 apps/encuestas/migrations/__init__.py                                    0      0   100%
 apps/encuestas/models.py                                                12      1    92%
-apps/encuestas/servicio.py                                              68      4    94%
+apps/encuestas/servicio.py                                              78      4    95%
 apps/integracion/__init__.py                                             0      0   100%
 apps/integracion/apps.py                                                 4      0   100%
 apps/integracion/formularios.py                                         37      1    97%
@@ -91,8 +92,8 @@ apps/web/vistas/__init__.py                                              0      
 apps/web/vistas/administracion.py                                      110      7    94%
 apps/web/vistas/autenticacion.py                                       131     19    85%
 apps/web/vistas/casos.py                                               119     14    88%
-apps/web/vistas/errores.py                                              12      2    83%
+apps/web/vistas/errores.py                                              25      1    96%
 apps/web/vistas/supervision.py                                          44      2    95%
 ----------------------------------------------------------------------------------------
-TOTAL                                                                 1789    147    92%
-132 passed in 22.88s
+TOTAL                                                                 1845    144    92%
+136 passed in 22.79s

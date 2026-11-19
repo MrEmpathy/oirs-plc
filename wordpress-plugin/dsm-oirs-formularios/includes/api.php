@@ -98,5 +98,8 @@ function dsm_oirs_mensaje_error( WP_Error|array $r ): string {
 	if ( 401 === $r['codigo'] ) {
 		return 'No fue posible verificar el origen de la solicitud. Avise al administrador del sitio.';
 	}
+	if ( $r['codigo'] >= 500 ) { // 503: una base del sistema está caída; los datos del formulario se conservan (DEF-16)
+		return 'El servicio no está disponible en este momento. Sus datos se conservan: intente enviarlos de nuevo en unos minutos.';
+	}
 	return 'No fue posible registrar su solicitud. Revise los campos marcados.';
 }

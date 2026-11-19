@@ -14,6 +14,17 @@ def db():
     return _cliente()[settings.MONGO_DB]
 
 
+@lru_cache(maxsize=1)
+def _cliente_bitacora():
+    """Cliente con tiempos de espera cortos para la bitácora: una escritura de auditoría no puede dejar esperando
+    3 s cada inicio de sesión cuando la base documental está caída (DEF-19)."""
+    return MongoClient(settings.MONGO_URI, serverSelectionTimeoutMS=500, connectTimeoutMS=500, tz_aware=True)
+
+
+def db_bitacora():
+    return _cliente_bitacora()[settings.MONGO_DB]
+
+
 def asegurar_indices():
     d = db()
     d.respuestas_encuesta.create_index([("encuesta_id", ASCENDING), ("establecimiento_id", ASCENDING),

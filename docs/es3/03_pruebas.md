@@ -17,11 +17,11 @@ datos) más los recorridos de extremo a extremo.
 | Tipo | Identificadores | Casos | Ejecuciones | Herramienta |
 |---|---|---|---|---|
 | Unitarias | PU-01..PU-24 | 24 | 69 | pytest |
-| Integración | PI-01..PI-26 (PI-12 en PHP) | 26 | 29 | pytest + PHP CLI |
+| Integración | PI-01..PI-30 (PI-12 en PHP) | 30 | 33 | pytest + PHP CLI |
 | Seguridad | PS-01..PS-32 | 32 | 35 | pytest |
-| Extremo a extremo (navegador) | E2E-01..E2E-09 | 9 | 9 | Playwright (Chromium) |
+| Extremo a extremo (navegador) | E2E-01..E2E-10 (E2E-10: 15 comprobaciones, destructiva) | 10 | 10 | Playwright (Chromium) |
 | Manual | CP-M01 | 1 | 1 | WP-CLI / revisión |
-| **Total** | | **92** | **143** | |
+| **Total** | | **97** | **148** | |
 
 ### 1.1 Cobertura de casos de uso (base de cálculo explícita)
 
@@ -46,6 +46,8 @@ escenarios normales (N), alternativos o de error (A) y de borde o seguridad (B).
 
 **Cobertura: 12 de 12 CU implementados cubiertos = 100 %**, con escenarios normales, alternativos y de borde en
 11 de 12. CU12 tiene una verificación manual sin escenario de borde automatizado.
+
+Disponibilidad y recuperación ante la caída de una base: E2E-10 y PI-27..PI-30 (sección 2.2).
 
 Requisitos no funcionales: RNF01–RNF03 y las 15 amenazas de la Tabla 20 del Informe N.º 2 (PS-01..PS-32, bandit,
 pip-audit). RNF05/RNF06 de forma automatizada (E2E-06: 390/820/1280 px, tema claro y oscuro, sin desplazamiento
@@ -97,7 +99,46 @@ defectos.
 | PI-20 | — / retención (sección 6.1) | Anonimización por plazo de retención | 3 casos: cerrado antiguo, cerrado reciente, abierto antiguo | `anonimizar_solicitantes --dias 1825` | Solo se anonimiza el cerrado antiguo; el caso conserva su tipo y su establecimiento | Igual al esperado | Aprobado |
 | CP-M01 | — / CU12 | El Editor de Comunicaciones administra contenidos, pero no plugins | WordPress instalado | `wp user list-caps comunicaciones`; crear una página como `comunicaciones` | Tiene `edit_pages`/`publish_pages`; no tiene `activate_plugins`/`install_plugins`/`manage_options` | 3 de 3 permisos de contenido; 0 de 3 de administración; página creada (id 14) y eliminada | Aprobado |
 
-### 2.2 Registro completo
+### 2.2 Caída de las bases de datos durante una sesión (E2E-10)
+
+Pregunta de la evaluación: ¿qué pasa si la base de datos cae en mitad de una sesión? `tests/e2e/caida_bases.py`
+deja una sesión abierta del encargado OIRS, un ingreso presencial a medio enviar y un ciudadano con el formulario
+listo; detiene uno a uno PostgreSQL, MongoDB, Redis y MariaDB (`docker compose stop`), registra lo que ve cada
+usuario, vuelve a levantarlos y comprueba la sesión, la integridad y la recuperación. Es destructiva (interrumpe
+el servicio unos segundos), por eso no forma parte de la batería automática:
+`.venv/bin/python tests/e2e/caida_bases.py <etapa>`. Las correcciones quedaron además cubiertas por pruebas
+automatizadas que simulan cada caída (PI-27 a PI-30, `tests/integration/test_resiliencia.py`).
+
+**Resultado: antes de corregir, 6 de 15 comprobaciones cumplían; después, 15 de 15** (evidencias
+`caida_bases_antes.txt` y `caida_bases_despues.txt`, capturas `E2E-10a..c`). Lo que se mantuvo correcto desde el
+inicio: ningún caso quedó a medias (transacciones), la sesión sobrevivió a la caída, no hubo referencias huérfanas
+entre bases y el sistema de funcionarios siguió operando sin WordPress. Defectos encontrados: DEF-16 a DEF-19.
+
+| ID | Escenario | Esperado | Antes de corregir | Después de corregir |
+|---|---|---|---|---|
+| E2E-10.1 | PostgreSQL caído: el funcionario navega a la bandeja | Página «Servicio no disponible» (503) sin detalles técnicos | HTTP 500 · «Internal Server Error» · error sin formato (**NO**) | HTTP 503 · «Servicio no disponible · DSM Padre Las Casas» (**Sí**) |
+| E2E-10.2 | PostgreSQL caído: el funcionario envía un ingreso presencial | «Servicio no disponible» (503) en menos de 5 s; el caso no se crea a medias | HTTP 500 en 0.1 s · «Internal Server Error» · error sin formato (**NO**) | HTTP 503 en 0.2 s · «Servicio no disponible · DSM Padre Las Casas» (**Sí**) |
+| E2E-10.3 | PostgreSQL caído: el ciudadano envía el formulario OIRS | Aviso de servicio no disponible y el texto escrito se conserva | «No fue posible registrar su solicitud. Revise los campos marcados.» · texto conservado: sí (**NO**) | «El servicio no está disponible en este momento. Sus datos se conservan: intente enviarlos de nuevo en unos minutos.» · texto conservado: sí (**Sí**) |
+| E2E-10.4 | PostgreSQL de vuelta: 12 peticiones seguidas con la misma sesión | Todas 200, sin volver a iniciar sesión | 11/12 con 200; la sesión siguió activa (**NO**) | 12/12 con 200; la sesión siguió activa (**Sí**) |
+| E2E-10.5 | Integridad tras la caída | Ningún caso nuevo ni caso sin historial | casos antes 14, después 14; casos sin historial: 0 (**Sí**) | casos antes 13, después 13; casos sin historial: 0 (**Sí**) |
+| E2E-10.6 | Reintento del ciudadano con la base de vuelta | Folio asignado, una sola vez | folio PLC-2026-000015 (**Sí**) | folio PLC-2026-000014 (**Sí**) |
+| E2E-10.7 | MongoDB caído: la Dirección inicia sesión | Ingresa sin demora perceptible (< 2 s) | ingresó en 3.7 s (**NO**) | ingresó en 1.1 s (**Sí**) |
+| E2E-10.8 | MongoDB caído: el encargado sigue trabajando con los casos | Bandeja disponible (200) sin demora | HTTP 200 en 0.1 s (**Sí**) | HTTP 200 en 0.1 s (**Sí**) |
+| E2E-10.9 | MongoDB caído: el ciudadano envía la encuesta | Aviso de servicio no disponible | error: No fue posible registrar su solicitud. Revise los campos marcados. (**NO**) | error: El servicio no está disponible en este momento. Sus datos se conservan: intente enviarlos de nuevo en unos minutos. (**Sí**) |
+| E2E-10.10 | Bitácora durante la caída de MongoDB | Los eventos quedan completos en el registro de la aplicación (no se pierden) | 0 evento(s) completos en el registro (**NO**) | 2 evento(s) completos en el registro (**Sí**) |
+| E2E-10.11 | Redis caído: el encargado abre los reportes | Reportes disponibles (200), calculados sin caché | HTTP 500 · «Error interno · DSM Padre Las Casas» (**NO**) | HTTP 200 · «Reportes e indicadores · DSM Padre Las Casas» (**Sí**) |
+| E2E-10.12 | Redis caído: el ciudadano envía la encuesta | Confirmación y exactamente una respuesta guardada | error: No fue posible registrar su solicitud. Revise los campos marcados.; respuestas guardadas: 1 (**NO**) | confirmación «¡Gracias por su opinión!»; respuestas guardadas: 1 (**Sí**) |
+| E2E-10.13 | MariaDB caído: sitio público y sistema | El sitio WordPress cae; el sistema de funcionarios sigue disponible | sitio HTTP 500; sistema HTTP 200 (**Sí**) | sitio HTTP 500; sistema HTTP 200 (**Sí**) |
+| E2E-10.14 | MariaDB de vuelta | El sitio vuelve sin intervención | HTTP 200 (**Sí**) | HTTP 200 (**Sí**) |
+| E2E-10.15 | Consistencia entre bases al final | Sin referencias huérfanas | sin referencias huérfanas (**Sí**) | sin referencias huérfanas (**Sí**) |
+
+La primera ejecución de la línea base (`caida_bases_antes_1.txt`) tuvo además defectos **de la prueba**: la encuesta
+se abría con MongoDB ya detenido y Chromium abortaba peticiones al cambiar las interfaces de red de Docker
+(`ERR_NETWORK_CHANGED`), lo que hizo fallar 10.6 sin que fuera un problema del sistema. Se corrigió la prueba (la
+página se abre antes de la caída, pausas tras detener o levantar y reintento de navegación) y la línea base se repitió
+sobre el código original sin las correcciones: 10.6 cumple también allí, y las demás fallas se confirmaron.
+
+### 2.3 Registro completo
 
 El listado de las 132 ejecuciones automatizadas (ID, módulo, función, tiempo y estado) está en
 `evidencias/es3/junit_pytest.xml`; el de las 9 E2E, en `junit_e2e.xml`. Resumen por caso:
@@ -122,7 +163,7 @@ El listado de las 132 ejecuciones automatizadas (ID, módulo, función, tiempo y
 
 | | Aprobado | Fallido | Bloqueado | No ejecutado |
 |---|---|---|---|---|
-| Ejecución final (17 y 18-11-2026) | 92 casos / 143 ejecuciones | 0 | 1 (instalación en el WordPress municipal) | 4 (SUS, ZAP, carga en staging, aceptación) |
+| Ejecución final (18-11-2026) | 97 casos / 148 ejecuciones | 0 | 1 (instalación en el WordPress municipal) | 4 (SUS, ZAP, carga en staging, aceptación) |
 
 Ejecuciones fallidas **durante** la etapa (conservadas, sin borrar): primera corrida en Docker 80/81 (DEF-02);
 E2E-03 (DEF-06); PI-14 y PI-24 (DEF-07); E2E-01..03 por el límite anti-spam (DEF-08). Todas se repitieron tras la

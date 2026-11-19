@@ -50,7 +50,13 @@ def manejar_errores(vista):
             return JsonSeguro({"error": "No encontrado"}, status=404)
         except PermissionDenied:
             return JsonSeguro({"error": "No autorizado"}, status=403)
-        except Exception:
+        except Exception as e:
+            from apps.core import disponibilidad
+            if disponibilidad.es_caida(e):          # base o caché caída: falla temporal, no error interno (DEF-16)
+                log.warning("Servicio no disponible en %s: %s", request.path, type(e).__name__)
+                resp = JsonSeguro({"error": disponibilidad.TITULO}, status=503)
+                resp["Retry-After"] = str(disponibilidad.REINTENTAR_EN_SEG)
+                return resp
             log.exception("Error no controlado en %s", request.path)
             return JsonSeguro({"error": "Error interno. Intente nuevamente."}, status=500)
     envoltura.__name__ = vista.__name__
