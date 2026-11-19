@@ -1,18 +1,18 @@
-# Evidencias de base de datos — 2026-11-18 14:42 -03 — entorno Docker (PostgreSQL 16, MongoDB 7)
+# Evidencias de base de datos — 2026-11-19 01:42 -03 — entorno Docker (PostgreSQL 16, MongoDB 7)
 
 ## 1. Tablas de la base estructurada y cantidad de filas (datos ficticios)
           tabla           | filas 
 --------------------------+-------
  categoria                |     8
  correlativo_folio        |     1
- derivacion               |     6
+ derivacion               |     7
  encuesta                 |     1
  establecimiento          |     6
  feriado                  |    49
- historial_estado         |    27
- requerimiento            |     9
- respuesta                |     6
- solicitante              |     9
+ historial_estado         |    37
+ requerimiento            |    16
+ respuesta                |     7
+ solicitante              |    10
  unidad                   |    35
  usuario                  |     9
  usuario_groups           |     0
@@ -77,41 +77,41 @@
  requerimiento_unidad_derivada_id_32f57808 | CREATE INDEX requerimiento_unidad_derivada_id_32f57808 ON public.requerimiento USING btree (unidad_derivada_id)
 (12 rows)
 
-## 4. Escritura y lectura: caso PLC-2026-000009, creado desde el sitio web, recuperado con sus relaciones
+## 4. Escritura y lectura: caso PLC-2026-000016, creado desde el sitio web, recuperado con sus relaciones
       folio      |  tipo   | canal |    establecimiento     | estado  | fecha_vencimiento | solicitante | unidad 
 -----------------+---------+-------+------------------------+---------+-------------------+-------------+--------
- PLC-2026-000009 | RECLAMO | WEB   | CESFAM Padre Las Casas | CERRADO | 2026-12-10        | María       | SOME
+ PLC-2026-000016 | RECLAMO | WEB   | CESFAM Padre Las Casas | CERRADO | 2026-12-10        | María       | SOME
 (1 row)
 
  estado_anterior | estado_nuevo |   accion   |      fecha       
 -----------------+--------------+------------+------------------
-                 | INGRESADO    | INGRESO    | 18-11-2026 17:41
- INGRESADO       | EN_PROCESO   | DERIVACION | 18-11-2026 17:41
- EN_PROCESO      | RESPONDIDO   | RESPUESTA  | 18-11-2026 17:41
- RESPONDIDO      | CERRADO      | CIERRE     | 18-11-2026 17:41
+                 | INGRESADO    | INGRESO    | 18-11-2026 18:56
+ INGRESADO       | EN_PROCESO   | DERIVACION | 18-11-2026 18:56
+ EN_PROCESO      | RESPONDIDO   | RESPUESTA  | 18-11-2026 18:56
+ RESPONDIDO      | CERRADO      | CIERRE     | 18-11-2026 18:56
 (4 rows)
 
       folio      | medio | fecha_emision | dentro_plazo 
 -----------------+-------+---------------+--------------
- PLC-2026-000009 | EMAIL | 2026-11-18    | t
+ PLC-2026-000016 | EMAIL | 2026-11-18    | t
 (1 row)
 
 ## 5. Reglas de integridad: intentos inválidos con el rol de la aplicación (oirs_app), transacciones revertidas
 a) Fecha de vencimiento anterior al ingreso (CHECK ck_req_vencimiento_posterior):
    ERROR:  new row for relation "requerimiento" violates check constraint "ck_req_vencimiento_posterior"
-   DETAIL:  Failing row contains (28, PLC-2026-999991, RECLAMO, WEB, Prueba de integridad DEMO-BD, , null, 2026-11-18 17:42:27.473244+00, 2026-11-17, INGRESADO, null, null, 2, null, null).
+   DETAIL:  Failing row contains (40, PLC-2026-999991, RECLAMO, WEB, Prueba de integridad DEMO-BD, , null, 2026-11-19 04:42:24.510564+00, 2026-11-18, INGRESADO, null, null, 2, null, null).
 b) Establecimiento inexistente (FOREIGN KEY):
    ERROR:  insert or update on table "requerimiento" violates foreign key constraint "requerimiento_establecimiento_id_970d28e4_fk_establecimiento_id"
    DETAIL:  Key (establecimiento_id)=(999999) is not present in table "establecimiento".
 c) Folio duplicado (UNIQUE):
    ERROR:  duplicate key value violates unique constraint "requerimiento_folio_key"
-   DETAIL:  Key (folio)=(PLC-2026-000009) already exists.
+   DETAIL:  Key (folio)=(PLC-2026-000016) already exists.
 d) Descripción nula (NOT NULL):
    ERROR:  null value in column "descripcion" of relation "requerimiento" violates not-null constraint
-   DETAIL:  Failing row contains (31, PLC-2026-999993, RECLAMO, WEB, null, , null, 2026-11-18 17:42:28.010278+00, 2026-12-08, INGRESADO, null, null, 2, null, null).
+   DETAIL:  Failing row contains (43, PLC-2026-999993, RECLAMO, WEB, null, , null, 2026-11-19 04:42:24.877925+00, 2026-12-09, INGRESADO, null, null, 2, null, null).
 e) Respuesta por correo autorizada sin correo ni teléfono (CHECK ck_solicitante_contacto):
    ERROR:  new row for relation "solicitante" violates check constraint "ck_solicitante_contacto"
-   DETAIL:  Failing row contains (14, DEMO-BD, , , , null, , t, f).
+   DETAIL:  Failing row contains (16, DEMO-BD, , , , null, , t, f).
 f) Modificar el historial de estados (privilegio UPDATE revocado):
    ERROR:  permission denied for table historial_estado
 g) Eliminar un caso (oirs_app no tiene DELETE):
@@ -136,14 +136,14 @@ SET
 (Con pocas filas PostgreSQL prefiere recorrer la tabla; enable_seqscan=off muestra el índice que usa con volumen real.)
 
 ## 7. Base documental (MongoDB): colecciones, índices y documentos de ejemplo
-bitacora_auditoria: 90 documentos
+bitacora_auditoria: 122 documentos
    índice _id_ {"_id":1}
    índice ix_bit_folio {"folio":1}
    índice ttl_bit_ts {"ts":1} (TTL 730 días)
 encuesta_definiciones: 1 documentos
    índice _id_ {"_id":1}
    índice ux_def_encuesta {"encuesta_id":1} (único)
-respuestas_encuesta: 23 documentos
+respuestas_encuesta: 29 documentos
    índice _id_ {"_id":1}
    índice ix_resp_enc_estab_fecha {"encuesta_id":1,"establecimiento_id":1,"fecha":1}
 Respuesta de encuesta (sin IP, sin hora, sin datos personales):
@@ -164,15 +164,15 @@ Respuesta de encuesta (sin IP, sin hora, sin datos personales):
   },
   comentario: ''
 }
-Eventos de bitácora del caso PLC-2026-000009 (referencia por folio a PostgreSQL):
+Eventos de bitácora del caso PLC-2026-000016 (referencia por folio a PostgreSQL):
 [
   {
-    ts: ISODate('2026-11-18T17:41:46.250Z'),
+    ts: ISODate('2026-11-18T18:56:45.335Z'),
     accion: 'REQUERIMIENTO_CREADO',
     resultado: 'OK',
     usuario_id: null,
     rol: null,
-    folio: 'PLC-2026-000009',
+    folio: 'PLC-2026-000016',
     red_origen: '172.31.0.0/24',
     detalle: {
       canal: 'WEB',
@@ -181,12 +181,12 @@ Eventos de bitácora del caso PLC-2026-000009 (referencia por folio a PostgreSQL
     }
   },
   {
-    ts: ISODate('2026-11-18T17:41:47.533Z'),
+    ts: ISODate('2026-11-18T18:56:46.439Z'),
     accion: 'REQUERIMIENTO_DERIVADO',
     resultado: 'OK',
     usuario_id: 6,
     rol: 'OIRS_EST',
-    folio: 'PLC-2026-000009',
+    folio: 'PLC-2026-000016',
     red_origen: null,
     detalle: {
       categoria_id: 2,
